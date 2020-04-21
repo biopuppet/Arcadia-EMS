@@ -7,5 +7,5 @@ setup(
   description="arcadia package",
   author='biopuppet',
   author_email='biopuppet@outlook.com',
-  url="None",
+  url="None", install_requires=['django']
 )
