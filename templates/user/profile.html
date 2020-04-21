@@ -1,0 +1,224 @@
+{% extends "base-sidebar.html" %}
+{% load static %}
+
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="{% url 'index' %}">Arcadia</a></li>
+                            <li class="breadcrumb-item active">Profile</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Profile</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- Profile -->
+                <div class="card bg-primary">
+                    <div class="card-body profile-user-box">
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="float-left m-2 mr-4"><img src="/media/{{ user.image }}"
+                                                                       style="height: 100px;" alt=""
+                                                                       class="rounded-circle img-thumbnail"></span>
+                                <div class="media-body">
+
+                                    <h4 class="mt-1 mb-1 text-white">{{ user.fullname }}</h4>
+                                    <p class="font-13 text-white-50"> {{ user.username }}</p>
+
+
+                                </div> <!-- end media-body-->
+                                <ul class="mb-0 text-light">
+                                    <li class="mr-3">
+                                        <h5 class="mb-1">{{ user.email }}</h5>
+                                    </li>
+                                    <li class="">
+                                        <h5 class="mb-1">{{ user.phone }}</h5>
+                                    </li>
+                                </ul>
+                            </div> <!-- end col-->
+
+                            <!-- Signup modal content -->
+                            <div id="change-password-modal" class="modal fade" tabindex="-1" role="dialog"
+                                 aria-hidden="true"
+                                 style="display: none;">
+
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="text-center mt-2 mb-4">
+                                                <a href="" class="text-success">
+                                                    <span><img src="{% static 'htmlimg/logo-dark.svg' %}" alt=""
+                                                               height="50"></span>
+                                                </a>
+                                            </div>
+
+                                            <form id="form-change-password" class="pl-3 pr-3" action=""
+                                                  method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name='id' value="{{ user.id }}"/>
+                                                <div class="form-group">
+                                                    <label>Current Password</label>
+                                                    <input name="current_password" class="form-control" type="password"
+                                                           required="" minlength="6" maxlength="20"
+                                                           placeholder="Current Password">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>New Password</label>
+                                                    <input name="new_password" class="form-control" type="password"
+                                                           required="" minlength="6" maxlength="20"
+                                                           placeholder="New Password">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>New Password (again)</label>
+                                                    <input name="confirm_password" class="form-control" type="password"
+                                                           required="" minlength="6" maxlength="20"
+                                                           placeholder="New Password (again)">
+                                                </div>
+
+                                                <div class="form-group text-center">
+                                                    <button id="btn-change-password" class="btn btn-danger"
+                                                            type="submit">Change Password
+                                                    </button>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div>
+                            <!-- /.modal -->
+                            <div class="col-sm-6">
+                                <div class="text-right">
+                                    <div class="button-list">
+                                        <button type="button" class="btn btn-info ">
+                                            <i class="mdi mdi-account-settings-variant mr-1"></i> Edit Profile
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                data-target="#change-password-modal">Change Password
+                                        </button>
+                                    </div>
+                                </div>
+                            </div> <!-- end col-->
+                        </div> <!-- end row -->
+
+                    </div> <!-- end card-body/ profile-user-box-->
+                </div><!--end profile/ card -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">Basic Profile</h4>
+
+                        <form action="" method="post" class="needs-validation" novalidate>
+                            {% csrf_token %}
+
+                            <div class="form-group mb-3">
+                                <label for="validationCustom01">Full Name</label>
+                                <input type="text" class="form-control" id="validationCustom01" placeholder="Full Name"
+                                       value="{{ user.fullname }}" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div hidden class="valid-tooltip">
+                                    Looks good!
+                                </div>
+                                <div hidden class="invalid-tooltip">
+                                    Please enter Full name.
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="validationCustomUsername">Username</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="validationCustomUsername"
+                                           placeholder="Username" aria-describedby="inputGroupPrepend" value="{{ user.username }}"
+                                           required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid username.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label>Phone</label>
+                                <input type="text" class="form-control" data-toggle="input-mask"
+                                       data-mask-format="000-0000-0000" value="{{ user.phone }}">
+                                <span class="font-13 text-muted">e.g "xxx-xxxx-xxxx"</span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="validationCustom03">Email</label>
+                                <input type="email" class="form-control" id="validationCustom03" placeholder="Email" value="{{ user.email }}"
+                                       readonly>
+                            </div>
+
+                            <button class="btn btn-primary" type="submit">Update Profile</button>
+                        </form>
+
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+
+    </div> <!-- container -->
+{% endblock %}
+
+
+{% block javascripts %}
+    <!-- demo app -->
+    <script src="{% static 'javascript/demo.profile.js' %}"></script>
+    <!-- end demo js-->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btn-change-password").click(function (message) {
+                const form = $("#form-change-password");
+                var data = form.serialize();
+                $.ajax({
+                    type: form.attr('method'),
+                    url: "{% url 'user:change-password' %}",
+                    data: data,
+                    async: false,
+                    cache: false,
+                    success: function (msg) {
+                        if (msg.status === 'success') {
+                            console.log('Success');
+                        } else if (msg.status === 'fail') {
+                            alert(msg.password_change_form_errors);
+                            //$('errorMessage').html(msg.message)
+                        }
+                    },
+                    end: function () {
+                        console.log('end');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

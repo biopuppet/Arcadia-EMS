@@ -13,9 +13,35 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include, re_path
+from django.contrib.auth import views as auth_views
+from django.views.static import serve
+
+from .settings import DEBUG
+from .views import page_not_found, page_error
+from user import views as user_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
+    path('user/', include('user.urls', namespace='user')),
+
+    path('', user_views.IndexView.as_view(), name='index'),
+    path('login/', user_views.LoginView.as_view(), name='login'),
+    path('logout/', user_views.LogoutView.as_view(), name='logout'),
+    path('maintained/', auth_views.TemplateView.as_view(template_name='maintenance.html'),
+       name='maintained'),
+
     path('admin/', admin.site.urls),
-]
+    # path('ui/', include('system.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = page_not_found
+handler500 = page_error
+
+if DEBUG:
+    urlpatterns += [
+
+    ]
