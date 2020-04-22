@@ -99,28 +99,39 @@
 
                 <li class="side-nav-item">
                     <a href="#" class="side-nav-link">
+                        <i class="mdi mdi-settings-outline"></i>
+                        <span> 系统管理 </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <ul class="side-nav-second-level" aria-expanded="false">
+                        <li>
+                            <a href="{% url 'user:index' %}">Users</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'user:groups' %}">Groups</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="side-nav-item">
+                    <a href="#" class="side-nav-link">
                         <i class="mdi mdi-settings"></i>
                         <span> 设置 </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <ul class="side-nav-second-level" aria-expanded="false">
                         <li>
-                            <a href="{% url 'user:index' %}">User</a>
-                        </li>
-                        <li>
                             <a href="{% url 'user:profile' %}">Profile</a>
                         </li>
-
                         <li>
                             <a href="{% url 'logout' %}">Logout</a>
                         </li>
                         <li>
                             <a href="#">Recover Password</a>
                         </li>
-                        <li>
+                        <li hidden>
                             <a href="#">Lock Screen</a>
                         </li>
-                        <li>
+                        <li hidden>
                             <a href="#">Confirm Mail</a>
                         </li>
                     </ul>
@@ -207,7 +218,7 @@
                                 <!-- item-->
                                 <a href="{% static '' %}" class="dropdown-item notify-item">
                                     <div class="notify-icon">
-                                        <img src="./htmlimg/avatar-2.jpg" class="img-fluid rounded-circle" alt=""/>
+                                        <img src="{% static 'htmlimg/avatar-2.jpg' %}" class="img-fluid rounded-circle" alt=""/>
                                     </div>
                                     <p class="notify-details">Cristina Pride</p>
                                     <p class="text-muted mb-0 user-msg">
@@ -228,7 +239,7 @@
                                 <!-- item-->
                                 <a href="{% static '' %}" class="dropdown-item notify-item">
                                     <div class="notify-icon">
-                                        <img src="./htmlimg/avatar-4.jpg" class="img-fluid rounded-circle" alt=""/>
+                                        <img src="{% static 'htmlimg/avatar-3.jpg' %}" class="img-fluid rounded-circle" alt=""/>
                                     </div>
                                     <p class="notify-details">Karen Robinson</p>
                                     <p class="text-muted mb-0 user-msg">
@@ -269,7 +280,7 @@
                         <a class="nav-link dropdown-toggle nav-user arrow-none mr-0" data-toggle="dropdown"
                            href="{% static '' %}" role="button" aria-haspopup="false"
                            aria-expanded="false">
-                            <img src="{% static 'htmlimg/avatar-1.jpg' %}" alt="" class="rounded">
+                            <img src="/media/{{ user.image }}" alt="" class="rounded">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated profile-dropdown ">
                             <!-- item-->

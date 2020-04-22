@@ -1,0 +1,187 @@
+{% extends "base-sidebar.html" %}
+{% load static %}
+
+{% block css %}
+    <!-- third party css -->
+    <link href="{% static 'css/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/buttons.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/select.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- third party css end -->
+{% endblock %}
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="{% url 'index' %}">Arcadia</a></li>
+                            <li class="breadcrumb-item active">Groups</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Groups</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+
+        <!-- Signup modal content -->
+        <div id="create-group-modal" class="modal fade" tabindex="-1" role="dialog"
+             aria-hidden="true"
+             style="display: none;">
+
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="text-center mt-2 mb-4">
+                            <a href="" class="text-success">
+                                <span><img src="{% static 'htmlimg/logo-dark.svg' %}" alt=""
+                                           height="50"></span>
+                            </a>
+                        </div>
+
+                        <form id="form-create-group" action="{% url 'user:create-group' %}" method="post" class="pl-3 pr-3">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label>Group Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                    </div>
+                                    <input name="name" type="text" class="form-control"
+                                           placeholder="Group Name" aria-describedby="inputGroupPrepend"
+                                           required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid group name.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <button hidden class="btn btn-danger text-left" type="submit">Cancel
+                                </button>
+                                <button id="btn-create-group" class="btn btn-primary" type="submit">Create
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
+                                data-target="#create-group-modal">New Group
+                        </button>
+
+                        <p class="text-muted font-14 mb-4" hidden>
+                            DataTables has most features enabled by default, so all you need to do to use it with your
+                            own tables is to call the construction
+                            function:
+                            <code>$().DataTable();</code>. KeyTable provides Excel like cell navigation on any table.
+                            Events (focus, blur, action etc) can be assigned to individual
+                            cells, columns, rows or all cells.
+                        </p>
+
+                        <table id="basic-datatable"
+                               class="table table-striped dt-responsive nowrap">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Permissions</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for group in groups %}
+                                <tr>
+                                    <td>{{ group.id }}</td>
+                                    <td>{{ group.name }}</td>
+                                    <td>{{ group.permissions }}</td>
+                                    <td class="table-action">
+                                        <a href="" class="action-icon"> <i class="mdi mdi-pencil"></i></a>
+                                        <a href="" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div> <!-- end card body-->
+                </div> <!-- end card -->
+            </div><!-- end col-->
+        </div>
+        <!-- end row-->
+    </div> <!-- container -->
+{% endblock %}
+
+
+{% block javascripts %}
+
+
+    {#    <script type="javascript">#}
+    {#        let oDataTable = $('#basic-datatable').DataTable();#}
+    {#    </script>#}
+
+    <script type="javascript">
+        $(document).ready(function () {
+            $(".state-saving-datatable").DataTable({
+                stateSave: !0,
+            });
+            $("#btn-create-group").click(function () {
+                console.log('submit create form')
+                let form = $("#form-create-group");
+                let data = form.serialize();
+                $.ajax({
+                    type: form.attr('method'),
+                    url: "{% url 'user:create-group' %}",
+                    data: data,
+                    cache: false,
+                    async: false,
+                    success: function (msg) {
+                        if (msg.status === 'success') {
+                            alert('Successfully created user!');
+                        } else if (msg.status === 'fail') {
+                            alert('failed');
+                        }
+                    },
+                    //end: function () {oDataTable.ajax.reload();}
+                });
+            });
+        });
+    </script>
+
+
+    <!-- third party js -->
+    <script src="{% static 'javascript/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.print.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.keyTable.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.select.min.js' %}"></script>
+    <!-- third party js ends -->
+
+    <!-- demo app -->
+    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
+    <!-- end demo js-->
+
+{% endblock %}

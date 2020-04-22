@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
+
 User = get_user_model()
 
 
@@ -33,13 +34,14 @@ class UserCreateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'fullname', 'id', 'username', 'phone', 'email', 'password'
+            'fullname', 'id', 'username', 'groups', 'phone', 'email', 'password'
         ]
 
         error_messages = {
             "fullname": {"required": "Full name required"},
             "username": {"required": "Username required"},
             "email": {"required": "Email required"},
+            "group": {"required": "Group required"},
             "phone": {
                 "required": "Phone Number required",
                 "max_length": "Invalid Phone Number(Too long)",
@@ -54,6 +56,10 @@ class UserCreateForm(forms.ModelForm):
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
         password_again = cleaned_data.get("password_again")
+        groups = cleaned_data.get("groups")
+
+        # if not Group.objects.exists(groups):
+        #     raise forms.ValidationError('Unknown group:{}'.format(groups))
 
         if User.objects.filter(username=username).count():
             raise forms.ValidationError('Username:{} already exists'.format(username))
@@ -70,6 +76,21 @@ class UserCreateForm(forms.ModelForm):
 
         if User.objects.filter(email=email).count():
             raise forms.ValidationError('Email:{} already exists'.format(email))
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'fullname', 'id', 'username', 'phone',
+        ]
+
+        error_messages = {
+            "phone": {
+                "max_length": "Invalid Phone Number(Too long)",
+                "min_length": "Invalid Phone Number(Too short)"
+            }
+        }
 
 
 class UserChangePasswordForm(forms.Form):
@@ -99,7 +120,8 @@ class UserChangePasswordForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(UserChangePasswordForm, self).clean()
-        print('clean')
+        # @TODO: Add old password validation
+
         new_password = cleaned_data.get("new_password")
         confirm_password = cleaned_data.get("confirm_password")
         if new_password != confirm_password:

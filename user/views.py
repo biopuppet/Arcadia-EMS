@@ -3,19 +3,20 @@ import re
 
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
-from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm
+from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm
 from user.models import UserProfile
 
 User = get_user_model()
 
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, 'index.html')
@@ -24,6 +25,7 @@ class IndexView(View):
 class LoginView(View):
 
     def get(self, request):
+        print(request.user)
         if not request.user.is_authenticated:
             return render(request, 'pages-login.html')
         else:
@@ -38,6 +40,8 @@ class LoginView(View):
             password = request.POST['password']
             user = authenticate(username=username, password=password)
             if user is not None:
+                print(user.get_all_permissions())
+                print(Group.objects.all())
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(redirect_to)
@@ -73,10 +77,8 @@ class UserListView(LoginRequiredMixin, View):
         return render(request, 'user/index.html', {'users': users})
 
     def post(self, request):
-        print('in UserListView')
-        print(request.POST)
+        # print(request.POST)
         users = UserProfile.objects.all()
-        # return HttpResponseRedirect(reverse('user:create'))
         return render(request, 'user/index.html', {'users': users})
 
 
@@ -84,10 +86,10 @@ class UserCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         users = UserProfile.objects.all()
+        print('in get')
         return render(request, 'user/index.html', {'users': users})
 
     def post(self, request):
-        print('in UserCreateView')
         print(request.POST)
         user_create_form = UserCreateForm(request.POST)
         if user_create_form.is_valid():
@@ -106,6 +108,29 @@ class UserCreateView(LoginRequiredMixin, View):
                 'user_create_form_errors': user_create_form_errors[0]
             }
         return HttpResponse(json.dumps(ret), content_type='application/json')
+
+
+class UpdateUserView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        users = UserProfile.objects.all()
+        return render(request, 'user/profile.html', {'users': users})
+
+    def post(self, request):
+        if 'id' in request.POST and request.POST['id']:
+            user = get_object_or_404(User, pk=int(request.POST['id']))
+        else:
+            user = get_object_or_404(User, pk=int(request.user.id))
+        user_update_form = UserUpdateForm(request.POST, instance=user)
+        if user_update_form.is_valid():
+            user_update_form.save()
+            return redirect('user:profile')
+        else:
+            ret = {
+                'status': 'fail',
+                'user_update_form_errors': user_update_form.errors
+            }
+            return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
 class UserChangePasswordView(LoginRequiredMixin, View):
@@ -140,7 +165,34 @@ class UserChangePasswordView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
+class UserDeleteView(View):
+
+    def get(self, request, user_id):
+        # print(request.POST)
+        if user_id > 0:
+            User.objects.filter(id=user_id).delete()
+            print('here')
+            print(user_id)
+        return redirect('user:index')
+
+
 class UserCalendarView(View):
 
     def get(self, request):
         return render(request, 'apps-calendar.html')
+
+
+class UserGroupsView(View):
+
+    def get(self, request):
+        groups = Group.objects.all()
+        return render(request, 'user/groups.html', {'groups': groups})
+
+
+class UserCreateGroupView(View):
+
+    def get(self, request):
+        return redirect("user:index")
+
+    def post(self, request):
+        return redirect("user:index")

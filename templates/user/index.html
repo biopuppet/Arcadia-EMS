@@ -21,7 +21,7 @@
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{% url 'index' %}">Arcadia</a></li>
-                            <li class="breadcrumb-item active">User List</li>
+                            <li class="breadcrumb-item active">Users</li>
                         </ol>
                     </div>
                     <h4 class="page-title">Users</h4>
@@ -47,7 +47,8 @@
                             </a>
                         </div>
 
-                        <form id="form-create-user" action="{% url 'user:create' %}" method="post" class="pl-3 pr-3">
+                        <form id="form-create-user" action="{% url 'user:create-user' %}" method="post"
+                              class="pl-3 pr-3">
                             {% csrf_token %}
                             <div class="form-group mb-3">
                                 <label for="validationCustomUsername">Username</label>
@@ -141,6 +142,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Last Login</th>
+                                <th>Activated</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -150,16 +152,40 @@
                                 <tr>
                                     <td>{{ user.id }}</td>
                                     <td class="table-user">
-                                        <img src="{% static 'htmlimg/avatar-3.jpg' %}" alt="table-user" class="mr-2 rounded-circle">
+                                        <img src="/media/{{ user.image }}" alt="table-user" class="mr-2 rounded-circle">
                                         {{ user.username }}
                                     </td>
                                     <td>{{ user.fullname }}</td>
                                     <td>{{ user.email }}</td>
                                     <td>{{ user.phone }}</td>
                                     <td>{{ user.last_login }}</td>
+                                    <td>
+                                         {{ user.is_active }}
+{#                                        <div>#}
+{#                                            <input type="checkbox" id="switch{{ user.id }}" checked="" data-switch="fail">#}
+{#                                            <label for="switch{{ user.id }}" data-on-label="On" data-off-label="Off"#}
+{#                                                   class="mb-0 d-block"></label>#}
+{#                                        </div>#}
+                                    </td>
+
                                     <td class="table-action">
-                                        <a href="" class="action-icon"> <i class="mdi mdi-pencil"></i></a>
-                                        <a href="" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                        {#                                        <a href="{% url 'user:view-user' user.id  %}" class="action-icon"> <i class="mdi mdi-pencil"></i></a>#}
+                                        <div class="dropdown">
+
+                                            <a href="#" class="action-icon">
+                                                <i class="mdi mdi-eye"></i></a>
+
+                                            <a class="action-icon dropdown-toggle" href="#"
+                                               id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                               aria-expanded="false">
+                                            </a>
+
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
+                                                <a href="{% url 'user:delete-user' user.id %}"
+                                                   class="dropdown-item">Delete</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -172,46 +198,11 @@
         </div>
         <!-- end row-->
     </div> <!-- container -->
+
 {% endblock %}
 
 
 {% block javascripts %}
-
-
-    {#    <script type="javascript">#}
-    {#        let oDataTable = $('#basic-datatable').DataTable();#}
-    {#    </script>#}
-
-    <script type="javascript">
-        $(document).ready(function () {
-            $(".state-saving-datatable").DataTable({
-                stateSave: !0,
-            });
-            $("#btn-create-user").click(function () {
-                console.log('submit create form')
-                let form = $("#form-create-user");
-                let data = form.serialize();
-                $.ajax({
-                    type: form.attr('method'),
-                    url: "{% url 'user:create' %}",
-                    data: data,
-                    cache: false,
-                    async: false,
-                    success: function (msg) {
-                        if (msg.status === 'success') {
-                            console.log('jasdfjisdof')
-                            alert('Successfully created user!');
-                        } else if (msg.status === 'fail') {
-                            alert('failed');
-                        }
-                    },
-                    //end: function () {oDataTable.ajax.reload();}
-                });
-            });
-        });
-    </script>
-
-
     <!-- third party js -->
     <script src="{% static 'javascript/jquery.dataTables.js' %}"></script>
     <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
@@ -230,4 +221,6 @@
     <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
     <!-- end demo js-->
 
+    <!-- bundle -->
+    <script src=" {% static 'javascript/vendor.min.js' %}/vendor.min.js"></script>
 {% endblock %}
