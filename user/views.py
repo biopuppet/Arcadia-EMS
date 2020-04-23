@@ -11,6 +11,7 @@ from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
+from user.email import send_email
 from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm
 from user.models import UserProfile
 
@@ -200,3 +201,19 @@ class UserCreateGroupView(LoginRequiredMixin, View):
 
     def post(self, request):
         return redirect("user:index")
+
+
+class UserRecoverPasswordView(View):
+
+    def get(self, request):
+        return render(request, 'pages-recoverpw.html')
+
+    def post(self, request):
+        if 'email' in request.POST and request.POST['email']:
+            email = request.POST['email']
+            user = User.objects.get(email=email)
+            token = User.objects.make_random_password()
+            send_email(request, email, 'Password Recovery @ ArcadiaEMS', token=token, fullname=user.fullname)
+            user.set_password(token)
+            user.save()
+        return render(request, 'pages-recoverpw.html', {'sent': 1})

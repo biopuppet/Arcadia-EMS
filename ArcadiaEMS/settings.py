@@ -127,3 +127,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/login/'
 
 AUTH_USER_MODEL = 'user.UserProfile'
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'arcadia_ems@163.com'
+EMAIL_HOST_PASSWORD = 'XATYEWMLEYGQNKSA'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

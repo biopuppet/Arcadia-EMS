@@ -15,6 +15,8 @@ urlpatterns = [
     path('toggle-user-status/<int:user_id>', ToggleUserStatusView().as_view(), name='toggle-user-status'),
 
     path('change-password/<int:user_id>', UserChangePasswordView.as_view(), name='change-password'),
+    path('recover-password/', UserRecoverPasswordView.as_view(), name='recover-password'),
+
     path('calendar/', UserCalendarView.as_view(), name='calendar'),
     path('groups/', UserGroupsView.as_view(), name='groups'),
     path('create-group/', UserCreateGroupView.as_view(), name='create-group')
