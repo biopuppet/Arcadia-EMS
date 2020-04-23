@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-
 User = get_user_model()
 
 
@@ -11,6 +10,8 @@ class LoginForm(forms.Form):
 
 
 class UserCreateForm(forms.ModelForm):
+    fullname = forms.CharField(required=False)
+
     password = forms.CharField(
         required=True,
         min_length=6,
@@ -31,6 +32,15 @@ class UserCreateForm(forms.ModelForm):
         }
     )
 
+    phone = forms.CharField(
+        required=False,
+        min_length=11,
+        max_length=13,
+        error_messages={
+            "min_length": "Invalid Phone number",
+        }
+    )
+
     class Meta:
         model = User
         fields = [
@@ -38,15 +48,9 @@ class UserCreateForm(forms.ModelForm):
         ]
 
         error_messages = {
-            "fullname": {"required": "Full name required"},
             "username": {"required": "Username required"},
             "email": {"required": "Email required"},
             "group": {"required": "Group required"},
-            "phone": {
-                "required": "Phone Number required",
-                "max_length": "Invalid Phone Number(Too long)",
-                "min_length": "Invalid Phone Number(Too short)"
-            }
         }
 
     def clean(self):
@@ -79,18 +83,20 @@ class UserCreateForm(forms.ModelForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+    phone = forms.CharField(
+        required=False,
+        min_length=11,
+        max_length=13,
+        error_messages={
+            "min_length": "Invalid Phone number",
+        }
+    )
+
     class Meta:
         model = User
         fields = [
             'fullname', 'id', 'username', 'phone',
         ]
-
-        error_messages = {
-            "phone": {
-                "max_length": "Invalid Phone Number(Too long)",
-                "min_length": "Invalid Phone Number(Too short)"
-            }
-        }
 
 
 class UserChangePasswordForm(forms.Form):

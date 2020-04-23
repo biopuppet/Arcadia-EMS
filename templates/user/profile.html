@@ -121,12 +121,6 @@
                                 <input name="fullname" type="text" class="form-control" id="validationCustom01"
                                        placeholder="Full Name"
                                        value="{{ user.fullname }}">
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div hidden class="valid-tooltip">
-                                    Looks good!
-                                </div>
                                 <div hidden class="invalid-tooltip">
                                     Please enter Full name.
                                 </div>
@@ -150,9 +144,12 @@
 
                             <div class="form-group mb-3">
                                 <label>Phone</label>
-                                <input name="phone" type="text" class="form-control" data-toggle="input-mask"
-                                       data-mask-format="000-0000-0000" value="{{ user.phone }}">
+                                <input name="phone" type="tel" class="form-control"
+                                        value="{{ user.phone }}" minlength="11" maxlength="13">
                                 <span class="font-13 text-muted">e.g "xxx-xxxx-xxxx"</span>
+                                <div class="invalid-feedback">
+                                    Please enter a valid phone number.
+                                </div>
                             </div>
 
                             <div class="form-group mb-3">
