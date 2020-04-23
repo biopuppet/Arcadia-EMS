@@ -160,7 +160,7 @@
                                     <td>{{ user.phone }}</td>
                                     <td>{{ user.last_login }}</td>
                                     <td>
-                                         {{ user.is_active }}
+                                        {{ user.is_active }}
 {#                                        <div>#}
 {#                                            <input type="checkbox" id="switch{{ user.id }}" checked="" data-switch="fail">#}
 {#                                            <label for="switch{{ user.id }}" data-on-label="On" data-off-label="Off"#}
@@ -169,10 +169,9 @@
                                     </td>
 
                                     <td class="table-action">
-                                        {#                                        <a href="{% url 'user:view-user' user.id  %}" class="action-icon"> <i class="mdi mdi-pencil"></i></a>#}
                                         <div class="dropdown">
 
-                                            <a href="#" class="action-icon">
+                                            <a href="{% url 'user:profile' user.id %}" class="action-icon">
                                                 <i class="mdi mdi-eye"></i></a>
 
                                             <a class="action-icon dropdown-toggle" href="#"
@@ -183,7 +182,8 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
                                                 <a href="{% url 'user:delete-user' user.id %}"
                                                    class="dropdown-item">Delete</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
+                                                <a href="{% url 'user:toggle-user-status' user.id %}"
+                                                    class="dropdown-item" >Toggle status</a>
                                             </div>
                                         </div>
                                     </td>
@@ -191,7 +191,6 @@
                             {% endfor %}
                             </tbody>
                         </table>
-
                     </div> <!-- end card body-->
                 </div> <!-- end card -->
             </div><!-- end col-->
@@ -200,7 +199,6 @@
     </div> <!-- container -->
 
 {% endblock %}
-
 
 {% block javascripts %}
     <!-- third party js -->
@@ -220,7 +218,4 @@
     <!-- demo app -->
     <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
     <!-- end demo js-->
-
-    <!-- bundle -->
-    <script src=" {% static 'javascript/vendor.min.js' %}/vendor.min.js"></script>
 {% endblock %}

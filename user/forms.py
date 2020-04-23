@@ -82,7 +82,7 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'fullname', 'id', 'username', 'phone',
+            'fullname', 'id', 'username', 'phone', 'is_active'
         ]
 
         error_messages = {

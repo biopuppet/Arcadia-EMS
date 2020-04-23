@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
+from ArcadiaEMS.views import page_not_found
 from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm
 from user.models import UserProfile
 
@@ -25,7 +26,6 @@ class IndexView(LoginRequiredMixin, View):
 class LoginView(View):
 
     def get(self, request):
-        print(request.user)
         if not request.user.is_authenticated:
             return render(request, 'pages-login.html')
         else:
@@ -54,20 +54,23 @@ class LoginView(View):
         return render(request, 'pages-login.html', ret)
 
 
-class LogoutView(LoginRequiredMixin, View):
+class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect(reverse('login'))
+        return render(request, 'pages-logout.html')
 
 
 class UserProfileView(LoginRequiredMixin, View):
 
-    def get(self, request):
-        return render(request, 'user/profile.html')
-
-    def post(self, request):
-        return render(request, 'user/profile.html')
+    def get(self, request, user_id):
+        requested_user = get_object_or_404(User, pk=int(user_id))
+        request_user = request.user
+        # @TODO: Add permission check
+        # if request_user != requested_user:
+        #     return page_not_found(request, exception="This is not the profile that you should see...")
+        # else:
+        return render(request, 'user/profile.html', {'user': requested_user})
 
 
 class UserListView(LoginRequiredMixin, View):
@@ -86,7 +89,6 @@ class UserCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         users = UserProfile.objects.all()
-        print('in get')
         return render(request, 'user/index.html', {'users': users})
 
     def post(self, request):
@@ -97,7 +99,6 @@ class UserCreateView(LoginRequiredMixin, View):
             new_user.password = make_password(user_create_form.cleaned_data['password'])
             new_user.save()
             user_create_form.save_m2m()
-            ret = {'status': 'success'}
             return redirect('user:index')
         else:
             pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
@@ -112,19 +113,16 @@ class UserCreateView(LoginRequiredMixin, View):
 
 class UpdateUserView(LoginRequiredMixin, View):
 
-    def get(self, request):
-        users = UserProfile.objects.all()
-        return render(request, 'user/profile.html', {'users': users})
+    # def get(self, request):
+    #     users = UserProfile.objects.all()
+    #     return render(request, 'user/profile.html', {'users': users})
 
-    def post(self, request):
-        if 'id' in request.POST and request.POST['id']:
-            user = get_object_or_404(User, pk=int(request.POST['id']))
-        else:
-            user = get_object_or_404(User, pk=int(request.user.id))
+    def post(self, request, user_id):
+        user = get_object_or_404(User, pk=int(user_id))
         user_update_form = UserUpdateForm(request.POST, instance=user)
         if user_update_form.is_valid():
             user_update_form.save()
-            return redirect('user:profile')
+            return HttpResponseRedirect(request.POST.get('next', '/'))
         else:
             ret = {
                 'status': 'fail',
@@ -135,61 +133,67 @@ class UpdateUserView(LoginRequiredMixin, View):
 
 class UserChangePasswordView(LoginRequiredMixin, View):
 
-    def get(self, request):
-        ret = dict()
-        if 'id' in request.GET and request.GET['id']:
-            user = get_object_or_404(User, pk=int(request.GET.get('id')))
-            ret['user'] = user
-        return render(request, 'user/profile.html', ret)
+    def get(self, request, user_id):
+        return HttpResponseRedirect(reverse('user:profile', args=(user_id,)))
 
-    def post(self, request):
-        print('in UserChangePasswordView')
-        print(request.POST)
-        ret = dict()
-        if 'id' in request.POST and request.POST['id']:
+    def post(self, request, user_id):
+        if 'id' in request.POST and int(request.POST['id']) == user_id:
             user = get_object_or_404(User, pk=int(request.POST['id']))
-            form = UserChangePasswordForm(request.POST)
-            if form.is_valid():
-                new_password = request.POST['new_password']
-                user.set_password(new_password)
-                user.save()
-                ret = {'status': 'success'}
-            else:
-                pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
-                errors = str(form.errors)
-                password_change_form_errors = re.findall(pattern, errors)
-                ret = {
-                    'status': 'fail',
-                    'password_change_form_errors': password_change_form_errors[0]
-                }
-        return HttpResponse(json.dumps(ret), content_type='application/json')
+        else:
+            raise page_not_found(request)
+        form = UserChangePasswordForm(request.POST)
+        if form.is_valid():
+            new_password = request.POST['new_password']
+            user.set_password(new_password)
+            user.save()
+            return HttpResponseRedirect(reverse('user:profile', args=[user_id, ]))
+        else:
+            pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
+            errors = str(form.errors)
+            password_change_form_errors = re.findall(pattern, errors)
+            ret = {
+                'status': 'fail',
+                'password_change_form_errors': password_change_form_errors[0]
+            }
+            return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
-class UserDeleteView(View):
+class ToggleUserStatusView(LoginRequiredMixin, View):
+
+    def get(self, request, user_id):
+        if user_id > 0:
+            user = get_object_or_404(User, pk=int(user_id))
+            print(user.is_active)
+            user.is_active = not user.is_active
+            user.save()
+            print(user.is_active)
+
+        return HttpResponseRedirect(reverse('user:index'))
+
+
+class DeleteUserView(LoginRequiredMixin, View):
 
     def get(self, request, user_id):
         # print(request.POST)
         if user_id > 0:
             User.objects.filter(id=user_id).delete()
-            print('here')
-            print(user_id)
         return redirect('user:index')
 
 
-class UserCalendarView(View):
+class UserCalendarView(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, 'apps-calendar.html')
 
 
-class UserGroupsView(View):
+class UserGroupsView(LoginRequiredMixin, View):
 
     def get(self, request):
         groups = Group.objects.all()
         return render(request, 'user/groups.html', {'groups': groups})
 
 
-class UserCreateGroupView(View):
+class UserCreateGroupView(LoginRequiredMixin, View):
 
     def get(self, request):
         return redirect("user:index")

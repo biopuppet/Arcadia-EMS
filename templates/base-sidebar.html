@@ -120,7 +120,7 @@
                     </a>
                     <ul class="side-nav-second-level" aria-expanded="false">
                         <li>
-                            <a href="{% url 'user:profile' %}">Profile</a>
+                            <a href="{% url 'user:profile' user.id %}">Profile</a>
                         </li>
                         <li>
                             <a href="{% url 'logout' %}">Logout</a>
@@ -284,7 +284,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated profile-dropdown ">
                             <!-- item-->
-                            <a href="{% url 'user:profile' %}" class="dropdown-item notify-item">
+                            <a href="{% url 'user:profile' user.id %}" class="dropdown-item notify-item">
                                 <i class="mdi mdi-account-circle"></i>
                                 <span>Account</span>
                             </a>
