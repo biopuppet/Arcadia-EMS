@@ -6,7 +6,7 @@ from django.shortcuts import render
 from ArcadiaEMS import settings
 
 
-def send_email(request, to, subject, **kwargs):
+def send_email(request, to, subject='ArcadiaEMS Support', **kwargs):
     html = render(request, 'user/email-recoverpwd.html', {'token': kwargs['token'], 'fullname': kwargs['fullname']})
     text = render(request, 'user/email.txt', {'token': kwargs['token'], 'fullname': kwargs['fullname']})
 

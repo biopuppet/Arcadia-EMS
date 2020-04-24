@@ -31,7 +31,9 @@
                                                required=""
                                                placeholder="Enter your email">
                                     </div>
-
+                                    {% if error_msg %}
+                                        <p class="alert alert-warning">{{ error_msg }}</p>
+                                    {% endif %}
                                     <div class="form-group mb-0 text-center">
                                         <button class="btn btn-primary" type="submit">Reset Password</button>
                                     </div>
