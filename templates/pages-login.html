@@ -41,9 +41,7 @@
                                 </div>
 
                                 {% if msg %} <!--判断如果后端返回用户验证错误信息,前端页面输出错误信息-->
-
                                     <p class="alert alert-warning">{{ msg }}</p>
-
                                 {% endif %}
 
                                 {#                                    <div class="form-group mb-3">#}
@@ -80,11 +78,7 @@
         <!-- end container -->
     </div>
     <!-- end page -->
-
-    <footer class="footer footer-alt">
-        2020 © Arcadia EMS - 爽粉后援会
-    </footer>
-
+    {% include 'module-footer.html' %}
 
     <!-- App js -->
     <script src="{% static 'javascript/app.min.js' %}"></script>
