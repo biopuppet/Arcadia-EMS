@@ -42,5 +42,6 @@ handler500 = page_error
 
 if DEBUG:
     urlpatterns += [
-
+        path('404/', handler404, name='404'),
+        path('500/', handler500, name='500'),
     ]
