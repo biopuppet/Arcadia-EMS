@@ -207,24 +207,25 @@ class UserCreateGroupView(LoginRequiredMixin, View):
 class UserRecoverPasswordView(View):
 
     def get(self, request):
-        return render(request, 'pages-recoverpw.html')
+        return render(request, 'user/recover-password.html')
 
     def post(self, request):
         if 'email' in request.POST and request.POST['email']:
             user_email = request.POST['email']
             token = User.objects.make_random_password()
-
-            # Do not use shortcut get_object_or_404, coz user shouldn't know if the email ref a user.
-            # user = get_object_or_404(User, email=user_email)
+            """ 
+            Do not use the shortcut below, coz user shouldn't know if the email refs an user.
+            user = get_object_or_404(User, email=user_email)
+            """
             try:
                 user = User.objects.get(email=user_email)
                 send_email(request, to=user_email, token=token, fullname=user.fullname)
                 user.set_password(token)
                 user.save()
             except ObjectDoesNotExist:
-                print('User with email: {} not found. Pretend we\'ve sent'.format(user_email))
-            sent = 1
+                pass
+            # No user with this email. Just pretend we've sent.
+            return render(request, 'user/recover-password.html', {'sent': True})
         else:
             error_msg = 'Please enter your email.'
-            sent = 0
-        return render(request, 'pages-recoverpw.html', {'sent': sent, 'error_msg': error_msg})
+            return render(request, 'user/recover-password.html', {'error_msg': error_msg})
