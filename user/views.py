@@ -4,6 +4,7 @@ import re
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -210,10 +211,20 @@ class UserRecoverPasswordView(View):
 
     def post(self, request):
         if 'email' in request.POST and request.POST['email']:
-            email = request.POST['email']
-            user = User.objects.get(email=email)
+            user_email = request.POST['email']
             token = User.objects.make_random_password()
-            send_email(request, email, 'Password Recovery @ ArcadiaEMS', token=token, fullname=user.fullname)
-            user.set_password(token)
-            user.save()
-        return render(request, 'pages-recoverpw.html', {'sent': 1})
+
+            # Do not use shortcut get_object_or_404, coz user shouldn't know if the email ref a user.
+            # user = get_object_or_404(User, email=user_email)
+            try:
+                user = User.objects.get(email=user_email)
+                send_email(request, to=user_email, token=token, fullname=user.fullname)
+                user.set_password(token)
+                user.save()
+            except ObjectDoesNotExist:
+                print('User with email: {} not found. Pretend we\'ve sent'.format(user_email))
+            sent = 1
+        else:
+            error_msg = 'Please enter your email.'
+            sent = 0
+        return render(request, 'pages-recoverpw.html', {'sent': sent, 'error_msg': error_msg})
