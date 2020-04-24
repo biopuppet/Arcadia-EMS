@@ -155,11 +155,11 @@
                                     <td>{{ user.last_login }}</td>
                                     <td>
                                         {{ user.is_active }}
-{#                                        <div>#}
-{#                                            <input type="checkbox" id="switch{{ user.id }}" checked="" data-switch="fail">#}
-{#                                            <label for="switch{{ user.id }}" data-on-label="On" data-off-label="Off"#}
-{#                                                   class="mb-0 d-block"></label>#}
-{#                                        </div>#}
+                                        {#                                        <div>#}
+                                        {#                                            <input type="checkbox" id="switch{{ user.id }}" checked="" data-switch="fail">#}
+                                        {#                                            <label for="switch{{ user.id }}" data-on-label="On" data-off-label="Off"#}
+                                        {#                                                   class="mb-0 d-block"></label>#}
+                                        {#                                        </div>#}
                                     </td>
 
                                     <td class="table-action">
@@ -174,10 +174,10 @@
                                             </a>
 
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
-                                                <a href="{% url 'user:delete-user' user.id %}"
-                                                   class="dropdown-item">Delete</a>
                                                 <a href="{% url 'user:toggle-user-status' user.id %}"
-                                                    class="dropdown-item" >Toggle status</a>
+                                                   class="dropdown-item">Toggle status</a>
+{#                                                <a href="{% url 'user:delete-user' user.id %}"#}
+{#                                                   class="dropdown-item">Delete</a>#}
                                             </div>
                                         </div>
                                     </td>
