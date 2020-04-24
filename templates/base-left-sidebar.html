@@ -1,0 +1,160 @@
+{% load static %}
+
+<!-- ========== Left Sidebar Start ========== -->
+<div class="left-side-menu">
+
+    <div class="slimscroll-menu">
+        <!-- LOGO -->
+        <a href="{% url 'index' %}" class="logo text-center mb-4">
+                <span class="logo-lg mr-3 mt-1">
+                    <img src="{% static 'htmlimg/logo.svg' %}" alt="" height="40">
+                </span>
+        </a>
+
+        <!--- Sidemenu -->
+        <ul class="metismenu side-nav">
+            <li class="side-nav-title side-nav-item">Navigation</li>
+            <li class="side-nav-item">
+                <a href="{% url 'index' %}" class="side-nav-link">
+                    <i class="dripicons-meter"></i>
+                    <span hidden class="badge badge-success float-right">7</span>
+                    <span> Dashboard </span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{% static '' %}" class="side-nav-link">
+                    <i class="dripicons-archive"></i>
+                    <span> 业务办理 </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <ul class="side-nav-second-level" aria-expanded="false">
+                    <li>
+                        <a href="#">设备建账</a>
+                    </li>
+                    <li>
+                        <a href="#">设备报废</a>
+                    </li>
+                    <li>
+                        <a href="#">设备报修</a>
+                    </li>
+                    <li>
+                        <a href="#">设备变动</a>
+                    </li>
+                    <li>
+                        <a href="#">设备借还</a>
+                    </li>
+                </ul>
+
+            </li>
+
+            <li class="side-nav-item">
+                <a href="#" class="side-nav-link">
+                    <i class="dripicons-folder-open"></i>
+                    <span> 业务审批 </span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{% static '' %}" class="side-nav-link">
+                    <i class="dripicons-stack"></i>
+                    <span> 设备报表 </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <ul class="side-nav-second-level" aria-expanded="false">
+                    <li>
+                        <a href="#">设备建账表</a>
+                    </li>
+                    <li>
+                        <a href="#">设备报废表</a>
+                    </li>
+                    <li>
+                        <a href="#">设备报修表</a>
+                    </li>
+                    <li>
+                        <a href="#">设备借还表</a>
+                    </li>
+                </ul>
+
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{% static '' %}" class="side-nav-link">
+                    <i class="dripicons-rocket"></i>
+                    <span> 附加程序 </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <ul class="side-nav-second-level" aria-expanded="false">
+                    <li>
+                        <a href="{% url 'user:calendar' %}">Calendar</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="#" class="side-nav-link">
+                    <i class="mdi mdi-settings-outline"></i>
+                    <span> 系统管理 </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <ul class="side-nav-second-level" aria-expanded="false">
+                    <li>
+                        <a href="{% url 'user:index' %}">Users</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'user:groups' %}">Groups</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="side-nav-item">
+                <a href="#" class="side-nav-link">
+                    <i class="mdi mdi-settings"></i>
+                    <span> 设置 </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <ul class="side-nav-second-level" aria-expanded="false">
+                    <li>
+                        <a href="{% url 'user:profile' user.id %}">Profile</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'user:recover-password' %}">Recover Password</a>
+                    </li>
+                    <li hidden>
+                        <a href="#">Lock Screen</a>
+                    </li>
+                    <li hidden>
+                        <a href="#">Confirm Mail</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="#" class="side-nav-link">
+                    <i class="mdi mdi-account"></i>
+                    <span> *Dev Kit </span>
+
+                    <span class="menu-arrow"></span>
+                </a>
+                <ul class="side-nav-second-level" aria-expanded="false">
+                    <li>
+                        <a href="#">Modals</a>
+                    </li>
+                    <li>
+                        <a href="#">Notifications</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- End Sidebar -->
+
+        <div class="clearfix"></div>
+    </div>
+    <!-- Sidebar -left -->
+
+</div>
+<!-- Left Sidebar End -->
+

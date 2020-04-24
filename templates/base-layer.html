@@ -1,12 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8"/>
     <title>Arcadia EMS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {#    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>#}
     <meta content="Coderthemes" name="author"/>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
@@ -21,35 +19,16 @@
     <!-- endbuild -->
 
     {% block css %}
-
     {% endblock %}
 </head>
-
 <body>
+    {% block main %}
+    {% endblock %}
 
-{% block main %}
+    <!-- bundle -->
+    <script src="{% static 'javascript/app.min.js' %}"></script>
 
-{% endblock %}
-
-<script type="javascript">
-    // screen Enter for safety reasons
-$(document).ready(function() {
-    $(document).keydown(function (event) {
-        if (event.keyCode === 13) {
-            $("*").each(function () {
-                event.preventDefault();
-            });
-        }
-    });
-});
-</script>
-
-<!-- bundle -->
-<script src="{% static 'javascript/app.min.js' %}"></script>
-
-{% block javascripts %}
-
-{% endblock %}
-
+    {% block javascripts %}
+    {% endblock %}
 </body>
 </html>
