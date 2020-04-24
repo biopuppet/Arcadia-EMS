@@ -1,46 +1,23 @@
-{% extends 'base-layer.html' %}
+{% extends 'base-page-card.html' %}
 {% load static %}
 
-{% block main %}
-    <div class="account-pages mt-5 mb-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-5">
-                    <div class="card">
-                        <!-- Logo -->
-                        <div class="card-header pt-4 pb-4 text-center bg-primary">
-                            <a href="{% url 'index' %}">
-                            <span><img src="{% static 'htmlimg/logo.svg' %}"
-                                       alt="" height="50"></span>
-                            </a>
-                        </div>
-
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <h1 class="text-error">4<i class="mdi mdi-emoticon-sad"></i>4</h1>
-                                <h4 class="text-uppercase text-danger mt-3">Page Not Found</h4>
-                                <p class="text-muted mt-3">
-                                    {% if exception %}
-                                        {{ exception }}
-                                    {% else %}
-                                        It looks like you may have taken a wrong turn...
-                                    {% endif %}
-                                </p>
-                                <a class="btn btn-info mt-3" href="{% url 'index' %}">
-                                    <i class="mdi mdi-reply"></i> Return Home </a>
-                            </div>
-                        </div> <!-- end card-body-->
-                    </div>
-                    <!-- end card -->
-                </div> <!-- end col -->
-            </div>
-            <!-- end row -->
+{% block card-body %}
+    <div class="card-body p-4">
+        <div class="text-center">
+            <h1 class="text-error">4<i class="mdi mdi-emoticon-sad"></i>4</h1>
+            <h4 class="text-uppercase text-danger mt-3">Page Not Found</h4>
+            <p class="text-muted mt-3">
+                {% if exception %}
+                    {{ exception }}
+                {% else %}
+                    It looks like you may have taken a wrong turn...
+                {% endif %}
+            </p>
+            <a class="btn btn-info mt-3" href="{% url 'index' %}">
+                <i class="mdi mdi-reply"></i> Return Home </a>
         </div>
-        <!-- end container -->
-    </div>
-
-    {% include 'module-footer.html' %}
-    <!-- end page -->
+    </div> <!-- end card-body-->
 {% endblock %}
 
-
+{% block under-card %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base-layer.html' %}
+{% load static %}
+
+{% block main %}
+    <div class="account-pages mt-5 mb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card">
+                        {% block card-header %}
+                            <!-- Logo -->
+                            <div class="card-header pt-4 pb-4 text-center bg-primary">
+                                <a href="{% url 'index' %}">
+                                    <span><img src="{% static 'htmlimg/logo.svg' %}" alt="" height="45"></span>
+                                </a>
+                            </div>
+                        {% endblock %}
+                        {% block card-body %}
+                        {% endblock %}
+                    </div>
+                    <!-- end card -->
+                    {% block under-card %}
+                        <div class="row mt-3">
+                            <div class="col-12 text-center">
+                                <p class="text-muted">Back to <a href="{% url 'login' %}" class="text-dark ml-1"><b>Log
+                                    In</b></a></p>
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+                    {% endblock %}
+                </div> <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </div>
+    <!-- end page -->
+    {% include 'module-footer.html' %}
+{% endblock %}
