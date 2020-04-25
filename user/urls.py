@@ -6,7 +6,7 @@ app_name = 'user'
 
 urlpatterns = [
     # path('user/', ),
-    path('', UserListView.as_view(), name='index'),
+    path('', UserIndexView.as_view(), name='index'),
     path('profile/<int:user_id>', UserProfileView.as_view(), name='profile'),
     path('create-user/', UserCreateView.as_view(), name='create-user'),
     path('delete-user/<int:user_id>', DeleteUserView.as_view(), name='delete-user'),

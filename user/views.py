@@ -73,7 +73,7 @@ class UserProfileView(LoginRequiredMixin, View):
         return render(request, 'user/profile.html', {'user': requested_user})
 
 
-class UserListView(LoginRequiredMixin, View):
+class UserIndexView(LoginRequiredMixin, View):
 
     def get(self, request):
         users = UserProfile.objects.all()
