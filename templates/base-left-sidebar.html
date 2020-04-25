@@ -86,7 +86,7 @@
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     <li>
-                        <a href="{% url 'user:calendar' %}">Calendar</a>
+                        <a href="{% url 'user:calendar' %}">日程表</a>
                     </li>
                 </ul>
             </li>
@@ -99,10 +99,10 @@
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     <li>
-                        <a href="{% url 'user:index' %}">Users</a>
+                        <a href="{% url 'user:index' %}">用户管理</a>
                     </li>
                     <li>
-                        <a href="{% url 'user:groups' %}">Groups</a>
+                        <a href="{% url 'user:groups' %}">角色组管理</a>
                     </li>
                 </ul>
             </li>
@@ -114,13 +114,7 @@
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     <li>
-                        <a href="{% url 'user:profile' user.id %}">Profile</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'user:recover-password' %}">Recover Password</a>
+                        <a href="{% url 'user:profile' user.id %}">我的账号</a>
                     </li>
                     <li hidden>
                         <a href="#">Lock Screen</a>

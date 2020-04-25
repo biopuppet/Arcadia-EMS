@@ -131,7 +131,8 @@
                 </a>
 
                 <!-- item-->
-                <a href="{% url 'logout' %}" class="dropdown-item notify-item">
+                <a href="{% url 'logout' %}" class="dropdown-item notify-item"
+                   data-toggle="modal" data-target="#modal-logout">
                     <i class="mdi mdi-logout"></i>
                     <span>Logout</span>
                 </a>
@@ -151,6 +152,12 @@
             </div>
         </form>
     </div>
+    {% include 'base-modal-warning.html' with id='modal-logout' msg='Are you sure you want to logout?' %}
+    <script type="text/javascript">
+        $('#modal-logout-continue').click(function () {
+            window.location.href = {% url 'logout' %};
+        });
+    </script>
     <button class="button-menu-mobile open-left disable-btn">
         <i class="mdi mdi-menu"></i>
     </button>
