@@ -1,0 +1,20 @@
+{% load static %}
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <div class="page-title-right">
+                {% block title-right %}
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Arcadia</a></li>
+                        <li class="breadcrumb-item active">{{ title_name | capfirst }}</li>
+                    </ol>
+                {% endblock %}
+            </div>
+            {% block title %}
+                <h4 class="page-title">{{ title_name | capfirst }}</h4>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+<!-- end page title -->
