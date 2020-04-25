@@ -1,0 +1,78 @@
+{% extends 'base-modal.html' %}
+{% load static %}
+
+{% block body %}
+    <form id="form-create-user" action="{% url 'user:create-user' %}" method="post"
+          class="pl-3 pr-3">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label>Username</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                </div>
+                <input name="username" type="text" class="form-control"
+                       placeholder="Username" aria-describedby="inputGroupPrepend"
+                       required>
+                <div class="invalid-feedback">
+                    Please enter a valid username.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Password</label>
+            <input name="password1" minlength="6" maxlength="20" type="password"
+                   class="form-control"
+                   placeholder="Password" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Password (again)</label>
+            <input name="password2" minlength="6" maxlength="20" type="password"
+                   class="form-control" placeholder="Password (again)" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="validationCustom01">Full Name</label>
+            <input name="fullname" type="text" class="form-control" id="validationCustom01"
+                   placeholder="Full Name">
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Phone</label>
+            <input name="phone" type="tel" class="form-control" minlength="11" maxlength="13">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="validationCustom03">Email</label>
+            <input name="email" type="email" class="form-control" id="validationCustom03"
+                   placeholder="Email">
+        </div>
+        {% if error_msg %}
+            <div class="alert alert-warning">{{ error_msg }}</div>
+        {% endif %}
+        <div class="form-group text-center">
+            <button hidden class="btn btn-danger text-left" type="submit">Cancel
+            </button>
+            <button id="btn-create-user" class="btn btn-primary" type="submit">Create User
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+            $('#{{id}}').modal('hide')
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#{{id}}').on('hide.bs.modal', function () {
+                console.log('skadjflk')
+                alert('嘿，我听说您喜欢模态框...');
+            })
+        });
+    </script>
+{% endblock %}

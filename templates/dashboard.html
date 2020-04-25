@@ -514,7 +514,7 @@
     <!-- container -->
 {% endblock %}
 
-{% block javascripts %}
+{% block js-footer %}
     <!-- third party js -->
     <script src="{% static 'javascript/Chart.bundle.js' %}"></script>
     <script src="{% static 'javascript/jquery-jvectormap-1.2.2.min.js' %}"></script>
@@ -523,4 +523,8 @@
     <!-- demo app -->
     <script src="{% static 'javascript/demo.dashboard.js' %}"></script>
     <!-- end demo js-->
+{% endblock %}
+
+{% block javascripts %}
+
 {% endblock %}
