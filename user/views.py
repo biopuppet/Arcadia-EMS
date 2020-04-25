@@ -36,14 +36,12 @@ class LoginView(View):
     def post(self, request):
         redirect_to = request.GET.get('next', '/')
         login_form = LoginForm(request.POST)
-        ret = dict(login_form=login_form)
+        ret = dict()
         if login_form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
             user = authenticate(username=username, password=password)
             if user is not None:
-                print(user.get_all_permissions())
-                print(Group.objects.all())
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(redirect_to)
@@ -82,7 +80,6 @@ class UserListView(LoginRequiredMixin, View):
         return render(request, 'user/index.html', {'users': users})
 
     def post(self, request):
-        # print(request.POST)
         users = UserProfile.objects.all()
         return render(request, 'user/index.html', {'users': users})
 
@@ -94,22 +91,17 @@ class UserCreateView(LoginRequiredMixin, View):
         return render(request, 'user/index.html', {'users': users})
 
     def post(self, request):
-        print(request.POST)
         user_create_form = UserCreateForm(request.POST)
+        users = UserProfile.objects.all()
         if user_create_form.is_valid():
-            new_user = user_create_form.save(commit=False)
-            new_user.password = make_password(user_create_form.cleaned_data['password'])
-            new_user.save()
-            user_create_form.save_m2m()
-            return redirect('user:index')
+            user_create_form.save()
+            return render(request, 'user/index.html', {'users': users})
         else:
-            pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
-            errors = str(user_create_form.errors)
-            user_create_form_errors = re.findall(pattern, errors)
             ret = {
                 'status': 'fail',
-                'user_create_form_errors': user_create_form_errors[0]
+                'user_create_form_errors': user_create_form.errors
             }
+            return render(request, 'user/index.html', {'users': users, 'error_msg': user_create_form.errors})
         return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
@@ -165,10 +157,8 @@ class ToggleUserStatusView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         if user_id > 0:
             user = get_object_or_404(User, pk=int(user_id))
-            print(user.is_active)
             user.is_active = not user.is_active
             user.save()
-            print(user.is_active)
 
         return HttpResponseRedirect(reverse('user:index'))
 
@@ -176,7 +166,6 @@ class ToggleUserStatusView(LoginRequiredMixin, View):
 class DeleteUserView(LoginRequiredMixin, View):
 
     def get(self, request, user_id):
-        # print(request.POST)
         if user_id > 0:
             User.objects.filter(id=user_id).delete()
         return redirect('user:index')

@@ -24,7 +24,7 @@
                        id="password" placeholder="Enter your password">
             </div>
 
-            {% if msg %} <!--判断如果后端返回用户验证错误信息,前端页面输出错误信息-->
+            {% if msg %}
                 <p class="alert alert-warning">{{ msg }}</p>
             {% endif %}
 

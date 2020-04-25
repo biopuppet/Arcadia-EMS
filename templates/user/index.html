@@ -68,13 +68,14 @@
 
                             <div class="form-group mb-3">
                                 <label>Password</label>
-                                <input name="password" minlength="6" maxlength="20" type="password" class="form-control"
+                                <input name="password1" minlength="6" maxlength="20" type="password"
+                                       class="form-control"
                                        placeholder="Password" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label>Password (again)</label>
-                                <input name="password_again" minlength="6" maxlength="20" type="password"
+                                <input name="password2" minlength="6" maxlength="20" type="password"
                                        class="form-control" placeholder="Password (again)" required>
                             </div>
 
@@ -94,7 +95,9 @@
                                 <input name="email" type="email" class="form-control" id="validationCustom03"
                                        placeholder="Email">
                             </div>
-
+                            {% if error_msg %}
+                                <div class="alert alert-warning">{{ error_msg }}</div>
+                            {% endif %}
                             <div class="form-group text-center">
                                 <button hidden class="btn btn-danger text-left" type="submit">Cancel
                                 </button>
@@ -176,8 +179,8 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
                                                 <a href="{% url 'user:toggle-user-status' user.id %}"
                                                    class="dropdown-item">Toggle status</a>
-{#                                                <a href="{% url 'user:delete-user' user.id %}"#}
-{#                                                   class="dropdown-item">Delete</a>#}
+                                                {#                                                <a href="{% url 'user:delete-user' user.id %}"#}
+                                                {#                                                   class="dropdown-item">Delete</a>#}
                                             </div>
                                         </div>
                                     </td>

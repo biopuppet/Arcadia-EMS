@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 
 User = get_user_model()
 
@@ -10,28 +11,17 @@ class LoginForm(forms.Form):
 
 
 class UserCreateForm(forms.ModelForm):
+    """
+    A form that creates a user, with no privileges, from the given username and
+    password.
+    """
+    error_messages = {
+        'password_mismatch': "The two password fields didn't match.",
+        'email_exists': "The email already exists."
+    }
+
     fullname = forms.CharField(required=False)
-
-    password = forms.CharField(
-        required=True,
-        min_length=6,
-        max_length=20,
-        error_messages={
-            "required": "密码不能为空",
-            "min_length": "密码长度最少6位数",
-        }
-    )
-
-    password_again = forms.CharField(
-        required=True,
-        min_length=6,
-        max_length=20,
-        error_messages={
-            "required": "确认密码不能为空",
-            "min_length": "密码长度最少6位数",
-        }
-    )
-
+    email = forms.EmailField(required=True)
     phone = forms.CharField(
         required=False,
         min_length=11,
@@ -40,46 +30,76 @@ class UserCreateForm(forms.ModelForm):
             "min_length": "Invalid Phone number",
         }
     )
+    password1 = forms.CharField(
+        label="Password",
+        strip=False,
+        min_length=6,
+        max_length=20,
+    )
+    password2 = forms.CharField(
+        label="Password confirmation",
+        strip=False,
+        min_length=6,
+        max_length=20,
+        help_text="Enter the same password as before, for verification.",
+    )
 
     class Meta:
         model = User
         fields = [
-            'fullname', 'id', 'username', 'groups', 'phone', 'email', 'password'
+            'fullname', 'id', 'username', 'groups', 'phone', 'email'
         ]
-
         error_messages = {
             "username": {"required": "Username required"},
             "email": {"required": "Email required"},
             "group": {"required": "Group required"},
         }
 
-    def clean(self):
-        cleaned_data = super(UserCreateForm, self).clean()
-        username = cleaned_data.get("username")
-        phone = cleaned_data.get("phone", "")
-        email = cleaned_data.get("email")
-        password = cleaned_data.get("password")
-        password_again = cleaned_data.get("password_again")
-        groups = cleaned_data.get("groups")
-
-        # if not Group.objects.exists(groups):
-        #     raise forms.ValidationError('Unknown group:{}'.format(groups))
-
-        if User.objects.filter(username=username).count():
-            raise forms.ValidationError('Username:{} already exists'.format(username))
-
-        if password != password_again:
-            raise forms.ValidationError("Inconsistent password")
-
-        if User.objects.filter(phone=phone).count():
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone", "")
+        if phone and User.objects.filter(phone=phone).count():
             raise forms.ValidationError('Phone:{} already exists'.format(phone))
-
         # REGEX_MOBILE = r"^1[3578]\-\d{9}$|^147\d{8}$|^176\d{8}$"
         # if not re.match(REGEX_MOBILE, phone):
-        #     raise forms.ValidationError("手机号码非法")
+        #     raise forms.ValidationError("Invalid Phone number.")
+        return phone
 
-        if User.objects.filter(email=email).count():
-            raise forms.ValidationError('Email:{} already exists'.format(email))
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if email and User.objects.filter(email=email).count():
+            raise forms.ValidationError(
+                self.error_messages['email_exists'],
+                code='email_exists',
+            )
+        return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                self.error_messages['password_mismatch'],
+                code='password_mismatch',
+            )
+        return password2
+
+    def _post_clean(self):
+        super()._post_clean()
+        # Validate the password after self.instance is updated with form data
+        # by super().
+        # password = self.cleaned_data.get('password2')
+        # if password:
+        #     try:
+        #         password_validation.validate_password(password, self.instance)
+        #     except forms.ValidationError as error:
+        #         self.add_error('password2', error)
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
 
 
 class UserUpdateForm(forms.ModelForm):
