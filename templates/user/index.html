@@ -1,4 +1,4 @@
-{% extends "base-sidebar.html" %}
+{% extends 'base-sidebar.html' %}
 {% load static %}
 
 {% block css %}
@@ -15,6 +15,7 @@
     <div class="container-fluid">
         {% include 'base-page-title.html' with title_name='Users' %}
         {% include 'user/modal-create-user.html' with id='modal-create-user' %}
+        {% include 'user/modal-update-user.html' with id='modal-update-user' %}
 
         <div class="row">
             <div class="col-12">
@@ -22,7 +23,7 @@
                     <div class="card-body">
                         <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
                                 data-target="#modal-create-user">
-                            <i class="mdi mdi-plus-circle"></i> New User
+                            <i class="mdi mdi-plus-circle mr-1"></i> New User
                         </button>
                         <p class="text-muted font-14 mb-4" hidden>
                             DataTables has most features enabled by default, so all you need to do to use it with your
@@ -40,9 +41,9 @@
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Last Login</th>
+                                <th>Department</th>
                                 <th>Activated</th>
-                                <th>Action</th>
+                                <th class="sorting_asc_disabled sorting_desc_disabled">Action</th>
                             </tr>
                             </thead>
 
@@ -57,7 +58,7 @@
                                     <td>{{ user.fullname }}</td>
                                     <td>{{ user.email }}</td>
                                     <td>{{ user.phone }}</td>
-                                    <td>{{ user.last_login }}</td>
+                                    <td>{{ user.department }}</td>
                                     <td>
                                         {{ user.is_active }}
                                         {#                                        <div>#}
@@ -73,16 +74,18 @@
                                             <a href="{% url 'user:profile' user.id %}" class="action-icon">
                                                 <i class="mdi mdi-eye"></i></a>
 
-                                            <a class="action-icon dropdown-toggle" href="#"
-                                               id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false">
-                                            </a>
+                                            <a href="{% url 'user:update-user' user.id %}" class="action-icon">
+                                                <i class="mdi mdi-square-edit-outline" data-toggle="modal"
+                                                   data-target="#modal-update-user"></i></a>
 
+                                            <a class="dropdown-toggle" href="#"
+                                               id="dropdownMenuLink" data-toggle="dropdown" >
+                                            </a>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
                                                 <a href="{% url 'user:toggle-user-status' user.id %}"
                                                    class="dropdown-item">Toggle status</a>
-                                                {#                                                <a href="{% url 'user:delete-user' user.id %}"#}
-                                                {#                                                   class="dropdown-item">Delete</a>#}
+                                                {# <a href="{% url 'user:delete-user' user.id %}"#}
+                                                {#  class="dropdown-item">Delete</a>#}
                                             </div>
                                         </div>
                                     </td>
@@ -98,6 +101,11 @@
     </div> <!-- container -->
 {% endblock %}
 
+{% block javascripts %}
+    <!-- demo app -->
+    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
+    <!-- end demo js-->
+{% endblock %}
 {% block js-footer %}
     <!-- third party js -->
     <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
@@ -113,7 +121,5 @@
     <script src="{% static 'javascript/dataTables.select.min.js' %}"></script>
     <!-- third party js ends -->
 
-    <!-- demo app -->
-    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
-    <!-- end demo js-->
+
 {% endblock %}

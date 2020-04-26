@@ -1,12 +1,13 @@
 $(document).ready(function () {
     "use strict";
     function addRound() {$(".dataTables_paginate > .pagination").addClass("pagination-rounded")}
-    $("#basic-datatable").DataTable({
-        keys: 0,
-        lengthChange: 1,
-        stateSave: !0,
+    var datatable = $("#basic-datatable").DataTable({
+        keys: true,
+        stateSave: true,
+        scrollX: 0,
+        scrollCollapse: 0,
         pagingType: "full_numbers",
-        select: {style: "single"},
+        // select: {style: "single"},
         language: {paginate: {previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>"}},
         // columnDefs: [{visible: !1, targets: -1}],
         drawCallback: addRound,

@@ -13,8 +13,8 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from user.email import send_email
-from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm
-from user.models import UserProfile
+from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm, GroupCreationForm
+from user.models import UserProfile, Department
 
 User = get_user_model()
 
@@ -77,7 +77,9 @@ class UserIndexView(LoginRequiredMixin, View):
 
     def get(self, request):
         users = UserProfile.objects.all()
-        return render(request, 'user/index.html', {'users': users})
+        form = UserCreateForm()
+        render(request, 'user/modal-create-user.html', {'form': form})
+        return render(request, 'user/index.html', {'form': form, 'users': users})
 
     def post(self, request):
         users = UserProfile.objects.all()
@@ -86,30 +88,32 @@ class UserIndexView(LoginRequiredMixin, View):
 
 class UserCreateView(LoginRequiredMixin, View):
 
-    def get(self, request):
-        users = UserProfile.objects.all()
-        return render(request, 'user/index.html', {'users': users})
-
     def post(self, request):
-        user_create_form = UserCreateForm(request.POST)
-        users = UserProfile.objects.all()
-        if user_create_form.is_valid():
-            user_create_form.save()
-            return render(request, 'user/index.html', {'users': users})
-        else:
-            ret = {
-                'status': 'fail',
-                'user_create_form_errors': user_create_form.errors
-            }
-            return render(request, 'user/index.html', {'users': users, 'error_msg': user_create_form.errors})
-        return HttpResponse(json.dumps(ret), content_type='application/json')
+        if request.is_ajax():
+            user_create_form = UserCreateForm(request.POST)
+            users = UserProfile.objects.all()
+            if user_create_form.is_valid():
+                user_create_form.save()
+                ret = {
+                    'status': 'success',
+                }
+                print(ret)
+                # return render(request, 'user/index.html', {'form': user_create_form, 'users': users})
+            else:
+                ret = {
+                    'status': 'fail',
+                    'errors': user_create_form.errors.as_ul(),
+                }
+                print(ret)
+                # return render(request, 'user/modal-create-user.html', {'form': user_create_form})
+            return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
 class UpdateUserView(LoginRequiredMixin, View):
 
-    # def get(self, request):
-    #     users = UserProfile.objects.all()
-    #     return render(request, 'user/profile.html', {'users': users})
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        return render(request, 'user/index.html', {'user': user})
 
     def post(self, request, user_id):
         user = get_object_or_404(User, pk=int(user_id))
@@ -120,7 +124,7 @@ class UpdateUserView(LoginRequiredMixin, View):
         else:
             ret = {
                 'status': 'fail',
-                'user_update_form_errors': user_update_form.errors
+                'errors': user_update_form.errors
             }
             return HttpResponse(json.dumps(ret), content_type='application/json')
 
@@ -190,7 +194,13 @@ class UserCreateGroupView(LoginRequiredMixin, View):
         return redirect("user:index")
 
     def post(self, request):
-        return redirect("user:index")
+        form = GroupCreationForm(request.POST)
+        groups = Group.objects.all()
+        ret = dict()
+        if form.is_valid:
+            form.save()
+        return HttpResponseRedirect(reverse('user:groups'))
+        #return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
 class UserRecoverPasswordView(View):
@@ -218,3 +228,10 @@ class UserRecoverPasswordView(View):
         else:
             error_msg = 'Please enter your email.'
             return render(request, 'user/recover-password.html', {'error_msg': error_msg})
+
+
+class DepartmentsView(View):
+
+    def get(self, request):
+        departments = Department.objects.all()
+        return render(request, 'user/departments.html', {'departments': departments})
