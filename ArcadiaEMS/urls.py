@@ -25,18 +25,19 @@ from django.conf.urls.static import static
 from .views import page_error, page_not_found
 
 urlpatterns = [
-    path('user/', include('user.urls', namespace='user')),
-    path('department/', include('department.urls', namespace='department')),
+        path('user/', include('user.urls', namespace='user')),
+        path('department/', include('department.urls', namespace='department')),
+        path('asset/', include('asset.urls', namespace='asset')),
 
-    path('', user_views.IndexView.as_view(), name='index'),
-    path('login/', user_views.LoginView.as_view(), name='login'),
-    path('logout/', user_views.LogoutView.as_view(), name='logout'),
-    path('maintained/', auth_views.TemplateView.as_view(template_name='maintenance.html'),
-       name='maintained'),
+        path('', user_views.IndexView.as_view(), name='index'),
+        path('login/', user_views.LoginView.as_view(), name='login'),
+        path('logout/', user_views.LogoutView.as_view(), name='logout'),
+        path('maintained/', auth_views.TemplateView.as_view(template_name='maintenance.html'),
+             name='maintained'),
 
-    path('admin/', admin.site.urls),
-    # path('ui/', include('system.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+        path('admin/', admin.site.urls),
+        # path('ui/', include('system.urls')),
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = page_not_found
 handler500 = page_error

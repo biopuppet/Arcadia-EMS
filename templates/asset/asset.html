@@ -1,0 +1,123 @@
+{% extends "base-sidebar.html" %}
+{% load static %}
+
+{% block css %}
+    <!-- third party css -->
+    <link href="{% static 'css/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/buttons.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/select.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- third party css end -->
+{% endblock %}
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+        {% include 'base-page-title.html' with title_name='设备台账' %}
+{#        {% include 'asset/create-asset.html' with id='modal-create-asset' %}#}
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-4">
+                                <a href="{% url 'asset:create-asset' %}" class="btn btn-danger mb-2">
+                                    <i class="mdi mdi-plus-circle mr-2"></i> Add Asset</a>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="text-sm-right">
+                                    <button type="button" class="btn btn-success mb-2 mr-1"><i
+                                            class="mdi mdi-settings"></i></button>
+                                    <button type="button" class="btn btn-light mb-2 mr-1">Import</button>
+                                    <button type="button" class="btn btn-light mb-2">Export</button>
+                                </div>
+                            </div><!-- end col-->
+                        </div>
+
+                        <table id="basic-datatable"
+                               class="table table-striped dt-responsive nowrap">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>名称</th>
+                                <th>规格</th>
+                                <th>购置日期</th>
+                                <th>所在部门</th>
+                                <th>状态</th>
+                                <th>数量</th>
+                                <th class="sorting_desc_disabled sorting_asc_disabled">操作</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td class="table-user">
+                                        <img src="/media/{{ user.image }}" alt="table-user" class="mr-2 rounded-circle">
+                                        {{ user.username }}
+                                    </td>
+                                    <td>{{ user.fullname }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.phone }}</td>
+                                    <td>{{ user.last_login }}</td>
+                                    <td>
+                                        {{ user.is_active }}
+                                        {#                                        <div>#}
+                                        {#                                            <input type="checkbox" id="switch{{ user.id }}" checked="" data-switch="fail">#}
+                                        {#                                            <label for="switch{{ user.id }}" data-on-label="On" data-off-label="Off"#}
+                                        {#                                                   class="mb-0 d-block"></label>#}
+                                        {#                                        </div>#}
+                                    </td>
+
+                                    <td class="table-action">
+                                        <div class="dropdown">
+
+                                            <a href="{% url 'user:profile' user.id %}" class="action-icon">
+                                                <i class="mdi mdi-eye"></i></a>
+
+                                            <a class="action-icon dropdown-toggle" href="#"
+                                               id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                               aria-expanded="false">
+                                            </a>
+
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
+                                                <a href="{% url 'user:toggle-user-status' user.id %}"
+                                                   class="dropdown-item">Toggle status</a>
+                                                {#                                                <a href="{% url 'user:delete-user' user.id %}"#}
+                                                {#                                                   class="dropdown-item">Delete</a>#}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        <!-- end row-->
+    </div> <!-- container -->
+{% endblock %}
+
+{% block js-footer %}
+    <!-- third party js -->
+    <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'javascript/buttons.print.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.keyTable.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.select.min.js' %}"></script>
+    <!-- third party js ends -->
+
+    <!-- demo app -->
+    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
+    <!-- end demo js-->
+{% endblock %}
