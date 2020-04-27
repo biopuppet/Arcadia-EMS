@@ -14,7 +14,7 @@ from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
-from user.email import send_email
+from ArcadiaEMS.email import send_email
 from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm, GroupCreationForm
 from user.models import UserProfile, Department
 
