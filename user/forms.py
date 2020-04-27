@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
 from django.forms import TextInput, Select, EmailInput, SelectMultiple
-from django.forms.widgets import ChoiceWidget
 
 from user.models import Department
 

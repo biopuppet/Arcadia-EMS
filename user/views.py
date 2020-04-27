@@ -225,7 +225,7 @@ class UserCreateGroupView(LoginRequiredMixin, View):
         ret = dict()
         if form.is_valid:
             form.save()
-        return HttpResponseRedirect(reverse('user:groups'))
+        return redirect('user:groups')
         # return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
