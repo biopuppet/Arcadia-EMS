@@ -15,82 +15,22 @@
     <div class="container-fluid">
         {% include 'base-page-title.html' with title_name='Groups' %}
 
-        <!-- Signup modal content -->
-        <div id="create-group-modal" class="modal fade" tabindex="-1" role="dialog"
-             aria-hidden="true"
-             style="display: none;">
-
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-
-                    <div class="modal-body">
-                        <div class="text-center mt-2 mb-4">
-                            <a href="" class="text-success">
-                                <span><img src="{% static 'htmlimg/logo-dark.svg' %}" alt=""
-                                           height="50"></span>
-                            </a>
-                        </div>
-
-                        <form id="form-create-group" action="{% url 'user:create-group' %}" method="post" class="pl-3 pr-3">
-                            {% csrf_token %}
-                            <div class="form-group mb-3">
-                                <label>Group Name</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                    </div>
-                                    <input name="name" type="text" class="form-control"
-                                           placeholder="Group Name" aria-describedby="inputGroupPrepend"
-                                           required>
-                                    <div class="invalid-feedback">
-                                        Please enter a valid group name.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group text-center">
-                                <button hidden class="btn btn-danger text-left" type="submit">Cancel
-                                </button>
-                                <button id="btn-create-group" class="btn btn-primary" type="submit">Create
-                                </button>
-                            </div>
-                        </form>
-
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
-                                data-target="#create-group-modal">
-                            <i class="mdi mdi-plus-circle"></i> New Group
+                        <button type="button" class="btn btn-primary mb-3">
+                            <i class="mdi mdi-account-multiple-plus-outline mr-1"></i> New Group
                         </button>
-
-                        <p class="text-muted font-14 mb-4" hidden>
-                            DataTables has most features enabled by default, so all you need to do to use it with your
-                            own tables is to call the construction
-                            function:
-                            <code>$().DataTable();</code>. KeyTable provides Excel like cell navigation on any table.
-                            Events (focus, blur, action etc) can be assigned to individual
-                            cells, columns, rows or all cells.
-                        </p>
-
-                        <table id="basic-datatable"
-                               class="table table-striped dt-responsive nowrap">
+                        <table id="basic-datatable" class="table table-striped dt-responsive nowrap">
                             <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Permissions</th>
-                                <th>Action</th>
+                                <th class="sorting_desc_disabled sorting_asc_disabled">Action</th>
                             </tr>
                             </thead>
-
                             <tbody>
                             {% for group in groups %}
                                 <tr>
