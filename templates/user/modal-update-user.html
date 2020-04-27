@@ -5,41 +5,36 @@
     <div class="modal-body">
         <form id="form-update-user" onsubmit="return false" action="" method="post" class="pl-3 pr-3">
             {% csrf_token %}
-            {{ form.non_field_errors }}
+            {{ user_update_form.non_field_errors }}
+            <input type="hidden" name="{{ user_update_form.id.name }}" id="{{ user_update_form.id.id_for_label }}" value="">
             <div class="form-row">
                 <div class="col-6 mb-3">
-                    {{ form.username.label_tag }}
-                    {{ form.username.errors }}
+                    {{ user_update_form.username.label_tag }}
+                    {{ user_update_form.username.errors }}
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>
                         </div>
-                        {{ form.username }}
+                        {{ user_update_form.username }}
                     </div>
                 </div>
                 <div class="col-6 mb-3">
-                    {{ form.fullname.label_tag | capfirst }}
-                    {{ form.fullname }}
-                    {{ form.fullname.errors }}
-                    <div class="invalid-feedback">
-                        Please enter a valid {{ form.fullname.label | capfirst }}.
-                    </div>
+                    {{ user_update_form.fullname.label_tag | capfirst }}
+                    {{ user_update_form.fullname }}
+                    {{ user_update_form.fullname.errors }}
                 </div>
             </div>
 
-            {% for item in form %}
-                {% if not item.name == "username" and not item.name == "fullname" %}
+            {% for item in user_update_form %}
+                {% if not item.name == "username" and not item.name == "fullname" and not item.is_hidden %}
                     <div class="form-group mb-3">
                         {{ item.label_tag | capfirst }}
                         {{ item }}
                         {{ item.errors }}
-                        <div class="invalid-feedback">
-                            Please enter a valid {{ item.label | capfirst }}.
-                        </div>
                     </div>
                 {% endif %}
             {% endfor %}
-            <div id="{{ id }}-error-msg" ></div>
+            <div id="{{ id }}-error-msg"></div>
             <div class="form-group text-center button-list">
                 <button class="btn btn-danger ml-auto" data-dismiss="modal">Cancel
                 </button>
@@ -51,12 +46,17 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'javascript/jquery-3.5.0.min.js' %}"></script>
     <script type="text/javascript">
+        $(function () {
+            $('#{{ id }}').on("hide.bs.modal", function (e) {
+                $('#{{ id }}-error-msg').removeClass('alert alert-warning');
+                $('#{{ id }}-error-msg').html("");
+            });
+        });
         $(document).ready(function () {
             $('#form-update-user').submit(function () {
                 $.ajax({
-                    url: '{% url 'user:update-user' user.id %}',
+                    url: '{% url 'user:update-user' %}',
                     type: 'POST',
                     data: $("#form-update-user").serialize(),
                     cache: false,
@@ -79,4 +79,5 @@
             });
         });
     </script>
+
 {% endblock %}

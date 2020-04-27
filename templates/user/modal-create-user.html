@@ -5,29 +5,29 @@
     <div class="modal-body">
         <form id="form-create-user" onsubmit="return false" action="" method="post" class="pl-3 pr-3">
             {% csrf_token %}
-            {{ form.non_field_errors }}
+            {{ user_create_form.non_field_errors }}
             <div class="form-row">
                 <div class="col-6 mb-3">
-                    {{ form.username.label_tag }}
-                    {{ form.username.errors }}
+                    {{ user_create_form.username.label_tag }}
+                    {{ user_create_form.username.errors }}
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>
                         </div>
-                        {{ form.username }}
+                        {{ user_create_form.username }}
                     </div>
                 </div>
                 <div class="col-6 mb-3">
-                    {{ form.fullname.label_tag | capfirst }}
-                    {{ form.fullname }}
-                    {{ form.fullname.errors }}
+                    {{ user_create_form.fullname.label_tag | capfirst }}
+                    {{ user_create_form.fullname }}
+                    {{ user_create_form.fullname.errors }}
                     <div class="invalid-feedback">
-                        Please enter a valid {{ form.fullname.label | capfirst }}.
+                        Please enter a valid {{ user_create_form.fullname.label | capfirst }}.
                     </div>
                 </div>
             </div>
 
-            {% for item in form %}
+            {% for item in user_create_form %}
                 {% if not item.name == "username" and not item.name == "fullname" %}
                     <div class="form-group mb-3">
                         {{ item.label_tag | capfirst }}
@@ -51,10 +51,8 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'javascript/jquery-3.5.0.min.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            "use strict";
             $('#form-create-user').submit(function () {
                 $.ajax({
                     url: '{% url 'user:create-user' %}',

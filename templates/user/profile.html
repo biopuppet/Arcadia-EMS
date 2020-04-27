@@ -96,20 +96,11 @@
                     <div class="card-body">
                         <h4 class="header-title mb-3">Basic Profile</h4>
 
-                        <form action="{% url 'user:update-user' user.id %}" method="post" class="needs-validation"
-                              novalidate>
+                        <form id="form-update-user" onsubmit="return false" action="" method="post" novalidate>
                             {% csrf_token %}
-
-                            <div class="form-group mb-3">
-                                <label for="validationCustom01">Full Name</label>
-                                <input type="hidden" name="next" value="{{ request.path }}">
-                                <input name="fullname" type="text" class="form-control" id="validationCustom01"
-                                       placeholder="Full Name"
-                                       value="{{ user.fullname }}">
-                                <div hidden class="invalid-tooltip">
-                                    Please enter Full name.
-                                </div>
-                            </div>
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <input type="hidden" name="{{ user_update_form.id.name }}"
+                                   id="{{ user_update_form.id.id_for_label }}" value="{{ user.id }}">
 
                             <div class="form-group mb-3">
                                 <label for="validationCustomUsername">Username</label>
@@ -120,32 +111,30 @@
                                     <input name="username" type="text" class="form-control"
                                            id="validationCustomUsername"
                                            placeholder="Username" aria-describedby="inputGroupPrepend"
-                                           value="{{ user.username }}">
-                                    <div class="invalid-feedback">
-                                        Please enter a valid username.
-                                    </div>
+                                           value="{{ user.username }}" readonly>
                                 </div>
                             </div>
 
                             <div class="form-group mb-3">
-                                <label>Phone</label>
-                                <input name="phone" type="tel" class="form-control"
-                                        value="{{ user.phone }}" minlength="11" maxlength="13">
-                                <span class="font-13 text-muted">e.g "xxx-xxxx-xxxx"</span>
-                                <div class="invalid-feedback">
-                                    Please enter a valid phone number.
-                                </div>
+                                {{ user_update_form.fullname.label_tag }}
+                                {{ user_update_form.fullname }}
+                                {{ user_update_form.fullname.errors }}
+                            </div>
+
+                            <div class="form-group mb-3">
+                                {{ user_update_form.phone.label_tag }}
+                                {{ user_update_form.phone }}
+                                {{ user_update_form.phone.errors }}
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="validationCustom03">Email</label>
-                                <input type="email" class="form-control" id="validationCustom03" placeholder="Email"
+                                <input name="email" type="email" class="form-control" id="validationCustom03" placeholder="Email"
                                        value="{{ user.email }}" readonly>
                             </div>
-
+                            <div id="error-msg"></div>
                             <button class="btn btn-primary" type="submit">Update Profile</button>
                         </form>
-
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col-->
@@ -159,37 +148,31 @@
     <!-- demo app -->
     <script src="{% static 'javascript/demo.profile.js' %}"></script>
     <!-- end demo js-->
-
+{% endblock %}
+{% block js-footer %}
     <script type="text/javascript">
         $(document).ready(function () {
-            $(document).keydown(function (event) {
-                if (event.keyCode === 13) {
-                    $("*").each(function () {
-                        event.preventDefault();
-                    });
-                }
-            });
-            $("#btn-change-password").click(function (message) {
-                const form = $("#form-change-password");
-                var data = form.serialize();
+            $('#form-update-user').submit(function () {
                 $.ajax({
+                    url: '{% url 'user:update-user' %}',
                     type: 'POST',
-                    url: "{% url 'user:change-password' user.id %}",
-                    data: data,
-                    async: false,
+                    data: $("#form-update-user").serialize(),
                     cache: false,
+                    async: true,
                     success: function (msg) {
+                        console.log(msg);
                         if (msg.status === 'success') {
-                            console.log('Success');
-                        } else if (msg.status === 'fail') {
-                            alert(msg.password_change_form_errors);
-                            //$('errorMessage').html(msg.message)
+                            parent.location.reload();
+                        } else {
+                            console.log(msg.errors);
+                            $('#error-msg').html(msg.errors);
+                            $('#error-msg').addClass('alert alert-warning');
                         }
                     },
-                    end: function () {
-                        console.log('end');
+                    complete: function (XMLHttpRequest) {
                     }
                 });
+                return false; // !important! or the form will be posted twice
             });
         });
     </script>

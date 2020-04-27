@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
-from django.forms import TextInput, Select, EmailInput
+from django.forms import TextInput, Select, EmailInput, SelectMultiple
+from django.forms.widgets import ChoiceWidget
 
 from user.models import Department
 
@@ -19,14 +20,16 @@ class UserCreateForm(forms.ModelForm):
     A form that creates a user, with no privileges, from the given username and
     password.
     """
+
     error_messages = {
         'password_mismatch': "The two password fields didn't match.",
         'email_exists': "The email already exists."
     }
+
     username = forms.CharField(
         label="Username",
         required=True,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Full Name"}, )
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Username"}, )
     )
     fullname = forms.CharField(
         label="Full Name",
@@ -65,11 +68,11 @@ class UserCreateForm(forms.ModelForm):
         max_length=20,
         help_text="Enter the same password as before, for verification.",
     )
-    groups = forms.ModelChoiceField(
+    groups = forms.ModelMultipleChoiceField(
         label="Role Group",
-        required=False,  # FIX
+        required=False,  # @TODO
         queryset=Group.objects.all(),
-        widget=Select(attrs={'class': 'form-control', })
+        widget=SelectMultiple(attrs={'class': 'form-control', })
     )
     department = forms.ModelChoiceField(
         label="Department",
@@ -81,12 +84,11 @@ class UserCreateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'username', 'fullname', 'id', 'groups', 'department', 'phone', 'email',
+            'id', 'username', 'fullname', 'groups', 'department', 'phone', 'email',
         ]
         error_messages = {
             "username": {"required": "Username required"},
             "email": {"required": "Email required"},
-            "group": {"required": "Group required"},
         }
 
     def __init__(self, *args, **kwargs):
@@ -140,19 +142,51 @@ class UserCreateForm(forms.ModelForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+    """
+    A form that updates an user's system info, such as group, department, etc.
+    """
+    # @TODO: How to do it in an elegant way?
+    id = forms.CharField(widget=forms.HiddenInput())
+
+    username = forms.CharField(
+        label="Username",
+        required=True,
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Username", }, )
+    )
+    fullname = forms.CharField(
+        label="Full Name",
+        required=False,
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Full Name"}),
+    )
+    email = forms.EmailField(
+        label="Email",
+        required=True,
+        widget=EmailInput(attrs={'class': 'form-control', 'placeholder': "Email"})
+    )
     phone = forms.CharField(
+        label="Phone",
         required=False,
         min_length=11,
         max_length=13,
-        error_messages={
-            "min_length": "Invalid Phone number",
-        }
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}),
+    )
+    groups = forms.ModelMultipleChoiceField(
+        label="Role Group",
+        required=False,  # @TODO
+        queryset=Group.objects.all(),
+        widget=SelectMultiple(attrs={'class': 'form-control', })
+    )
+    department = forms.ModelChoiceField(
+        label="Department",
+        required=False,
+        queryset=Department.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
     )
 
     class Meta:
         model = User
         fields = [
-            'fullname', 'id', 'username', 'phone',
+            'id', 'username', 'fullname', 'email', 'phone', 'groups', 'department',
         ]
 
 

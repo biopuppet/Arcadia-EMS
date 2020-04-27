@@ -52,8 +52,8 @@
                                 <tr>
                                     <td>{{ user.id }}</td>
                                     <td class="table-user">
-                                        <img src="/media/{{ user.image }}" alt="table-user" class="mr-2 rounded-circle">
-                                        {{ user.username }}
+                                        <img src="/media/{{ user.image }}" alt="table-user" class="mr-1 rounded-circle">
+                                        <a class="text-dark" href="{% url 'user:profile' user.id %}">{{ user.username }}</a>
                                     </td>
                                     <td>{{ user.fullname }}</td>
                                     <td>{{ user.email }}</td>
@@ -74,12 +74,13 @@
                                             <a href="{% url 'user:profile' user.id %}" class="action-icon">
                                                 <i class="mdi mdi-eye"></i></a>
 
-                                            <a href="{% url 'user:update-user' user.id %}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline" data-toggle="modal"
-                                                   data-target="#modal-update-user"></i></a>
+                                            <a href="#" class="action-icon" data-toggle="modal"
+                                               data-target="#modal-update-user"
+                                               onclick="send_update_user_id({{ user.id }})">
+                                                <i class="mdi mdi-square-edit-outline"></i></a>
 
                                             <a class="dropdown-toggle" href="#"
-                                               id="dropdownMenuLink" data-toggle="dropdown" >
+                                               id="dropdownMenuLink" data-toggle="dropdown">
                                             </a>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
                                                 <a href="{% url 'user:toggle-user-status' user.id %}"
@@ -102,9 +103,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <!-- demo app -->
-    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
-    <!-- end demo js-->
+
 {% endblock %}
 {% block js-footer %}
     <!-- third party js -->
@@ -120,6 +119,31 @@
     <script src="{% static 'javascript/dataTables.keyTable.min.js' %}"></script>
     <script src="{% static 'javascript/dataTables.select.min.js' %}"></script>
     <!-- third party js ends -->
+    <!-- demo app -->
+    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
+    <!-- end demo js-->
+    <script type="text/javascript">
+        function send_update_user_id(e) {
+            $.ajax({
+                url: '{% url 'user:update-user' %}',
+                type: 'GET',
+                data: {'user_id': e},
+                cache: false,
+                async: true,
+                success: function (msg) {
+                    if (msg.status === 'success') {
+                        {% for item in user_update_form %}
+                            $('#{{ item.id_for_label }}').val(msg['data']['{{ item.name }}']);
+                        {% endfor %}
+                        $('#{{user_update_form.id.id_for_label}}').val(e);
+                    } else {
+                        console.log(msg.errors);
+                    }
+                },
+                complete: function (XMLHttpRequest) {
+                }
+            });
+        }
 
-
+    </script>
 {% endblock %}

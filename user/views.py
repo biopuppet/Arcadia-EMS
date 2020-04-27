@@ -4,7 +4,9 @@ import re
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -66,20 +68,34 @@ class UserProfileView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         requested_user = get_object_or_404(User, pk=int(user_id))
         request_user = request.user
+        print(request_user)
         # @TODO: Add permission check
         # if request_user != requested_user:
         #     return page_not_found(request, exception="This is not the profile that you should see...")
         # else:
-        return render(request, 'user/profile.html', {'user': requested_user})
+        user_dict = model_to_dict(request_user)
+        print(user_dict)
+        user_update_form = UserUpdateForm(auto_id="form-update-user-%s", label_suffix='', initial=user_dict)
+        ret = {
+            'user': requested_user,
+            'user_update_form': user_update_form,
+        }
+
+        return render(request, 'user/profile.html', ret)
 
 
 class UserIndexView(LoginRequiredMixin, View):
 
     def get(self, request):
         users = UserProfile.objects.all()
-        form = UserCreateForm()
-        render(request, 'user/modal-create-user.html', {'form': form})
-        return render(request, 'user/index.html', {'form': form, 'users': users})
+        user_create_form = UserCreateForm(auto_id="form-create-user-%s", label_suffix='')
+        user_update_form = UserUpdateForm(auto_id="form-update-user-%s", label_suffix='')
+        ret = {
+            'user_create_form': user_create_form,
+            'user_update_form': user_update_form,
+            'users': users
+        }
+        return render(request, 'user/index.html', ret)
 
     def post(self, request):
         users = UserProfile.objects.all()
@@ -111,22 +127,35 @@ class UserCreateView(LoginRequiredMixin, View):
 
 class UpdateUserView(LoginRequiredMixin, View):
 
-    def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
-        return render(request, 'user/index.html', {'user': user})
+    def get(self, request):
+        if request.is_ajax():
+            print(request.GET)
+            user_id = request.GET['user_id']
+            user = User.objects.get(id=user_id)
+            user_data = json.loads(serializers.serialize("json", (user,)))[0]['fields']
+            ret = {
+                'status': 'success',
+                'data': user_data,
+            }
+            return HttpResponse(json.dumps(ret), content_type='application/json')
 
-    def post(self, request, user_id):
+    def post(self, request):
+        user_id = request.POST.get('id')
+        print(request.POST)
         user = get_object_or_404(User, pk=int(user_id))
         user_update_form = UserUpdateForm(request.POST, instance=user)
         if user_update_form.is_valid():
             user_update_form.save()
-            return HttpResponseRedirect(request.POST.get('next', '/'))
+            print(user)
+            print(user.fullname)
+            ret = {'status': 'success'}
         else:
+            print("failed")
             ret = {
                 'status': 'fail',
-                'errors': user_update_form.errors
+                'errors': user_update_form.errors.as_ul(),
             }
-            return HttpResponse(json.dumps(ret), content_type='application/json')
+        return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
 class UserChangePasswordView(LoginRequiredMixin, View):
@@ -146,12 +175,9 @@ class UserChangePasswordView(LoginRequiredMixin, View):
             user.save()
             return HttpResponseRedirect(reverse('user:profile', args=[user_id, ]))
         else:
-            pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
-            errors = str(form.errors)
-            password_change_form_errors = re.findall(pattern, errors)
             ret = {
                 'status': 'fail',
-                'password_change_form_errors': password_change_form_errors[0]
+                'password_change_form_errors': form.errors.as_ul()
             }
             return HttpResponse(json.dumps(ret), content_type='application/json')
 
@@ -200,7 +226,7 @@ class UserCreateGroupView(LoginRequiredMixin, View):
         if form.is_valid:
             form.save()
         return HttpResponseRedirect(reverse('user:groups'))
-        #return HttpResponse(json.dumps(ret), content_type='application/json')
+        # return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
 class UserRecoverPasswordView(View):
