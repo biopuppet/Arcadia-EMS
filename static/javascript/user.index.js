@@ -3,6 +3,7 @@ function initDatatable(table_id, url_data_table) {
     function addRound() {
         $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
     }
+
     function trunc(type, data, max) {
         return type === 'display' && data.length > max ? data.substr(0, max) + '...' : data;
     }
@@ -82,6 +83,14 @@ function initDatatable(table_id, url_data_table) {
                 title: 'Activated',
                 data: 'is_active',
                 responsivePriority: 6,
+                render: function (data, type, full, meta) {
+                    val = data === true ? "checked" : "";
+                    content = "<div>\n" +
+                        " <input disabled type=\"checkbox\" id=\"switch-" + full.id + "\"" + val + " data-switch=\"success\">\n" +
+                        "<label for=\"switch-" + full.id + "\" data-on-label=\"On\" data-off-label=\"Off\"\n" +
+                        "class=\"mb-0 d-block\"></label></div>";
+                    return content;
+                }
             },
             {
                 title: "Action",

@@ -18,6 +18,8 @@ urlpatterns = [
     path('recover-password/', UserRecoverPasswordView.as_view(), name='recover-password'),
 
     path('calendar/', UserCalendarView.as_view(), name='calendar'),
-    path('groups/', UserGroupsView.as_view(), name='groups'),
-    path('create-group/', UserCreateGroupView.as_view(), name='create-group'),
+    path('group/', UserGroupsView.as_view(), name='groups'),
+    path('group/create', UserCreateGroupView.as_view(), name='create-group'),
+    path('group/<int:group_id>/change', UserChangeGroupView.as_view(), name='change-group'),
+    path('group/<int:group_id>/delete', UserDeleteGroupView.as_view(), name='delete-group'),
 ]

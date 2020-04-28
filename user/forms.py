@@ -1,7 +1,8 @@
 from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.forms import TextInput, Select, EmailInput, SelectMultiple
 
 from user.models import Department
@@ -225,10 +226,21 @@ class UserChangePasswordForm(forms.Form):
 
 
 class GroupCreationForm(forms.ModelForm):
-    name = forms.CharField(max_length=30, required=True)
+    name = forms.CharField(
+        label="Group Name",
+        max_length=30,
+        required=True,
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Group Name"})
+    )
+    permissions = forms.ModelMultipleChoiceField(
+        label="Permissions",
+        queryset=Permission.objects.all(),
+        required=True,
+        widget=FilteredSelectMultiple("Groups", is_stacked=False, attrs={'class': 'form-control', })
+    )
 
     class Meta:
         model = Group
         fields = [
-            'id', 'name',
+            'id', 'name', 'permissions',
         ]

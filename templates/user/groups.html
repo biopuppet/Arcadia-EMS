@@ -19,9 +19,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary mb-3">
+                        <a href="{% url 'user:create-group' %}" type="button" class="btn btn-primary mb-3">
                             <i class="mdi mdi-account-multiple-plus-outline mr-1"></i> New Group
-                        </button>
+                        </a>
                         <table id="basic-datatable" class="table table-striped dt-responsive nowrap">
                             <thead>
                             <tr>
@@ -38,17 +38,10 @@
                                     <td>{{ group.name }}</td>
                                     <td>{{ group.permissions }}</td>
                                     <td class="table-action">
-                                        <a href="" class="action-icon"> <i class="mdi mdi-pencil"></i></a>
-                                        <a href="" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                        <a class="action-icon " href="#"
-                                           id="dropdownMenuLink" data-toggle="dropdown"><i class="mdi mdi-pencil"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
-                                            <a href="{% url 'user:toggle-user-status' user.id %}"
-                                               class="dropdown-item">Toggle status</a>
-                                            <a href="{% url 'user:delete-user' user.id %}"
-                                               class="dropdown-item">Delete</a>
-                                        </div>
+                                        <a href="{% url 'user:change-group' group.id %}" class="action-icon">
+                                            <i class="mdi mdi-pencil"></i></a>
+                                        <a href="{% url 'user:delete-group' group.id %}" class="action-icon">
+                                            <i class="mdi mdi-delete"></i></a>
                                     </td>
                                 </tr>
                             {% endfor %}
