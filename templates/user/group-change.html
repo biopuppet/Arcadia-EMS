@@ -1,0 +1,48 @@
+{% extends "base-sidebar.html" %}
+{% load static %}
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+        {% include 'base-page-title.html' with title_name='Change Group' sec_title="Groups" sec_url="/user/group/" %}
+
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{% url 'user:change-group' group.id %}" method="post" class="pl-3 pr-3">
+                            {% csrf_token %}
+                            {% for item in form %}
+                                <div class="form-group mb-3">
+                                    {{ item.label_tag }}
+                                    {{ item }}
+                                    {{ item.errors }}
+                                </div>
+                            {% endfor %}
+                            {% if error_msg %}
+                                <p class="alert alert-warning">{{ error_msg }}</p>
+                            {% endif %}
+                            <div class="row mb-2">
+                                <div class="col-sm-6">
+                                    <div class="text-left">
+                                        <a href="{% url 'user:delete-group' group.id %}" class="btn btn-danger"
+                                           type="button">Delete
+                                            Group</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-sm-right">
+                                        <button class="btn btn-primary" type="submit">Update Group</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div> <!-- end card body-->
+                </div> <!-- end card -->
+            </div><!-- end col-->
+        </div>
+        <!-- end row-->
+    </div> <!-- container -->
+{% endblock %}

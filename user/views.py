@@ -216,7 +216,8 @@ class UserGroupsView(LoginRequiredMixin, View):
 class UserCreateGroupView(LoginRequiredMixin, View):
 
     def get(self, request):
-        return redirect("user:index")
+        form = GroupCreationForm()
+        return render(request, 'user/group-create.html', {'form': form})
 
     def post(self, request):
         form = GroupCreationForm(request.POST)
@@ -226,6 +227,48 @@ class UserCreateGroupView(LoginRequiredMixin, View):
             form.save()
         return redirect('user:groups')
         # return HttpResponse(json.dumps(ret), content_type='application/json')
+
+
+class UserChangeGroupView(LoginRequiredMixin, View):
+
+    def post(self, request, group_id):
+        group = get_object_or_404(Group, pk=group_id)
+        form = GroupCreationForm(request.POST, instance=group)
+        ret = {'form': form, 'group': group}
+        if form.is_valid():
+            form.save()
+            print(group)
+            print('suidj')
+        else:
+            ret = {
+                'error_msg': form.errors.as_ul(),
+                'form': form,
+                'group': group
+            }
+        print(ret)
+        return render(request, 'user/group-change.html', ret)
+
+    def get(self, request, group_id):
+        group = get_object_or_404(Group, pk=group_id)
+        form = GroupCreationForm(instance=group)
+        ret = {'form': form, 'group': group}
+        if form.is_valid():
+            form.save()
+        else:
+            ret = {
+                'error_msg': form.errors.as_ul(),
+                'form': form,
+                'group': group
+            }
+        return render(request, 'user/group-change.html', ret)
+
+
+class UserDeleteGroupView(LoginRequiredMixin, View):
+
+    def get(self, request, group_id):
+        group = get_object_or_404(Group, pk=group_id)
+        group.delete()
+        return redirect('user:groups')
 
 
 class UserRecoverPasswordView(View):
@@ -253,4 +296,3 @@ class UserRecoverPasswordView(View):
         else:
             error_msg = 'Please enter your email.'
             return render(request, 'user/recover-password.html', {'error_msg': error_msg})
-
