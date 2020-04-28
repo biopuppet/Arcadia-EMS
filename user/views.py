@@ -93,13 +93,24 @@ class UserIndexView(LoginRequiredMixin, View):
         ret = {
             'user_create_form': user_create_form,
             'user_update_form': user_update_form,
-            'users': users
         }
         return render(request, 'user/index.html', ret)
 
     def post(self, request):
-        users = UserProfile.objects.all()
-        return render(request, 'user/index.html', {'users': users})
+        user_list = []
+        for user in User.objects.all():
+            user_list.append({
+                'id': user.id,
+                'username': user.username,
+                'fullname': user.fullname,
+                'email': user.email,
+                'phone': user.phone,
+                'image': str(user.image),
+                'is_active': user.is_active,
+                'department': str(user.department),
+            })
+        # print(user_list)
+        return HttpResponse(json.dumps(user_list), content_type='application/json')
 
 
 class UserCreateView(LoginRequiredMixin, View):

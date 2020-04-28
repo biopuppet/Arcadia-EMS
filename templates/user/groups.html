@@ -40,6 +40,15 @@
                                     <td class="table-action">
                                         <a href="" class="action-icon"> <i class="mdi mdi-pencil"></i></a>
                                         <a href="" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                        <a class="action-icon " href="#"
+                                           id="dropdownMenuLink" data-toggle="dropdown"><i class="mdi mdi-pencil"></i>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
+                                            <a href="{% url 'user:toggle-user-status' user.id %}"
+                                               class="dropdown-item">Toggle status</a>
+                                            <a href="{% url 'user:delete-user' user.id %}"
+                                               class="dropdown-item">Delete</a>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}

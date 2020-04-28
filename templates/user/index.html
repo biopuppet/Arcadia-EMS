@@ -21,79 +21,31 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
-                                data-target="#modal-create-user">
-                            <i class="mdi mdi-account-plus mr-1"></i> New User
-                        </button>
-                        <p class="text-muted font-14 mb-4" hidden>
-                            DataTables has most features enabled by default, so all you need to do to use it with your
-                            own tables is to call the construction function:<code>$().DataTable();</code>.
-                            KeyTable provides Excel like cell navigation on any table. Events (focus, blur, action etc)
-                            can be assigned to individual cells, columns, rows or all cells.
-                        </p>
 
-                        <table id="basic-datatable"
-                               class="table table-striped dt-responsive nowrap">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Username</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Department</th>
-                                <th>Activated</th>
-                                <th class="sorting_asc_disabled sorting_desc_disabled">Action</th>
-                            </tr>
-                            </thead>
+                        <div class="row mb-2">
+                            <div class="col-sm-4">
+                                <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
+                                        data-target="#modal-create-user">
+                                    <i class="mdi mdi-account-plus mr-1"></i> New User
+                                </button>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="text-sm-right">
+                                    <button disabled type="button" class="btn btn-danger mb-3 mr-1">
+                                        Import
+                                    </button>
+                                    <button disabled type="button" class="btn btn-warning mb-3 mr-1">
+                                        Export
+                                    </button>
+                                    <button type="button" class="btn btn-info mb-3" onclick="parent.location.reload();">
+                                        <i class="mdi mdi-refresh"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-                            <tbody>
-                            {% for user in users %}
-                                <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td class="table-user">
-                                        <img src="/media/{{ user.image }}" alt="table-user" class="mr-1 rounded-circle">
-                                        <a class="text-dark" href="{% url 'user:profile' user.id %}">{{ user.username }}</a>
-                                    </td>
-                                    <td>{{ user.fullname }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.phone }}</td>
-                                    <td>{{ user.department }}</td>
-                                    <td>
-                                        {{ user.is_active }}
-                                        {#                                        <div>#}
-                                        {#                                            <input type="checkbox" id="switch{{ user.id }}" checked="" data-switch="fail">#}
-                                        {#                                            <label for="switch{{ user.id }}" data-on-label="On" data-off-label="Off"#}
-                                        {#                                                   class="mb-0 d-block"></label>#}
-                                        {#                                        </div>#}
-                                    </td>
+                        <table id="datatable-users" class="nowrap table table-striped"></table>
 
-                                    <td class="table-action">
-                                        <div class="dropdown">
-
-                                            <a href="{% url 'user:profile' user.id %}" class="action-icon">
-                                                <i class="mdi mdi-eye"></i></a>
-
-                                            <a href="#" class="action-icon" data-toggle="modal"
-                                               data-target="#modal-update-user"
-                                               onclick="send_update_user_id({{ user.id }})">
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-
-                                            <a class="dropdown-toggle" href="#"
-                                               id="dropdownMenuLink" data-toggle="dropdown">
-                                            </a>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
-                                                <a href="{% url 'user:toggle-user-status' user.id %}"
-                                                   class="dropdown-item">Toggle status</a>
-                                                {# <a href="{% url 'user:delete-user' user.id %}"#}
-                                                {#  class="dropdown-item">Delete</a>#}
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
                     </div>
                 </div> <!-- end card -->
             </div><!-- end col-->
@@ -103,8 +55,15 @@
 {% endblock %}
 
 {% block javascripts %}
-
+    <script src="{% static 'javascript/user.index.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // "use strict";
+            initDatatable("#datatable-users", "{% url 'user:index' %}");
+        });
+    </script>
 {% endblock %}
+
 {% block js-footer %}
     <!-- third party js -->
     <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
@@ -120,9 +79,10 @@
     <script src="{% static 'javascript/dataTables.select.min.js' %}"></script>
     <!-- third party js ends -->
     <!-- demo app -->
-    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
+    {#    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>#}
     <!-- end demo js-->
     <script type="text/javascript">
+        // send user id to user update form in modal
         function send_update_user_id(e) {
             $.ajax({
                 url: '{% url 'user:update-user' %}',
@@ -144,6 +104,5 @@
                 }
             });
         }
-
     </script>
 {% endblock %}

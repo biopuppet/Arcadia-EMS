@@ -52,30 +52,29 @@
 
 {% block js %}
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#form-create-user').submit(function () {
-                $.ajax({
-                    url: '{% url 'user:create-user' %}',
-                    type: 'POST',
-                    data: $("#form-create-user").serialize(),
-                    cache: false,
-                    async: true,
-                    success: function (msg) {
-                        console.log(msg);
-                        if (msg.status === 'success') {
-                            $('#{{ id }}').modal('hide');
-                            parent.location.reload();
-                        } else {
-                            console.log(msg.errors);
-                            $('#{{ id }}-error-msg').html(msg.errors);
-                            $('#{{ id }}-error-msg').addClass('alert alert-warning');
-                        }
-                    },
-                    complete: function (XMLHttpRequest) {
+        var form = $('#form-create-user');
+        var error_msg = $('#{{ id }}-error-msg');
+        form.submit(function () {
+            $.ajax({
+                url: '{% url 'user:create-user' %}',
+                type: 'POST',
+                data: form.serialize(),
+                cache: false,
+                async: true,
+                success: function (msg) {
+                    if (msg.status === 'success') {
+                        $('#{{ id }}').modal('hide');
+                        $('#datatable-users').DataTable().ajax.reload();
+                    } else {
+                        console.log(msg.errors);
+                        error_msg.html(msg.errors);
+                        error_msg.addClass('alert alert-warning');
                     }
-                });
-                return false; // !important! or the form will be posted twice
+                },
+                complete: function (XMLHttpRequest) {
+                }
             });
+            return false; // !important! or the form will be posted twice
         });
     </script>
 {% endblock %}

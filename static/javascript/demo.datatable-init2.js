@@ -1,19 +1,30 @@
 $(document).ready(function () {
     // "use strict";
-    function addRound() {$(".dataTables_paginate > .pagination").addClass("pagination-rounded")}
+    function addRound() {
+        $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+    }
+
     $("#basic-datatable").DataTable({
+        // "ajax": {
+        //     "url": {% %},
+        //     "dataSrc": "tableData"
+        // },
+        // "data": [
+        // [ "Tiger Nixon", "System Architect", "$3,120", "2011/04/25", "Edinburgh", 5421 ],
+        // [ "Garrett Winters", "Director", "$8,422", "2011/07/25", "Edinburgh", 8422 ],
+        // ],
         //keys: true,
         stateSave: true,
-		"scrollCollapse": true,
+        "scrollCollapse": true,
         "scrollX": "100%",
-		"scrollXInner": "100%",
+        "scrollXInner": "100%",
         //scrollX: 0,
         // scrollX: true,
         //scrollCollapse: 0,
         pagingType: "full_numbers",
         // select: {style: "single"},
         language: {paginate: {previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>"}},
-        // columnDefs: [{visible: -1, targets: -1}],
+        columnDefs: [{targets: -1, visible: true, searchable: false}],
         drawCallback: addRound,
         // createdRow: function (a, i, e) {
         //     15e4 < 1 * i[5].replace(/[\$,]/g, "") && $("td", a).eq(5).addClass("text-danger")
