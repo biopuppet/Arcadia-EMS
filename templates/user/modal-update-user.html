@@ -62,7 +62,6 @@
                     cache: false,
                     async: true,
                     success: function (msg) {
-                        console.log(msg);
                         if (msg.status === 'success') {
                             $('#{{ id }}').modal('hide');
                             $('#datatable-users').DataTable().ajax.reload();

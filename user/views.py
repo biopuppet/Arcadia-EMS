@@ -68,13 +68,11 @@ class UserProfileView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         requested_user = get_object_or_404(User, pk=int(user_id))
         request_user = request.user
-        print(request_user)
         # @TODO: Add permission check
         # if request_user != requested_user:
         #     return page_not_found(request, exception="This is not the profile that you should see...")
         # else:
         user_dict = model_to_dict(request_user)
-        print(user_dict)
         user_update_form = UserUpdateForm(auto_id="form-update-user-%s", label_suffix='', initial=user_dict)
         ret = {
             'user': requested_user,
@@ -109,7 +107,6 @@ class UserIndexView(LoginRequiredMixin, View):
                 'is_active': user.is_active,
                 'department': str(user.department),
             })
-        # print(user_list)
         return HttpResponse(json.dumps(user_list), content_type='application/json')
 
 
@@ -124,15 +121,11 @@ class UserCreateView(LoginRequiredMixin, View):
                 ret = {
                     'status': 'success',
                 }
-                print(ret)
-                # return render(request, 'user/index.html', {'form': user_create_form, 'users': users})
             else:
                 ret = {
                     'status': 'fail',
                     'errors': user_create_form.errors.as_ul(),
                 }
-                print(ret)
-                # return render(request, 'user/modal-create-user.html', {'form': user_create_form})
             return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
@@ -140,7 +133,6 @@ class UpdateUserView(LoginRequiredMixin, View):
 
     def get(self, request):
         if request.is_ajax():
-            print(request.GET)
             user_id = request.GET['user_id']
             user = User.objects.get(id=user_id)
             user_data = json.loads(serializers.serialize("json", (user,)))[0]['fields']
@@ -152,16 +144,12 @@ class UpdateUserView(LoginRequiredMixin, View):
 
     def post(self, request):
         user_id = request.POST.get('id')
-        print(request.POST)
         user = get_object_or_404(User, pk=int(user_id))
         user_update_form = UserUpdateForm(request.POST, instance=user)
         if user_update_form.is_valid():
             user_update_form.save()
-            print(user)
-            print(user.fullname)
             ret = {'status': 'success'}
         else:
-            print("failed")
             ret = {
                 'status': 'fail',
                 'errors': user_update_form.errors.as_ul(),

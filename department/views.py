@@ -32,7 +32,6 @@ class DepartmentCreationView(View):
                 'dc_form': dc_form,
                 'error_msg': dc_form.errors.as_text(),
             }
-        print(ret)
         return render(request, 'department/create-department.html', ret)
 
 
