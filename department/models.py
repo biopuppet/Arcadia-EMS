@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=30, blank=True, null=True, verbose_name='部门')
+    name = models.CharField(max_length=30, null=True, unique=True, verbose_name='部门')
 
     class Meta:
         verbose_name = "Department"

@@ -7,6 +7,9 @@
                 {% block title-right %}
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{% url 'index' %}">Arcadia</a></li>
+                        {% if sec_title %}
+                            <li class="breadcrumb-item"><a href="{{ sec_url }}">{{ sec_title }}</a></li>
+                        {% endif %}
                         <li class="breadcrumb-item active">{{ title_name | capfirst }}</li>
                     </ol>
                 {% endblock %}
