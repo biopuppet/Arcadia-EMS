@@ -20,5 +20,4 @@ urlpatterns = [
     path('calendar/', UserCalendarView.as_view(), name='calendar'),
     path('groups/', UserGroupsView.as_view(), name='groups'),
     path('create-group/', UserCreateGroupView.as_view(), name='create-group'),
-    path('departments/', DepartmentsView.as_view(), name='departments'),
 ]

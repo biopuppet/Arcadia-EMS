@@ -255,9 +255,3 @@ class UserRecoverPasswordView(View):
             error_msg = 'Please enter your email.'
             return render(request, 'user/recover-password.html', {'error_msg': error_msg})
 
-
-class DepartmentsView(View):
-
-    def get(self, request):
-        departments = Department.objects.all()
-        return render(request, 'user/departments.html', {'departments': departments})

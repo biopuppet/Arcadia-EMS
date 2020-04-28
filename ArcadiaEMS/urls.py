@@ -26,6 +26,7 @@ from .views import page_error, page_not_found
 
 urlpatterns = [
     path('user/', include('user.urls', namespace='user')),
+    path('department/', include('department.urls', namespace='department')),
 
     path('', user_views.IndexView.as_view(), name='index'),
     path('login/', user_views.LoginView.as_view(), name='login'),
