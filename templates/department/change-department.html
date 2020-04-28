@@ -1,0 +1,39 @@
+{% extends 'base-sidebar.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid">
+        {% include 'base-page-title.html' with title_name='Change Department' sec_title="Departments" sec_url="/department/" %}
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card card-body">
+                    <form action="{% url 'department:change' department.id %}" method="post" class="pl-3 pr-3">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            {{ form.name.label_tag }}
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                </div>
+                                {{ form.name }}
+                            </div>
+                        </div>
+                        {% if error_msg %}
+                            <p class="alert alert-warning">{{ error_msg }}</p>
+                        {% endif %}
+                        <div class="text-center">
+                            <button class="btn btn-primary" type="submit">Change Department</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

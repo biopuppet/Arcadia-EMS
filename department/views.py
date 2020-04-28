@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
@@ -21,7 +21,6 @@ class DepartmentCreationView(LoginRequiredMixin, View):
 
     def post(self, request):
         dc_form = DepartmentCreationForm(request.POST)
-        ret = {'dc_form': dc_form}
         if dc_form.is_valid():
             department = dc_form.save()
             ret = {
@@ -34,6 +33,36 @@ class DepartmentCreationView(LoginRequiredMixin, View):
                 'error_msg': dc_form.errors.as_text(),
             }
         return render(request, 'department/create-department.html', ret)
+
+
+class DepartmentChangeView(LoginRequiredMixin, View):
+
+    def get(self, request, department_id):
+        department = get_object_or_404(Department, pk=department_id)
+        form = DepartmentCreationForm(instance=department)
+        ret = {
+            'department': department,
+            'form': form,
+        }
+        return render(request, 'department/change-department.html', ret)
+
+    def post(self, request, department_id):
+        department = get_object_or_404(Department, pk=department_id)
+        form = DepartmentCreationForm(request.POST, instance=department)
+        if form.is_valid():
+            form.save()
+            ret = {
+                "msg": "Successfully Changed Department " + department.name,
+                'department': department,
+                'form': form,
+            }
+        else:
+            ret = {
+                'error_msg': form.errors.as_ul(),
+                'department': department,
+                'form': form,
+            }
+        return render(request, 'department/change-department.html', ret)
 
 
 class DepartmentDeleteView(LoginRequiredMixin, View):
