@@ -1,4 +1,8 @@
 // "use strict";
+function dt_reload(id, resetPaging = false, callback = null) {
+    $(id).DataTable().ajax.reload(callback, resetPaging);
+}
+
 function initDatatable(table_id, url_data_table) {
     function addRound() {
         $(".dataTables_paginate > .pagination").addClass("pagination-rounded")

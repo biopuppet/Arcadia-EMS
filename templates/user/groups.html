@@ -58,52 +58,14 @@
 
 
 {% block js-footer %}
-
-    {#    <script type="javascript">#}
-    {#        let oDataTable = $('#basic-datatable').DataTable();#}
-    {#    </script>#}
-
-    <script type="javascript">
-        $(document).ready(function () {
-            $("#btn-create-group").click(function () {
-                let form = $("#form-create-group");
-                let data = form.serialize();
-                $.ajax({
-                    type: form.attr('method'),
-                    url: "{% url 'user:create-group' %}",
-                    data: data,
-                    cache: false,
-                    async: false,
-                    success: function (msg) {
-                        if (msg.status === 'success') {
-                            alert('Successfully created user!');
-                        } else if (msg.status === 'fail') {
-                            alert('failed');
-                        }
-                    },
-                    //end: function () {oDataTable.ajax.reload();}
-                });
-            });
-        });
-    </script>
-
-
     <!-- third party js -->
     <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
     <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'javascript/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.flash.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.print.min.js' %}"></script>
-    <script src="{% static 'javascript/dataTables.keyTable.min.js' %}"></script>
-    <script src="{% static 'javascript/dataTables.select.min.js' %}"></script>
     <!-- third party js ends -->
-
+    
     <!-- demo app -->
     <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
     <!-- end demo js-->
-
 {% endblock %}

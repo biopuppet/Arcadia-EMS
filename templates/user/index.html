@@ -37,7 +37,7 @@
                                     <button disabled type="button" class="btn btn-warning mb-3 mr-1">
                                         Export
                                     </button>
-                                    <button type="button" class="btn btn-info mb-3" onclick="parent.location.reload();">
+                                    <button id="toastr-users-reload" type="button" class="btn btn-info mb-3">
                                         <i class="mdi mdi-refresh"></i>
                                     </button>
                                 </div>
@@ -75,6 +75,16 @@
     {#    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>#}
     <!-- end demo js-->
     <script type="text/javascript">
+        !function (t) {
+            "use strict";
+            t("#toastr-users-reload").on("click", function (i) {
+                dt_reload("#datatable-users", true);
+                t.NotificationApp.send(
+                    "Success", "User table reloaded!",
+                    "top-right", "rgba(0,0,0,0.2)", "success", 2e3)
+            })
+        }(window.jQuery);
+
         // send user id to user update form in modal
         function send_update_user_id(e) {
             $.ajax({
