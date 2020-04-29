@@ -43,8 +43,8 @@ function initDatatable(table_id, url_data_table) {
                 //width: "10%",
                 "render": function (data, type, full, meta) {
                     var truncated_data = trunc(type, data, 10);
-                    content = "<a class=\"text-dark\" href=\"/user/" + full.id + "\">" + truncated_data + "</a>";
-                    img = "<img src=\"/media/" + full.image + "\" alt=\"table-user\" class=\"mr-1 rounded-circle\">";
+                    content = "<a class='text-dark' href='/user/" + full.id + "'>" + truncated_data + "</a>";
+                    img = "<img src='/media/" + full.image + "' alt='table-user' height='30' class='mr-1 rounded-circle'>";
                     return img + content;
                 },
             },
@@ -85,10 +85,10 @@ function initDatatable(table_id, url_data_table) {
                 responsivePriority: 6,
                 render: function (data, type, full, meta) {
                     val = data === true ? "checked" : "";
-                    content = "<div>\n" +
-                        " <input disabled type=\"checkbox\" id=\"switch-" + full.id + "\"" + val + " data-switch=\"success\">\n" +
-                        "<label for=\"switch-" + full.id + "\" data-on-label=\"On\" data-off-label=\"Off\"\n" +
-                        "class=\"mb-0 d-block\"></label></div>";
+                    content = "<div><input disabled " + val + " type='checkbox' id='switch-" + full.id +
+                        "' data-switch='success'>\n" +
+                        "<label for='switch-" + full.id + "' data-on-label='On' data-off-label='Off'\n" +
+                        "class='mb-0 d-block'></label></div>";
                     return content;
                 }
             },
@@ -100,16 +100,16 @@ function initDatatable(table_id, url_data_table) {
                 className: "table-action",
                 responsivePriority: 0,
                 "render": function (data, type, full, meta) {
-                    var view_btn = "<a href=\"/user/" + full.id + "\" class=\"action-icon\">" +
-                        "<i class=\"mdi mdi-eye\"></i></a>";
-                    var update_btn = "<a href=\"#\" class=\"action-icon\" data-toggle=\"modal\" " +
-                        "data-target=\"#modal-update-user\" onclick=\"send_update_user_id(" + full.id + ")\">" +
-                        "<i class=\"mdi mdi-square-edit-outline\"></i></a>";
+                    var view_btn = "<a href='/user/" + full.id + "' class='action-icon'>" +
+                        "<i class='mdi mdi-eye'></i></a>";
+                    var update_btn = "<a href='#' class='action-icon' data-toggle='modal' " +
+                        "data-target='#modal-update-user' onclick='send_update_user_id(" + full.id + ")'>" +
+                        "<i class='mdi mdi-square-edit-outline'></i></a>";
                     var more_btn =
-                        "<a class=\"action-icon \" href=\"#\" id=\"dropdownMenuLink\" data-toggle=\"dropdown\">" +
-                        "<i class=\"mdi mdi-dots-horizontal\"></i></a>" +
-                        "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuLink\">" +
-                        "<a href=\"/user/toggle-user-status/" + full.id + "\" class=\"dropdown-item\">" +
+                        "<a class='action-icon ' href='#' id='dropdownMenuLink' data-toggle='dropdown'>" +
+                        "<i class='mdi mdi-dots-horizontal'></i></a>" +
+                        "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>" +
+                        "<a href='/user/toggle-user-status/" + full.id + "' class='dropdown-item'>" +
                         "Toggle status</a></div>";
                     return view_btn + update_btn + more_btn;
                 }
