@@ -37,7 +37,7 @@
                                     <button disabled type="button" class="btn btn-warning mb-3 mr-1">
                                         Export
                                     </button>
-                                    <button id="toastr-users-reload" type="button" class="btn btn-info mb-3">
+                                    <button type="button" class="btn btn-info dt-btn-reload mb-3">
                                         <i class="mdi mdi-refresh"></i>
                                     </button>
                                 </div>
@@ -55,7 +55,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{% static 'javascript/user.index.js' %}"></script>
+    <script src="{% static 'javascript/arcadia.datatable.user.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             // "use strict";
@@ -73,18 +73,10 @@
     <!-- third party js ends -->
     <!-- demo app -->
     {#    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>#}
+    <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
+
     <!-- end demo js-->
     <script type="text/javascript">
-        !function (t) {
-            "use strict";
-            t("#toastr-users-reload").on("click", function (i) {
-                dt_reload("#datatable-users", true);
-                t.NotificationApp.send(
-                    "Success", "User table reloaded!",
-                    "top-right", "rgba(0,0,0,0.2)", "success", 2e3)
-            })
-        }(window.jQuery);
-
         // send user id to user update form in modal
         function send_update_user_id(e) {
             $.ajax({

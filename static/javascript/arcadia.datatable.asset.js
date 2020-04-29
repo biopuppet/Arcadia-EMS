@@ -1,9 +1,4 @@
-// "use strict";
-function dt_reload(id, resetPaging = false, callback = null) {
-    $(id).DataTable().ajax.reload(callback, resetPaging);
-}
-
-function initDatatable(table_id, url_data_table) {
+function initDatatable(table, url_data_table, csrf_token) {
     function addRound() {
         $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
     }
@@ -12,14 +7,14 @@ function initDatatable(table_id, url_data_table) {
         return type === 'display' && data.length > max ? data.substr(0, max) + '...' : data;
     }
 
-    $('#'+table_id).DataTable({
+    table.DataTable({
         "responsive": true,
         "processing": false, // I'm blind, for christ's sake..
         "serverSide": false, // Frontend job
         "ajax": {
             "url": url_data_table,
             "type": "POST",
-            "data": {"csrfmiddlewaretoken": jQuery("[name=csrfmiddlewaretoken]").val()},
+            "data": {"csrfmiddlewaretoken": csrf_token},
             "dataSrc": "",
         },
         autoWidth: false,
@@ -35,27 +30,21 @@ function initDatatable(table_id, url_data_table) {
                 }
             },*/
             {
-                title: 'ID',
-                data: 'id',
+                title: '编号',
+                data: 'aid',
                 responsivePriority: 1,
-                width: "1%",
+                width: "5%",
             },
             {
-                title: 'Username',
-                data: 'username',
+                title: '名称',
+                data: 'name',
                 responsivePriority: 1,
                 className: "table-user",
                 width: "10%",
-                "render": function (data, type, full, meta) {
-                    var truncated_data = trunc(type, data, 15);
-                    content = "<a class='text-dark' href='/user/" + full.id + "'>" + truncated_data + "</a>";
-                    img = "<img src='/media/" + full.image + "' alt='table-user' height='30' class='mr-1 rounded-circle'>";
-                    return img + content;
-                },
             },
             {
-                title: 'Full Name',
-                data: 'fullname',
+                title: '规格',
+                data: 'spec',
                 responsivePriority: 2,
                 width: "10%",
                 "render": function (data, type, full, meta) {
@@ -63,31 +52,25 @@ function initDatatable(table_id, url_data_table) {
                 },
             },
             {
-                title: 'Email',
-                data: 'email',
+                title: '购置日期',
+                data: 'acquired_on',
                 responsivePriority: 3,
-                width: "15%",
+                width: "10%",
                 "render": function (data, type, full, meta) {
                     return trunc(type, data, 30);
                 },
             },
             {
-                title: 'Phone',
-                data: 'phone',
+                title: '所在部门',
+                data: 'department',
                 responsivePriority: 4,
-                width: "15%",
+                width: "10%",
 
             },
             {
-                title: 'Department',
-                data: 'department',
+                title: '状态',
+                data: 'status',
                 responsivePriority: 5,
-                width: "10%",
-            },
-            {
-                title: 'Activated',
-                data: 'is_active',
-                responsivePriority: 6,
                 width: "5%",
                 render: function (data, type, full, meta) {
                     val = data === true ? "checked" : "";
@@ -99,7 +82,14 @@ function initDatatable(table_id, url_data_table) {
                 }
             },
             {
-                title: "Action",
+                title: '数量',
+                data: 'quantity',
+                responsivePriority: 6,
+                width: "5%",
+
+            },
+            {
+                title: "操作",
                 data: null,
                 searchable: false,
                 orderable: false,
@@ -116,7 +106,7 @@ function initDatatable(table_id, url_data_table) {
                         "<a class='action-icon ' href='#' id='dropdownMenuLink' data-toggle='dropdown'>" +
                         "<i class='mdi mdi-dots-horizontal'></i></a>" +
                         "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>" +
-                        "<a href='/user/toggle-user-status/" + full.id + "' class='dropdown-item'>" +
+                        "<a href='#" + full.id + "' class='dropdown-item'>" +
                         "Toggle status</a></div>";
                     return view_btn + update_btn + more_btn;
                 }

@@ -5,8 +5,6 @@
     <!-- third party css -->
     <link href="{% static 'css/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'css/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
-    <link href="{% static 'css/buttons.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
-    <link href="{% static 'css/select.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
     <!-- third party css end -->
 {% endblock %}
 
@@ -14,65 +12,29 @@
     <!-- Start Content-->
     <div class="container-fluid">
         {% include 'base-page-title.html' with title_name='设备台账' %}
-{#        {% include 'asset/create-asset.html' with id='modal-create-asset' %}#}
 
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+
                         <div class="row mb-2">
                             <div class="col-sm-4">
                                 <a href="{% url 'asset:create' %}" class="btn btn-danger mb-2">
-                                    <i class="mdi mdi-plus-circle mr-2"></i> Add Asset</a>
+                                    <i class="mdi mdi-plus-circle mr-1"></i> Add Asset</a>
                             </div>
                             <div class="col-sm-8">
                                 <div class="text-sm-right">
-                                    <button type="button" class="btn btn-success mb-2 mr-1"><i
-                                            class="mdi mdi-settings"></i></button>
-                                    <button type="button" class="btn btn-light mb-2 mr-1">Import</button>
-                                    <button type="button" class="btn btn-light mb-2">Export</button>
+                                    <button disabled type="button" class="btn btn-warning mb-3 mr-1">
+                                        Export
+                                    </button>
+                                    <button type="button" class="btn btn-info dt-btn-reload mb-3">
+                                        <i class="mdi mdi-refresh"></i>
+                                    </button>
                                 </div>
                             </div><!-- end col-->
                         </div>
-
-                        <table id="basic-datatable"
-                               class="table table-striped dt-responsive nowrap">
-                            <thead>
-                            <tr>
-                                <th>编号</th>
-                                <th>名称</th>
-                                <th>规格</th>
-                                <th>购置日期</th>
-                                <th>所在部门</th>
-                                <th>状态</th>
-                                <th>数量</th>
-                                <th class="sorting_desc_disabled sorting_asc_disabled">操作</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            {% for asset in assets %}
-                                <tr>
-                                    <td>{{ asset.aid }}</td>
-                                    <td>{{ asset.name }}</td>
-                                    <td>{{ asset.category }}</td>
-                                    <td>{{ asset.quantity }}</td>
-                                    <td>{{ asset.price }}</td>
-                                    <td>{{ asset.department }}</td>
-                                    <td>
-                                        {{ asset.status }}
-                                    </td>
-
-                                    <td class="table-action">
-                                        <a href="#" class="action-icon">
-                                            <i class="mdi mdi-pencil"></i></a>
-                                        <a href="#" class="action-icon">
-                                            <i class="mdi mdi-delete"></i></a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                        <table id="datatable-assets" class="table table-striped dt-responsive nowrap"></table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
@@ -81,22 +43,26 @@
     </div> <!-- container -->
 {% endblock %}
 
+
+{% block javascripts %}
+    <script src="{% static 'javascript/arcadia.datatable.asset.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // "use strict";
+            initDatatable($('#datatable-assets'), "{% url 'asset:index' %}", "{{ csrf_token }}");
+        });
+    </script>
+{% endblock %}
+
 {% block js-footer %}
     <!-- third party js -->
     <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
     <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'javascript/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.flash.min.js' %}"></script>
-    <script src="{% static 'javascript/buttons.print.min.js' %}"></script>
-    <script src="{% static 'javascript/dataTables.keyTable.min.js' %}"></script>
-    <script src="{% static 'javascript/dataTables.select.min.js' %}"></script>
     <!-- third party js ends -->
 
     <!-- demo app -->
-    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>
+    <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
     <!-- end demo js-->
 {% endblock %}

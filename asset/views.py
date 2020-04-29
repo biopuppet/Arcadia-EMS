@@ -14,6 +14,21 @@ class AssetIndexView(View):
         assets = Asset.objects.all()
         return render(request, 'asset.html', {'assets': assets})
 
+    def post(self, request):
+        if request.is_ajax():
+            asset_list = []
+            for asset in Asset.objects.all():
+                asset_list.append({
+                    'aid': asset.aid,
+                    'name': asset.name,
+                    'spec': asset.spec,
+                    'acquired_on': str(asset.acquired_on),
+                    'department': asset.department,
+                    'status': asset.status,
+                    'quantity': asset.quantity,
+                })
+            return HttpResponse(json.dumps(asset_list), content_type='application/json')
+
 
 class AssetProfileView(View):
 
