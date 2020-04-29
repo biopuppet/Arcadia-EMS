@@ -70,7 +70,7 @@ class UserProfileView(LoginRequiredMixin, View):
         request_user = request.user
         # @TODO: Add permission check
         # if request_user != requested_user:
-        #     return page_not_found(request, exception="This is not the profile that you should see...")
+        #     return page_not_found(request)
         # else:
         user_dict = model_to_dict(request_user)
         user_update_form = UserUpdateForm(auto_id="form-update-user-%s", label_suffix='', initial=user_dict)
