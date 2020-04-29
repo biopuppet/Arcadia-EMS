@@ -12,7 +12,7 @@ function initDatatable(table_id, url_data_table) {
         return type === 'display' && data.length > max ? data.substr(0, max) + '...' : data;
     }
 
-    $(table_id).DataTable({
+    $('#'+table_id).DataTable({
         "responsive": true,
         "processing": false, // I'm blind, for christ's sake..
         "serverSide": false, // Frontend job
@@ -22,6 +22,7 @@ function initDatatable(table_id, url_data_table) {
             "data": {"csrfmiddlewaretoken": jQuery("[name=csrfmiddlewaretoken]").val()},
             "dataSrc": "",
         },
+        autoWidth: false,
         columns: [
             /*
             {
@@ -37,16 +38,16 @@ function initDatatable(table_id, url_data_table) {
                 title: 'ID',
                 data: 'id',
                 responsivePriority: 1,
-                //width: "1%",
+                width: "1%",
             },
             {
                 title: 'Username',
                 data: 'username',
                 responsivePriority: 1,
                 className: "table-user",
-                //width: "10%",
+                width: "10%",
                 "render": function (data, type, full, meta) {
-                    var truncated_data = trunc(type, data, 10);
+                    var truncated_data = trunc(type, data, 15);
                     content = "<a class='text-dark' href='/user/" + full.id + "'>" + truncated_data + "</a>";
                     img = "<img src='/media/" + full.image + "' alt='table-user' height='30' class='mr-1 rounded-circle'>";
                     return img + content;
@@ -56,7 +57,7 @@ function initDatatable(table_id, url_data_table) {
                 title: 'Full Name',
                 data: 'fullname',
                 responsivePriority: 2,
-                //width: "10%",
+                width: "10%",
                 "render": function (data, type, full, meta) {
                     return trunc(type, data, 15);
                 },
@@ -65,7 +66,7 @@ function initDatatable(table_id, url_data_table) {
                 title: 'Email',
                 data: 'email',
                 responsivePriority: 3,
-                //width: "10%",
+                width: "15%",
                 "render": function (data, type, full, meta) {
                     return trunc(type, data, 30);
                 },
@@ -74,19 +75,20 @@ function initDatatable(table_id, url_data_table) {
                 title: 'Phone',
                 data: 'phone',
                 responsivePriority: 4,
-                //width: "15%",
+                width: "15%",
 
             },
             {
                 title: 'Department',
                 data: 'department',
                 responsivePriority: 5,
-                //width: "10%",
+                width: "10%",
             },
             {
                 title: 'Activated',
                 data: 'is_active',
                 responsivePriority: 6,
+                width: "5%",
                 render: function (data, type, full, meta) {
                     val = data === true ? "checked" : "";
                     content = "<div><input disabled " + val + " type='checkbox' id='switch-" + full.id +
@@ -101,8 +103,9 @@ function initDatatable(table_id, url_data_table) {
                 data: null,
                 searchable: false,
                 orderable: false,
-                className: "table-action",
+                className: "table-action text-center",
                 responsivePriority: 0,
+                width: "5%",
                 "render": function (data, type, full, meta) {
                     var view_btn = "<a href='/user/" + full.id + "' class='action-icon'>" +
                         "<i class='mdi mdi-eye'></i></a>";

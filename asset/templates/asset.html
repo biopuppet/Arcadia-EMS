@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-sm-4">
-                                <a href="{% url 'asset:create-asset' %}" class="btn btn-danger mb-2">
+                                <a href="{% url 'asset:create' %}" class="btn btn-danger mb-2">
                                     <i class="mdi mdi-plus-circle mr-2"></i> Add Asset</a>
                             </div>
                             <div class="col-sm-8">
@@ -51,44 +51,23 @@
                             </thead>
 
                             <tbody>
-                            {% for user in users %}
+                            {% for asset in assets %}
                                 <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td class="table-user">
-                                        <img src="/media/{{ user.image }}" alt="table-user" class="mr-2 rounded-circle">
-                                        {{ user.username }}
-                                    </td>
-                                    <td>{{ user.fullname }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.phone }}</td>
-                                    <td>{{ user.last_login }}</td>
+                                    <td>{{ asset.aid }}</td>
+                                    <td>{{ asset.name }}</td>
+                                    <td>{{ asset.category }}</td>
+                                    <td>{{ asset.quantity }}</td>
+                                    <td>{{ asset.price }}</td>
+                                    <td>{{ asset.department }}</td>
                                     <td>
-                                        {{ user.is_active }}
-                                        {#                                        <div>#}
-                                        {#                                            <input type="checkbox" id="switch{{ user.id }}" checked="" data-switch="fail">#}
-                                        {#                                            <label for="switch{{ user.id }}" data-on-label="On" data-off-label="Off"#}
-                                        {#                                                   class="mb-0 d-block"></label>#}
-                                        {#                                        </div>#}
+                                        {{ asset.status }}
                                     </td>
 
                                     <td class="table-action">
-                                        <div class="dropdown">
-
-                                            <a href="{% url 'user:profile' user.id %}" class="action-icon">
-                                                <i class="mdi mdi-eye"></i></a>
-
-                                            <a class="action-icon dropdown-toggle" href="#"
-                                               id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false">
-                                            </a>
-
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
-                                                <a href="{% url 'user:toggle-user-status' user.id %}"
-                                                   class="dropdown-item">Toggle status</a>
-                                                {#                                                <a href="{% url 'user:delete-user' user.id %}"#}
-                                                {#                                                   class="dropdown-item">Delete</a>#}
-                                            </div>
-                                        </div>
+                                        <a href="#" class="action-icon">
+                                            <i class="mdi mdi-pencil"></i></a>
+                                        <a href="#" class="action-icon">
+                                            <i class="mdi mdi-delete"></i></a>
                                     </td>
                                 </tr>
                             {% endfor %}

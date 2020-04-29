@@ -1,17 +1,18 @@
 import json
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 
-from asset.forms import AssetCreationForm
+from asset.forms import AssetCreationForm, AssetForm
 from asset.models import Asset
 
 
 class AssetIndexView(View):
 
     def get(self, request):
-        return render(request, 'asset/asset.html')
+        assets = Asset.objects.all()
+        return render(request, 'asset.html', {'assets': assets})
 
 
 class AssetProfileView(View):
@@ -23,19 +24,42 @@ class AssetProfileView(View):
 class AssetCreationView(View):
 
     def get(self, request):
-        form = AssetCreationForm(request)
-        return render(request, 'asset/create-asset.html', {'form': form})
+        asset_creation_form = AssetCreationForm(auto_id="form-asset-create-%s", label_suffix='')
+        asset_form = AssetForm(auto_id="form-asset-%s", label_suffix='')
+        ret = {
+            'asset_creation_form': asset_creation_form,
+            'asset_form': asset_form,
+        }
+        return render(request, 'create-asset.html', ret)
 
     def post(self, request):
-        form = AssetCreationForm(request.POST)
-        asset = Asset.objects.all()
-        if form.is_valid():
-            # form.save()
+        print(request.POST)
+        asset_form = AssetForm(request.POST)
+        asset_creation_form = AssetCreationForm(request.POST)
+        assets = Asset.objects.all()
+        asset = None
+        if asset_form.is_valid():
+            print("asset_form valid")
+            asset = asset_form.save()
             print(asset)
-            ret = {'status': 'success'}
+            if asset_creation_form.is_valid():
+                # form.save()
+                asset_creation = asset_creation_form.save()
+                asset_creation.asset = asset
+                print(asset_creation.asset)
+                print('creation form valid')
+                ret = {'status': 'success'}
+            else:
+                ret = {
+                    'status': 'fail',
+                    'asset_creation_form_errors': asset_creation_form.errors
+                }
+                print(asset_creation_form.errors)
         else:
             ret = {
                 'status': 'fail',
-                'user_create_form_errors': form.errors
+                'asset_form_errors': asset_form.errors
             }
+            print(asset_form.errors)
+        return redirect('asset:index')
         return HttpResponse(json.dumps(ret), content_type='application/json')
