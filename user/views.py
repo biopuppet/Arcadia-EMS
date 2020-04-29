@@ -132,7 +132,7 @@ class UserCreateView(LoginRequiredMixin, View):
 class UpdateUserView(LoginRequiredMixin, View):
 
     def get(self, request):
-        if request.is_ajax():
+        if request.is_ajax() and 'user_id' in request.GET and int(request.GET['user_id']) > 0:
             user_id = request.GET['user_id']
             user = User.objects.get(id=user_id)
             user_data = json.loads(serializers.serialize("json", (user,)))[0]['fields']

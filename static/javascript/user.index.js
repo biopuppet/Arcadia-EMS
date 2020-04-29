@@ -117,7 +117,9 @@ function initDatatable(table_id, url_data_table) {
 
         ],
 
-        //keys: true,
+        // keys: {
+        //     columns: ':not(:last-child, :first-child)',
+        // },
         stateSave: true,
         scrollCollapse: true,
         scrollX: false,
