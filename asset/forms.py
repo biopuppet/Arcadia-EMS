@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.forms import TextInput, Select
 
@@ -16,13 +18,13 @@ class AssetForm(forms.ModelForm):
         label="设备编号",
         required=True,
         max_length=30,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Asset ID", }, )
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备编号", }, )
     )
     name = forms.CharField(
         label="设备名称",
         required=True,
         max_length=50,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Asset Name", }, )
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备名称", }, )
     )
     category = forms.ModelChoiceField(
         label="设备类别",
@@ -34,13 +36,19 @@ class AssetForm(forms.ModelForm):
         label="设备型号",
         required=False,
         max_length=30,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Asset Model", }, )
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备型号", }, )
     )
     spec = forms.CharField(
         label="设备规格",
         required=False,
         max_length=30,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Asset Specification", }, )
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备规格", }, )
+    )
+    manufacturer = forms.CharField(
+        label="生产厂商",
+        required=False,
+        max_length=50,
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "生产厂商详细信息，如联系方式、地址等", }, )
     )
     # status = forms.ChoiceField(
     #     label="状态",
@@ -70,14 +78,32 @@ class AssetForm(forms.ModelForm):
         widget=forms.widgets.TextInput(
             attrs={'class': 'form-control', 'placeholder': '0.00'}),
     )
+    note = forms.CharField(
+        label="备注",
+        required=False,
+        widget=forms.widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '设备备注信息'})
+    )
 
     class Meta:
         model = Asset
         fields = [
-            'aid', 'name', 'category', 'model', 'spec', 'produced_on', 'expired_on',
-            'quantity', 'price',
+            'aid', 'name', 'category', 'model', 'spec', 'manufacturer', 'produced_on', 'expired_on',
+            'quantity', 'price', 'note',
         ]
 
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        regex_price = r"^([0-9]+|[0-9]{1,3}(,[0-9]{3})*)(.[0-9]{1,2})?$"
+        if price and not re.match(regex_price, str(price)):
+            raise forms.ValidationError("非法金额格式，合法格式如199, 10.02")
+        return price
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+        print(quantity)
+        if quantity and quantity <= 0:
+            raise forms.ValidationError("非法数量")
+        return quantity
 
 class AssetCreationForm(forms.ModelForm):
     """
@@ -85,6 +111,7 @@ class AssetCreationForm(forms.ModelForm):
     """
     error_messages = {
     }
+
     credentials = forms.FileField(
         label="建账证明",
         required=False,
@@ -99,7 +126,7 @@ class AssetCreationForm(forms.ModelForm):
     note = forms.CharField(
         label="备注",
         required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', })
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '建账备注信息'})
     )
 
     class Meta:
@@ -107,9 +134,6 @@ class AssetCreationForm(forms.ModelForm):
         fields = [
             'credentials', 'transactor', 'note',
         ]
-        error_messages = {
-
-        }
 
     # def clean_id(self):
     #     aid = self.cleaned_data.get("id")

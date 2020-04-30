@@ -20,8 +20,8 @@
 
                         <div class="row mb-2">
                             <div class="col-sm-4">
-                                <a href="{% url 'asset:create' %}" class="btn btn-danger mb-2">
-                                    <i class="mdi mdi-plus-circle mr-1"></i> Add Asset</a>
+                                <a href="{% url 'asset:create' %}" class="btn btn-danger mb-2 badge-l">
+                                    <i class="mdi mdi-plus-circle mr-1"></i> 设备建账</a>
                             </div>
                             <div class="col-sm-8">
                                 <div class="text-sm-right">
@@ -45,13 +45,7 @@
 
 
 {% block javascripts %}
-    <script src="{% static 'javascript/arcadia.datatable.asset.js' %}"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // "use strict";
-            initDatatable($('#datatable-assets'), "{% url 'asset:index' %}", "{{ csrf_token }}");
-        });
-    </script>
+
 {% endblock %}
 
 {% block js-footer %}
@@ -65,4 +59,11 @@
     <!-- demo app -->
     <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
     <!-- end demo js-->
+    <script src="{% static 'javascript/arcadia.datatable.asset.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // "use strict";
+            initDatatable($('#datatable-assets'), "{% url 'asset:index' %}", "{{ csrf_token }}");
+        });
+    </script>
 {% endblock %}

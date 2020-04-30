@@ -5,7 +5,11 @@
     <!-- Start Content-->
     <div class="container-fluid">
         {% include 'base-page-title.html' with title_name='设备建账' %}
-
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -25,23 +29,43 @@
                                                 </div>
                                                 {{ asset_form.aid }}
                                             </div>
-                                            {{ asset_form.aid.errors }}
+                                            {% if asset_form.aid.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.aid.errors }}</div>
+                                            {% endif %}
                                         </div>
+
                                         <div class="col-6 mb-3">
                                             {{ asset_form.name.label_tag | capfirst }}
                                             {{ asset_form.name }}
-                                            {{ asset_form.name.errors }}
+                                            {% if asset_form.name.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.name.errors }}</div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     {% for item in asset_form %}
-                                        {% if not item.name == "aid" and not item.name == "name" %}
-                                            <div class="form-group mb-3">
-                                                {{ item.label_tag }}
-                                                {{ item }}
-                                                {{ item.errors }}
+                                        {% if not item.name == "aid" and not item.name == "name" and not item.name == 'note' %}
+                                            {% if item.name == "category" or item.name == 'spec' or item.name == 'produced_on' or item.name == 'quantity' %}
+                                                <div class="form-row">
+                                            {% endif %}
+
+                                        <div class="col-6 mb-3">
+                                            {{ item.label_tag | capfirst }}
+                                            {{ item }}
+                                            {% if item.errors %}
+                                                <div class="alert-warning">{{ item.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+
+                                        {% if item.name == "model" or item.name == 'manufacturer' or item.name == 'expired_on' or item.name == 'price' %}
                                             </div>
                                         {% endif %}
+                                        {% endif %}
                                     {% endfor %}
+                                    <div class="form-group mb-3">
+                                        {{ asset_form.note.label_tag }}
+                                        {{ asset_form.note }}
+                                    </div>
 
                                     <h4 class="mt-lg-4">设备建账信息</h4>
                                     <p class="text-muted mb-4">设备建账相关信息</p>
@@ -52,6 +76,7 @@
                                             {{ item.errors }}
                                         </div>
                                     {% endfor %}
+
                                     <div class="row mt-4">
                                         <div class="col-sm-6">
                                             <a href="{% url 'asset:index' %}"
@@ -75,15 +100,8 @@
                                             <tbody>
                                             <tr>
                                                 <td>
-                                                    <img src="{% static 'htmlimg/avatar-3.jpg' %}"
-                                                         alt="contact-img" title="contact-img"
-                                                         class="rounded mr-2" height="48">
                                                     <p class="m-0 d-inline-block align-middle">
-                                                        <a href="https://coderthemes.com/hyper/saas/apps-ecommerce-products-details.html"
-                                                           class="text-body font-weight-semibold">Amazing
-                                                            Modern Chair</a>
-                                                        <br>
-                                                        <small>5 x $148.66</small>
+                                                        5 x $148.60
                                                     </p>
                                                 </td>
                                                 <td class="text-right">
@@ -100,14 +118,6 @@
                                             </tr>
                                             <tr class="text-right">
                                                 <td>
-                                                    <h6 class="m-0">Shipping:</h6>
-                                                </td>
-                                                <td class="text-right">
-                                                    FREE
-                                                </td>
-                                            </tr>
-                                            <tr class="text-right">
-                                                <td>
                                                     <h5 class="m-0">Total:</h5>
                                                 </td>
                                                 <td class="text-right font-weight-semibold">
@@ -119,7 +129,6 @@
                                     </div>
                                     <!-- end table-responsive -->
                                 </div> <!-- end .border-->
-
                             </div> <!-- end col -->
                         </div> <!-- end row-->
                     </div> <!-- end card-body-->
@@ -128,27 +137,7 @@
         </div>
         <!-- end row-->
     </div> <!-- container -->
-
-
 {% endblock %}
 
 {% block js-footer %}
-    <script src="{% static 'javascript/vendor.min.js' %}"></script>
-    <script type="text/javascript">
-        $(function () {
-            $('.nav-item .nav-link:first').click();
-        });
-
-        function show_tab(id) {
-            $('.tab-pane').removeClass('show active');
-            $('#' + id).addClass('show active');
-        }
-
-        function submit_asset_info() {
-
-            $('.nav-item :last').click();
-        }
-    </script>
-    <script>
-    </script>
 {% endblock %}

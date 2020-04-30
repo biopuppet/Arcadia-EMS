@@ -17,7 +17,7 @@ class Asset(models.Model):
     spec = models.CharField(max_length=30, blank=True, verbose_name='设备规格')
     manufacturer = models.CharField(max_length=50, null=True, blank=True, verbose_name='生产厂商')
     produced_on = models.DateField(null=True, blank=True, verbose_name='生产日期')
-    acquired_on = models.DateField(auto_now_add=True, verbose_name='购置日期')
+    acquired_at = models.DateTimeField(auto_now_add=True, verbose_name='购置日期')
     expired_on = models.DateField(null=True, blank=True, verbose_name='保质日期')
     department = models.ForeignKey(Department, null=True, on_delete=models.SET_NULL,
                                    related_name='%(class)s_department_assets',
@@ -36,7 +36,7 @@ class BaseAppModel(models.Model):
                                    related_name='%(class)s_transacted_assets',
                                    verbose_name='经办人')
     note = models.TextField(blank=True, verbose_name='备注')
-    status = models.CharField(max_length=10, default='审批中', verbose_name='审批状态')
+    status = models.CharField(max_length=10, default='审核中', verbose_name='审批状态')
     reviewer = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True,
                                  related_name='%(class)s_reviewed_assets',
                                  verbose_name='审批人')

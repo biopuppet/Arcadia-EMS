@@ -19,15 +19,23 @@ class AssetIndexView(View):
             asset_list = []
             for asset in Asset.objects.all():
                 asset_list.append({
+                    'id': asset.id,
                     'aid': asset.aid,
                     'name': asset.name,
                     'spec': asset.spec,
-                    'acquired_on': str(asset.acquired_on),
+                    'acquired_at': asset.acquired_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    'manufacturer': asset.manufacturer,
+                    'produced_on': str(asset.produced_on),
+                    'expired_on': str(asset.expired_on),
                     'department': asset.department,
                     'status': asset.status,
                     'quantity': asset.quantity,
+                    'price': str(asset.price),
                 })
             return HttpResponse(json.dumps(asset_list), content_type='application/json')
+        else:
+            assets = Asset.objects.all()
+            return render(request, 'asset.html', {'assets': assets})
 
 
 class AssetProfileView(View):
@@ -48,33 +56,26 @@ class AssetCreationView(View):
         return render(request, 'create-asset.html', ret)
 
     def post(self, request):
-        print(request.POST)
-        asset_form = AssetForm(request.POST)
-        asset_creation_form = AssetCreationForm(request.POST)
-        assets = Asset.objects.all()
-        asset = None
-        if asset_form.is_valid():
-            print("asset_form valid")
+        asset_form = AssetForm(request.POST, auto_id="form-asset-create-%s", label_suffix='')
+        asset_creation_form = AssetCreationForm(request.POST, auto_id="form-asset-%s", label_suffix='')
+        ret = {
+            'asset_creation_form': asset_creation_form,
+            'asset_form': asset_form,
+        }
+        if asset_form.is_valid() and asset_creation_form.is_valid():
             asset = asset_form.save()
-            print(asset)
-            if asset_creation_form.is_valid():
-                # form.save()
-                asset_creation = asset_creation_form.save()
-                asset_creation.asset = asset
-                print(asset_creation.asset)
-                print('creation form valid')
-                ret = {'status': 'success'}
-            else:
-                ret = {
-                    'status': 'fail',
-                    'asset_creation_form_errors': asset_creation_form.errors
-                }
-                print(asset_creation_form.errors)
+            asset_creation = asset_creation_form.save()
+            asset_creation.asset = asset
+            # TODO: deal with file input
+            asset_creation.save()
+            ret.update({'msg': '编号【{}】设备建账申请已提交！'.format(asset.aid)})
         else:
-            ret = {
-                'status': 'fail',
-                'asset_form_errors': asset_form.errors
-            }
-            print(asset_form.errors)
-        return redirect('asset:index')
-        return HttpResponse(json.dumps(ret), content_type='application/json')
+            errors = dict()
+            if asset_form.errors:
+                errors = asset_form.errors
+            if asset_creation_form.errors:
+                errors.update(asset_creation_form.errors)
+            ret.update({
+                'error_msg': errors.as_ul()
+            })
+        return render(request, 'create-asset.html', ret)
