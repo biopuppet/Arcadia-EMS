@@ -40,23 +40,23 @@
                         <a href="{% url 'asset:create' %}">设备建账</a>
                     </li>
                     <li>
-                        <a href="#">设备报废</a>
+                        <a href="{% url 'maintained' %}">设备报废</a>
                     </li>
                     <li>
-                        <a href="#">设备报修</a>
+                        <a href="{% url 'maintained' %}">设备报修</a>
                     </li>
                     <li>
-                        <a href="#">设备变动</a>
+                        <a href="{% url 'maintained' %}">设备变动</a>
                     </li>
                     <li>
-                        <a href="#">设备借还</a>
+                        <a href="{% url 'maintained' %}">设备借还</a>
                     </li>
                 </ul>
 
             </li>
 
             <li class="side-nav-item">
-                <a href="#" class="side-nav-link">
+                <a href="{% url 'maintained' %}" class="side-nav-link">
                     <i class="dripicons-folder-open"></i>
                     <span> 业务审批 </span>
                 </a>
@@ -70,16 +70,16 @@
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     <li>
-                        <a href="#">设备建账表</a>
+                        <a href="{% url 'maintained' %}">设备建账表</a>
                     </li>
                     <li>
-                        <a href="#">设备报废表</a>
+                        <a href="{% url 'maintained' %}">设备报废表</a>
                     </li>
                     <li>
-                        <a href="#">设备报修表</a>
+                        <a href="{% url 'maintained' %}">设备报修表</a>
                     </li>
                     <li>
-                        <a href="#">设备借还表</a>
+                        <a href="{% url 'maintained' %}">设备借还表</a>
                     </li>
                 </ul>
 
