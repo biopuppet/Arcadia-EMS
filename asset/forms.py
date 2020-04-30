@@ -75,7 +75,7 @@ class AssetForm(forms.ModelForm):
     price = forms.DecimalField(
         label="单价",
         required=False,
-        widget=forms.widgets.TextInput(
+        widget=forms.widgets.NumberInput(
             attrs={'class': 'form-control', 'placeholder': '0.00'}),
     )
     note = forms.CharField(
@@ -100,10 +100,10 @@ class AssetForm(forms.ModelForm):
 
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
-        print(quantity)
         if quantity and quantity <= 0:
             raise forms.ValidationError("非法数量")
         return quantity
+
 
 class AssetCreationForm(forms.ModelForm):
     """
