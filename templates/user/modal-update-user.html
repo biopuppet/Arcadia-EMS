@@ -64,8 +64,7 @@
                     success: function (msg) {
                         if (msg.status === 'success') {
                             $('#{{ id }}').modal('hide');
-                            dt_reload("#datatable-users");
-                            //parent.location.reload();
+                            dt_reload($("#datatable-users"));
                         } else {
                             console.log(msg.errors);
                             $('#{{ id }}-error-msg').html(msg.errors);

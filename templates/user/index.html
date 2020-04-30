@@ -59,7 +59,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             // "use strict";
-            initDatatable("datatable-users", "{% url 'user:index' %}");
+            initDatatable($("#datatable-users"), "{% url 'user:index' %}");
         });
     </script>
 {% endblock %}
