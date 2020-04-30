@@ -222,44 +222,40 @@ class UserCreateGroupView(LoginRequiredMixin, View):
     def post(self, request):
         form = GroupCreationForm(request.POST)
         groups = Group.objects.all()
-        ret = dict()
+        ret = {'form': GroupCreationForm(), }
         if form.is_valid:
-            form.save()
-        return redirect('user:groups')
-        # return HttpResponse(json.dumps(ret), content_type='application/json')
+            group = form.save()
+            ret.update({
+                'msg': '成功创建角色组: {}'.format(group)
+            })
+        else:
+            ret.update({
+                'error_msg': form.errors.as_ul()
+            })
+        return render(request, 'user/group-create.html', ret)
 
 
 class UserChangeGroupView(LoginRequiredMixin, View):
+
+    def get(self, request, group_id):
+        group = get_object_or_404(Group, pk=group_id)
+        form = GroupCreationForm(instance=group)
+        return render(request, 'user/group-change.html', {'form': form, 'group': group})
 
     def post(self, request, group_id):
         group = get_object_or_404(Group, pk=group_id)
         form = GroupCreationForm(request.POST, instance=group)
         ret = {'form': form, 'group': group}
         if form.is_valid():
-            form.save()
-            print(group)
-            print('suidj')
+            group = form.save()
+            ret.update({
+                'msg': '成功更改角色组: {}'.format(group),
+            })
         else:
-            ret = {
+            ret.update({
                 'error_msg': form.errors.as_ul(),
-                'form': form,
-                'group': group
-            }
+            })
         print(ret)
-        return render(request, 'user/group-change.html', ret)
-
-    def get(self, request, group_id):
-        group = get_object_or_404(Group, pk=group_id)
-        form = GroupCreationForm(instance=group)
-        ret = {'form': form, 'group': group}
-        if form.is_valid():
-            form.save()
-        else:
-            ret = {
-                'error_msg': form.errors.as_ul(),
-                'form': form,
-                'group': group
-            }
         return render(request, 'user/group-change.html', ret)
 
 

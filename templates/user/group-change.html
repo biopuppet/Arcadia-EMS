@@ -5,7 +5,11 @@
     <!-- Start Content-->
     <div class="container-fluid">
         {% include 'base-page-title.html' with title_name='Change Group' sec_title="Groups" sec_url="/user/group/" %}
-
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-6">
                 <div class="card">
