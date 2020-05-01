@@ -1,0 +1,74 @@
+{% extends 'base-sidebar.html' %}
+{% load static %}
+
+{% block css %}
+    <!-- third party css -->
+    <link href="{% static 'css/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/buttons.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/select.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- third party css end -->
+{% endblock %}
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+        {% include 'base-page-title.html' with title_name='申请审核' %}
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4">
+                                <button disabled type="button" class="btn btn-primary mb-3">
+                                    <i class="mdi mdi-account-plus mr-1"></i> Button
+                                </button>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="text-sm-right">
+                                    <button disabled type="button" class="btn btn-danger mb-3 mr-1">
+                                        Import
+                                    </button>
+                                    <button disabled type="button" class="btn btn-warning mb-3 mr-1">
+                                        Export
+                                    </button>
+                                    <button type="button" class="btn btn-info dt-btn-reload mb-3">
+                                        <i class="mdi mdi-refresh"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table id="datatable-apps" class="nowrap table table-striped"></table>
+
+                    </div>
+                </div> <!-- end card -->
+            </div><!-- end col-->
+        </div>
+        <!-- end row-->
+    </div> <!-- container -->
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'javascript/arcadia.datatable.review.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // "use strict";
+            initDatatable($("#datatable-apps"), "{% url 'review:index' %}", "{{ csrf_token }}");
+        });
+    </script>
+{% endblock %}
+
+{% block js-footer %}
+    <!-- third party js -->
+    <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
+    <!-- third party js ends -->
+    <!-- demo app -->
+    {#    <script src="{% static 'javascript/demo.datatable-init2.js' %}"></script>#}
+    <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
+{% endblock %}

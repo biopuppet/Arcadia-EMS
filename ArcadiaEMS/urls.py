@@ -28,6 +28,7 @@ urlpatterns = [
         path('user/', include('user.urls', namespace='user')),
         path('department/', include('department.urls', namespace='department')),
         path('asset/', include('asset.urls', namespace='asset')),
+        path('review/', include('review.urls', namespace='review')),
 
         path('', user_views.IndexView.as_view(), name='index'),
         path('login/', user_views.LoginView.as_view(), name='login'),
