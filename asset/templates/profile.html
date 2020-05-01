@@ -5,6 +5,8 @@
     <!-- third party css -->
     <link href="{% static 'css/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'css/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/buttons.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/select.bootstrap4.css' %}" rel="stylesheet" type="text/css"/>
     <!-- third party css end -->
 {% endblock %}
 
@@ -52,8 +54,8 @@
                                         <h5>{{ asset.quantity }}</h5>
                                     </div>
                                     <div class="col-md-4">
-                                        <h5>借出统计:</h5>
-                                        <h5>5,458</h5>
+                                        <h5>SKU统计:</h5>
+                                        <h5>{{ asset.skus.all.count }}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -68,9 +70,7 @@
                                     {% endif %}
                                 </p>
                             </div>
-                            {% for item in asset.skus.all.values_list %}
-                                   <span>{{ item }}</span>
-                            {% endfor %}
+
                             <div class="button-list mt-4">
                                 <button {% if asset.status != '完好' %}disabled{% endif %} type="button"
                                         class="btn btn-danger mt-2"><i
@@ -83,7 +83,10 @@
                             </div>
                         </div> <!-- end col -->
                     </div> <!-- end row-->
-                    <div class="table-responsive mt-4">
+                    <div class="mt-4">
+                        <table id="datatable-asset-skus"
+                               class="table table-bordered table-striped"></table>
+
                         <table class="table table-bordered">
                             <thead class="thead-light">
                             <tr>
@@ -137,4 +140,18 @@
 {% endblock %}
 
 {% block js-footer %}
+    <!-- third party js -->
+    <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
+    <!-- third party js ends -->
+    <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
+    <script src="{% static 'javascript/arcadia.datatable.asset_skus.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // "use strict";
+            initDatatable($('#datatable-asset-skus'), "{% url 'asset:profile' asset.aid %}", "{{ csrf_token }}");
+        });
+    </script>
 {% endblock %}

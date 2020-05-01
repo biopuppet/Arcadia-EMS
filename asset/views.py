@@ -45,12 +45,36 @@ class AssetProfileView(View):
 
     def get(self, request, asset_id):
         asset = get_object_or_404(Asset, pk=asset_id)
-        print(asset.skus.all().values())
-        print(asset.skus.all().values_list())
-        for skus in asset.skus.all():
-            for set in skus.sets.all():
-                print('%s %s %s' % (skus, set, set.quantity))
-        return render(request, 'profile.html', {'asset': asset})
+        res = asset.skus.all().values()
+        print(res)
+        for dic in res:
+            dic.pop('asset_id')
+            dic.pop('skuid')
+            dic.pop('note')
+        print(list(res))
+        # for skus in asset.skus.all():
+        #     for set in skus.sets.all():
+        #         print('%s %s %s' % (skus, set, set.quantity))
+        return render(request, 'profile.html', {'asset': asset, 'skus': list(res)})
+
+    def post(self, request, asset_id):
+        if request.is_ajax():
+            asset = get_object_or_404(Asset, pk=asset_id)
+            sku_list = []
+            for sku in asset.skus.all():
+                sku_list.append({
+                    'id': sku.id,
+                    'model': sku.model,
+                    'spec': sku.spec,
+                    'acquired_at': sku.acquired_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    'updated_at': sku.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    'manufacturer': sku.manufacturer,
+                    'produced_on': str(sku.produced_on),
+                    'expired_on': str(sku.expired_on),
+                    'price': str(sku.price),
+                })
+            print(sku_list)
+            return HttpResponse(json.dumps(sku_list), content_type='application/json')
 
 
 class AssetCreationView(View):
@@ -150,7 +174,7 @@ class AssetCreationOnAssetView(LoginRequiredMixin, View):
 
     def post(self, request, asset_id):
         asset = get_object_or_404(Asset, pk=asset_id)
-        asset_form = AssetForm( auto_id="form-asset-%s", label_suffix='')
+        asset_form = AssetForm(auto_id="form-asset-%s", label_suffix='')
         asset_creation_form = AssetCreationForm(request.POST, auto_id="form-create-%s", label_suffix='')
         asset_sku_form = AssetSkuForm(request.POST, auto_id="form-asset-sku-%s", label_suffix='')
         asset_set_form = AssetSetForm(request.POST, auto_id="form-asset-set-%s", label_suffix='')
