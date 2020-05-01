@@ -1,9 +1,4 @@
-import hashlib
-from hmac import digest
-
 from django.db import models
-
-from ArcadiaEMS import settings
 from user.models import UserProfile
 from user.models import Department
 
@@ -31,13 +26,13 @@ class AssetSKU(models.Model):
     the asset, e.g. the spec, model, the manufacturer, etc. It can be thought of as
     a code assigned to a set of indistinct entities.
     """
-    skuid = models.CharField(max_length=50, primary_key=True, verbose_name='货格编号')
+    skuid = models.CharField(max_length=50, null=True, unique=True, verbose_name='货格编号')
     acquired_at = models.DateTimeField(auto_now_add=True, verbose_name='购置日期')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新日期')
     note = models.TextField(blank=True, verbose_name='备注')
 
     # static attributes
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, verbose_name='所属设备')
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='skus', verbose_name='所属设备')
     model = models.CharField(max_length=30, blank=True, verbose_name='设备型号')
     spec = models.CharField(max_length=30, blank=True, verbose_name='设备规格')
     manufacturer = models.CharField(max_length=50, null=True, blank=True, verbose_name='生产厂商')
@@ -71,7 +66,7 @@ class AssetSet(models.Model):
         When returning, the user inputs the `status when returned`, `quantity`, etc. If the return was granted,
         combine the 2 rows if everything's consistent. Otherwise, keep as it is.
     """
-    sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, verbose_name='所属货格')
+    sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, related_name='sets', verbose_name='所属货格')
     status = models.CharField(max_length=20, default='完好', verbose_name='状态')
     quantity = models.IntegerField(default=1, verbose_name='数量')
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, verbose_name='所在部门')
@@ -87,7 +82,7 @@ class AssetSet(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return self.sku.skuid + '/' + self.id.__str__()
+        return self.id.__str__()
 
 
 class BaseAppModel(models.Model):

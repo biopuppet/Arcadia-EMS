@@ -51,12 +51,11 @@ class AssetSkuForm(forms.ModelForm):
     """
     error_messages = {
     }
-
     # skuid = forms.CharField(
-    #     label="设备编号",
+    #     label="货格编号",
     #     required=True,
     #     max_length=30,
-    #     widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备编号", }, )
+    #     widget=TextInput(attrs={'class': 'form-control', 'placeholder': "货格编号", }, )
     # )
     model = forms.CharField(
         label="设备型号",
