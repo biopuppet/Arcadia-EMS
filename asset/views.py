@@ -152,3 +152,30 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
         else:
             return {'error_msg': 'Unknown errors'}
         return {'error_msg': errors.as_ul()}
+
+
+class AssetScrapTableView(View):
+
+    def get(self, request):
+        scraptable = AssetScrap.objects.all()
+        return render(request, 'assetscraptable.html', {'assetsscraptable': scraptable})
+
+    def post(self, request):
+        if request.is_ajax():
+            scraptable_list = []
+            for scraptable in AssetScrap.objects.all():
+                scraptable_list.append({
+                    'created_at': str(scraptable.created_at),
+                    'updated_at': str(scraptable.updated_at),
+                    'asset': scraptable.asset,
+                    'transactor': scraptable.transactor,
+                    'note': scraptable.note,
+                    'status': scraptable.status,
+                    'reviewer': scraptable.reviewer,
+                    'opinion': scraptable.opinion,
+                    'reason': scraptable.reason,
+                })
+            return HttpResponse(json.dumps(scraptable_list), content_type='application/json')
+        else:
+            scraptable = AssetScrap.objects.all()
+            return render(request, 'assetscraptable.html', {'assetsscraptable': scraptable})
