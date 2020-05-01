@@ -194,13 +194,13 @@ class AssetScrapTableView(View):
                 scraptable_list.append({
                     'created_at': str(scraptable.created_at),
                     'updated_at': str(scraptable.updated_at),
-                    'asset': scraptable.asset,
-                    'transactor': scraptable.transactor,
-                    'note': scraptable.note,
-                    'status': scraptable.status,
-                    'reviewer': scraptable.reviewer,
-                    'opinion': scraptable.opinion,
-                    'reason': scraptable.reason,
+                    'asset': str(scraptable.asset),
+                    'transactor': str(scraptable.transactor),
+                    'note': str(scraptable.note),
+                    'status': str(scraptable.status),
+                    'reviewer': str(scraptable.reviewer),
+                    'opinion': str(scraptable.opinion),
+                    'reason': str(scraptable.reason),
                 })
             return HttpResponse(json.dumps(scraptable_list), content_type='application/json')
         else:
