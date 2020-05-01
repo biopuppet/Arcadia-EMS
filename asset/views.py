@@ -154,6 +154,33 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
         return {'error_msg': errors.as_ul()}
 
 
+class AssetCreateTableView(View):
+
+    def get(self, request):
+        createtable = AssetCreate.objects.all()
+        return render(request, 'assetcreatetable.html', {'assetscreatetable': createtable})
+
+    def post(self, request):
+        if request.is_ajax():
+            createtable_list = []
+            for createtable in AssetCreate.objects.all():
+                createtable_list.append({
+                    'created_at': str(createtable.created_at),
+                    'updated_at': str(createtable.updated_at),
+                    'asset': str(createtable.asset.name),
+                    'transactor': str(createtable.transactor),
+                    'note': str(createtable.note),
+                    'status': str(createtable.status),
+                    'reviewer': str(createtable.reviewer),
+                    'opinion': str(createtable.opinion),
+                    'credentials': str(createtable.credentials),
+                })
+            return HttpResponse(json.dumps(createtable_list), content_type='application/json')
+        else:
+            createtable = AssetCreate.objects.all()
+            return render(request, 'assetcreatetable.html', {'assetscreatetable': createtable})
+
+
 class AssetScrapTableView(View):
 
     def get(self, request):
