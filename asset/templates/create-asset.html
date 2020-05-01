@@ -42,29 +42,79 @@
                                             {% endif %}
                                         </div>
                                     </div>
-                                    {% for item in asset_form %}
-                                        {% if not item.name == "aid" and not item.name == "name" and not item.name == 'note' %}
-                                            {% if item.name == "category" or item.name == 'spec' or item.name == 'produced_on' or item.name == 'quantity' %}
-                                                <div class="form-row">
-                                            {% endif %}
-
+                                    <div class="form-row">
                                         <div class="col-6 mb-3">
-                                            {{ item.label_tag | capfirst }}
-                                            {{ item }}
-                                            {% if item.errors %}
-                                                <div class="alert-warning">{{ item.errors }}</div>
+                                            {{ asset_form.category.label_tag | capfirst }}
+                                            {{ asset_form.category }}
+                                            {% if asset_form.category.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.category.errors }}</div>
                                             {% endif %}
                                         </div>
 
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.model.label_tag | capfirst }}
+                                            {{ asset_sku_form.model }}
+                                            {% if asset_sku_form.model.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.model.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
 
-                                        {% if item.name == "model" or item.name == 'manufacturer' or item.name == 'expired_on' or item.name == 'price' %}
-                                            </div>
-                                        {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.spec.label_tag | capfirst }}
+                                            {{ asset_sku_form.spec }}
+                                            {% if asset_sku_form.spec.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.spec.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.manufacturer.label_tag | capfirst }}
+                                            {{ asset_sku_form.manufacturer }}
+                                            {% if asset_sku_form.manufacturer.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.manufacturer.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.produced_on.label_tag | capfirst }}
+                                            {{ asset_sku_form.produced_on }}
+                                            {% if asset_sku_form.produced_on.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.produced_on.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.expired_on.label_tag | capfirst }}
+                                            {{ asset_sku_form.expired_on }}
+                                            {% if asset_sku_form.expired_on.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.expired_on.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.price.label_tag | capfirst }}
+                                            {{ asset_sku_form.price }}
+                                            {% if asset_sku_form.price.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.price.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ asset_set_form.quantity.label_tag | capfirst }}
+                                            {{ asset_set_form.quantity }}
+                                            {% if asset_set_form.quantity.errors %}
+                                                <div class="alert alert-warning">{{ asset_set_form.quantity.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                     <div class="form-group mb-3">
-                                        {{ asset_form.note.label_tag }}
-                                        {{ asset_form.note }}
+                                        {{ asset_form.description.label_tag }}
+                                        {{ asset_form.description }}
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        {{ asset_sku_form.note.label_tag }}
+                                        {{ asset_sku_form.note }}
                                     </div>
 
                                     <h4 class="mt-lg-4">设备建账信息</h4>

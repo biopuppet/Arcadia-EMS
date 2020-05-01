@@ -3,7 +3,7 @@ import re
 from django import forms
 from django.forms import TextInput, Select
 
-from asset.models import Asset, AssetCreate, AssetCategory
+from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU
 from user.models import UserProfile
 
 
@@ -32,6 +32,32 @@ class AssetForm(forms.ModelForm):
         queryset=AssetCategory.objects.all(),
         widget=Select(attrs={'class': 'form-control', })
     )
+    description = forms.CharField(
+        label="设备描述",
+        required=False,
+        widget=forms.widgets.Textarea(attrs={'class': 'form-control', 'placeholder': "此设备的详细描述信息", })
+    )
+
+    class Meta:
+        model = Asset
+        fields = [
+            'aid', 'name', 'category', 'description',
+        ]
+
+
+class AssetSkuForm(forms.ModelForm):
+    """
+    Asset SKU form.
+    """
+    error_messages = {
+    }
+
+    # skuid = forms.CharField(
+    #     label="设备编号",
+    #     required=True,
+    #     max_length=30,
+    #     widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备编号", }, )
+    # )
     model = forms.CharField(
         label="设备型号",
         required=False,
@@ -50,12 +76,6 @@ class AssetForm(forms.ModelForm):
         max_length=50,
         widget=TextInput(attrs={'class': 'form-control', 'placeholder': "生产厂商详细信息，如联系方式、地址等", }, )
     )
-    # status = forms.ChoiceField(
-    #     label="状态",
-    #     required=False,
-    #     choices=((1, '审核中'), (2, '完好'), (3, '维修中'), (4, '采购中'), (5, '已报废')),
-    #     widget=forms.widgets.Select(attrs={'class': 'form-control', }),
-    # )
     produced_on = forms.DateField(
         label="生产日期",
         required=False,
@@ -66,12 +86,6 @@ class AssetForm(forms.ModelForm):
         required=False,
         widget=forms.widgets.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'})
     )
-    quantity = forms.IntegerField(
-        label="数量",
-        required=True,
-        initial=1,
-        widget=forms.widgets.NumberInput(attrs={'class': 'form-control', }),
-    )
     price = forms.DecimalField(
         label="单价",
         required=False,
@@ -79,16 +93,16 @@ class AssetForm(forms.ModelForm):
             attrs={'class': 'form-control', 'placeholder': '0.00'}),
     )
     note = forms.CharField(
-        label="备注",
+        label="货格备注",
         required=False,
-        widget=forms.widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '设备备注信息'})
+        widget=forms.widgets.Textarea(attrs={'class': 'form-control',
+                                             'placeholder': '此货格（指具有该型号、规格、厂商等属性的设备）的备注信息'})
     )
 
     class Meta:
-        model = Asset
+        model = AssetSKU
         fields = [
-            'aid', 'name', 'category', 'model', 'spec', 'manufacturer', 'produced_on', 'expired_on',
-            'quantity', 'price', 'note',
+            'model', 'spec', 'manufacturer', 'produced_on', 'expired_on', 'price', 'note',
         ]
 
     def clean_price(self):
@@ -97,6 +111,21 @@ class AssetForm(forms.ModelForm):
         if price and not re.match(regex_price, str(price)):
             raise forms.ValidationError("非法金额格式，合法格式如199, 10.02")
         return price
+
+
+class AssetSetForm(forms.ModelForm):
+    quantity = forms.IntegerField(
+        label="数量",
+        required=True,
+        initial=1,
+        widget=forms.widgets.NumberInput(attrs={'class': 'form-control', }),
+    )
+
+    class Meta:
+        model = AssetSet
+        fields = [
+            'quantity',
+        ]
 
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
