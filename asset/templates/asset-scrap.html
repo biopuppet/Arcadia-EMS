@@ -1,0 +1,138 @@
+{% extends 'base-sidebar.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+        {% include 'base-page-title.html' with title_name='设备报废' %}
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <form action="{% url 'asset:scrap' %}" method="post" class="pl-2 pr-2">
+                                    {% csrf_token %}
+                                    <h4 class="mt-2">设备报废信息</h4>
+                                    <p class="text-muted mb-4">您填写的设备基础信息会直接用于生成设备条目，请谨慎填写!</p>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ scrap_form.aid.label_tag | capfirst }}
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">#</span>
+                                                </div>
+                                                {{ scrap_form.aid }}
+                                            </div>
+                                            {% if scrap_form.aid.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.aid.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ scrap_form.transactor.label_tag | capfirst }}
+                                            {{ scrap_form.transactor }}
+                                            {% if scrap_form.errors %}
+                                                <div class="alert alert-warning">{{ scrap_form.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ scrap_form.reviewer.label_tag | capfirst }}
+                                            {{ scrap_form.reviewer }}
+                                            {% if asset_form.category.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.category.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="col-12 mb-6">
+                                            {{ scrap_form.reason.label_tag | capfirst }}
+                                            {{ scrap_form.reason }}
+                                            {% if asset_sku_form.model.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.model.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="col-12 mb-3">
+                                            {{ scrap_form.note.label_tag | capfirst }}
+                                            {{ scrap_form.note }}
+                                            {% if scrap_form.note.errors %}
+                                                <div class="alert alert-warning">{{ scrap_form.note.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.produced_on.label_tag | capfirst }}
+                                            {{ asset_sku_form.produced_on }}
+                                            {% if asset_sku_form.produced_on.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.produced_on.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.expired_on.label_tag | capfirst }}
+                                            {{ asset_sku_form.expired_on }}
+                                            {% if asset_sku_form.expired_on.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.expired_on.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.price.label_tag | capfirst }}
+                                            {{ asset_sku_form.price }}
+                                            {% if asset_sku_form.price.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.price.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ asset_set_form.quantity.label_tag | capfirst }}
+                                            {{ asset_set_form.quantity }}
+                                            {% if asset_set_form.quantity.errors %}
+                                                <div class="alert alert-warning">{{ asset_set_form.quantity.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        {{ asset_form.description.label_tag }}
+                                        {{ asset_form.description }}
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        {{ asset_sku_form.note.label_tag }}
+                                        {{ asset_sku_form.note }}
+                                    </div>
+
+                                    <div class="row mt-4">
+                                        <div class="col-sm-6">
+                                            <a href="{% url 'asset:index' %}"
+                                               class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
+                                                <i class="mdi mdi-arrow-left"></i> 返回台账
+                                            </a>
+                                        </div> <!-- end col -->
+                                        <div class="col-sm-6 text-sm-right">
+                                            <button href="#" class="btn btn-danger">
+                                                <i class="mdi mdi-truck-fast mr-1"></i> 提交
+                                            </button>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+                                </form>
+                            </div>
+                             <!-- end col -->
+                        </div> <!-- end row-->
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        <!-- end row-->
+    </div> <!-- container -->
+{% endblock %}
+
+{% block js-footer %}
+{% endblock %}

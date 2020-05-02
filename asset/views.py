@@ -5,7 +5,7 @@ from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
-from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
+from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm
 from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
     AssetFixSerializer, AssetBorrowReturnSerializer
@@ -210,3 +210,32 @@ class AssetBorrowReturnTableView(LoginRequiredMixin, View):
             return HttpResponse(json.dumps(asset_borrowreturns_serial.data), content_type='application/json')
         else:
             return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': asset_borrowreturns})
+
+
+class AssetScrapView(View):
+
+    def get(self, request):
+        scrap_form = AssetScrapForm(auto_id="form-scrap-%s", label_suffix='')
+        ret = {
+            'scrap_form': scrap_form,
+        }
+        return render(request, 'asset-scrap.html', ret)
+
+    def post(self, request):
+        scrap_form = AssetScrapForm(request.POST, auto_id="form-scrap-%s", label_suffix='')
+        ret = {
+            'scrap_form': scrap_form,
+        }
+        if scrap_form.is_valid():
+            assert_scrap = scrap_form.save(commit=False)
+            # TODO: deal with file input
+            assert_scrap.save()
+            ret.update({'msg': '编号【{}】设备建账申请已提交！'.format(scrap_form.aid)})
+        else:
+            errors = dict()
+            if scrap_form.errors:
+                errors = scrap_form.errors
+            ret.update({
+                'error_msg': errors.as_ul()
+            })
+        return render(request, 'asset-scrap.html', ret)

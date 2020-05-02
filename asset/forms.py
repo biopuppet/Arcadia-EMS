@@ -3,7 +3,7 @@ import re
 from django import forms
 from django.forms import TextInput, Select
 
-from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU
+from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU, AssetScrap
 from department.models import Department
 from user.models import UserProfile
 
@@ -227,3 +227,40 @@ class AssetCreationForm(forms.ModelForm):
         if commit:
             asset_creation_app.save()
         return asset_creation_app
+
+class AssetScrapForm(forms.ModelForm):
+    """
+    A form that scrap an asset.
+    """
+    error_messages = {
+    }
+
+    aid = forms.CharField(
+        label="设备编号",
+        required=True,
+        max_length=30,
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备编号", })
+    )
+    transactor = forms.ModelChoiceField(
+        label="申请人",
+        required=True,
+        queryset=UserProfile.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
+    )  # 存疑
+    reviewer = forms.ModelChoiceField(
+        label="审批人",
+        required=True,
+        queryset=UserProfile.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
+    )
+    reason = forms.CharField(
+        label="报废原因",
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '报废原因说明'})
+    )
+
+    class Meta:
+        model = AssetScrap
+        fields = [
+            'aid', 'transactor', 'reviewer', 'reason',
+        ]
