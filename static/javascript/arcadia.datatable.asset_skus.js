@@ -67,7 +67,7 @@ function initDatatable(table, ajax_url, csrf_token) {
                         function (data, type, full, meta) {
                             var view_btn = "<a type='button' data-toggle='collapse' data-target='#asset-sets-"
                                 + full.id + "' href='' class='action-icon'><i class='mdi mdi-eye'></i></a>";
-                            var update_btn = "<a href='/asset/change/" + full.id + "' class='action-icon'>" +
+                            var update_btn = "<a href='#' class='action-icon'>" +
                                 "<i class='mdi mdi-pencil'></i></a>";
                             var more_btn =
                                 "<a class='action-icon ' href='#' id='dropdownMenuLink' data-toggle='dropdown'>" +

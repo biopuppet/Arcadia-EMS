@@ -121,12 +121,18 @@ class BaseAppModel(models.Model):
     def transit(self, event):
         if event is None or event == '':
             return self.status
+
         if event == 'reject':
             self.status = '已驳回'
         elif event == 'approve':
             self.status = '已通过'
         else:
             self.status = '异常'
+
+        # Transit all of the asset sets under this application
+        for asset_set in self.asset_sets_app.all():
+            asset_set.status = self.type + self.status
+            asset_set.save()
 
 
 class AssetCreate(BaseAppModel):

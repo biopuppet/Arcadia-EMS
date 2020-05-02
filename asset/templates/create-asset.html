@@ -194,7 +194,13 @@
     <!-- end demo js-->
     <script type="text/javascript">
         $(document).ready(function () {
-            var table = initDatatable($('#datatable-create-asset'), "{% url 'asset:index' %}", "{{ csrf_token }}");
+            var table = initDatatable(
+                $('#datatable-create-asset'),
+                "{% url 'asset:index' %}",
+                "{{ csrf_token }}",
+                paging=false,
+                searching=false,
+            );
         });
     </script>
 {% endblock %}

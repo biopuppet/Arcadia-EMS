@@ -1,4 +1,4 @@
-function initDatatable(table, ajax_url, csrf_token) {
+function initDatatable(table, ajax_url, csrf_token, paging=true, searching=true) {
     var dt = table.DataTable($.extend(true, {}, CONSTANT.DATA_TABLE.DEFAULT_OPTION, {
             ajax: {
                 "url": ajax_url,
@@ -6,6 +6,8 @@ function initDatatable(table, ajax_url, csrf_token) {
                 "data": {"csrfmiddlewaretoken": csrf_token},
                 "dataSrc": "",
             },
+            paging: paging,
+            searching: searching,
             columns: [
                 {
                     title: '编号',

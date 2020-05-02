@@ -35,6 +35,7 @@ class ReviewAssetCreationForm(forms.ModelForm):
         result = self.cleaned_data.get('result')
         print(result)
         asset_create_app.transit(result)
+
         if commit:
             asset_create_app.save()
         return asset_create_app
