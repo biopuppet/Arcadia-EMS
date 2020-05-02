@@ -98,7 +98,7 @@ class AssetSet(models.Model):
 class BaseAppModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
-
+    type = models.CharField(max_length=20, default='Unknown', verbose_name='申请类型')
     sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, related_name='%(class)s_sku', verbose_name='关联SKU')
     transactor = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True,
                                    related_name='%(class)s_transacted_assets',
@@ -125,7 +125,6 @@ class AssetCreate(BaseAppModel):
     class Meta:
         verbose_name = "Asset create application"
         verbose_name_plural = verbose_name + "s"
-        ordering = ['id']
 
     def __str__(self):
         return 'Create: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
@@ -137,7 +136,6 @@ class AssetScrap(BaseAppModel):
     class Meta:
         verbose_name = "Asset scrap application"
         verbose_name_plural = verbose_name + "s"
-        ordering = ['id']
 
     def __str__(self):
         return 'Scrap: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
@@ -150,7 +148,6 @@ class AssetFix(BaseAppModel):
     class Meta:
         verbose_name = "Asset fix application"
         verbose_name_plural = verbose_name + "s"
-        ordering = ['id']
 
     def __str__(self):
         return 'Fix: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()

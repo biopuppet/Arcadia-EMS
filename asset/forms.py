@@ -198,6 +198,7 @@ class AssetCreationForm(forms.ModelForm):
     def save(self, sku=None, commit=True):
         asset_creation_app = super().save(commit=False)
         asset_creation_app.sku = sku
+        asset_creation_app.type = '建账'
         if commit:
             asset_creation_app.save()
         return asset_creation_app
