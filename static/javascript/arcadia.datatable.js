@@ -13,7 +13,7 @@ function dt_reload(table, resetPaging = false, callback = null) {
 }(window.jQuery);
 
 function trunc(type, data, max) {
-    return type === 'display' && data.length > max ? data.substr(0, max) + '...' : data;
+    return type === 'display' && data && data.length > max ? data.substr(0, max) + '...' : data;
 }
 
 var CONSTANT = {
@@ -82,16 +82,23 @@ var CONSTANT = {
                         badge += "badge-info";
                         break;
                     case "完好":
+                    case "已通过":
                         badge += "badge-success";
                         break;
                     case "已驳回":
-                        badge += "badge-secondary";
+                        badge += "badge-danger";
                         break;
                     case "维修中":
+                        badge += "badge-secondary";
+                        break;
+                    case "采购中":
                         badge += "badge-primary";
                         break;
                     case "已报废":
                         badge += "badge-dark";
+                        break;
+                    case "已关闭":
+                        badge += "badge-light";
                         break;
                     default:
                         badge += "badge-light";
