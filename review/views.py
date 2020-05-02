@@ -20,7 +20,7 @@ class ReviewIndexView(LoginRequiredMixin, View):
                 'id': app.id,
                 'created_at': app.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 'updated_at': app.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-                'asset': app.asset.aid,
+                'asset': app.sku.skuid,
                 'transactor': app.transactor.username,
                 'status': app.status,
             })

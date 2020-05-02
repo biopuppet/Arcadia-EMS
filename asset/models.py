@@ -26,7 +26,7 @@ class AssetSKU(models.Model):
     the asset, e.g. the spec, model, the manufacturer, etc. It can be thought of as
     a code assigned to a set of indistinct entities.
     """
-    skuid = models.CharField(max_length=50, null=True, unique=True, verbose_name='货格编号')
+    skuid = models.CharField(max_length=50, unique=True, verbose_name='货格编号')
     acquired_at = models.DateTimeField(auto_now_add=True, verbose_name='购置日期')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新日期')
     note = models.TextField(blank=True, verbose_name='备注')
@@ -52,6 +52,12 @@ class AssetSKU(models.Model):
         skuid = '%s/%s/%s/%s/' % (self.asset.aid, str(self.model), str(self.spec), str(self.manufacturer))
         skuid += '%s/%s/%s/' % (str(self.produced_on), str(self.expired_on), str(self.price))
         return skuid
+
+    def set_skuid(self, skuid):
+        if skuid:
+            self.skuid = skuid
+        else:
+            self.skuid = self.make_skuid()
 
 
 class AssetSet(models.Model):

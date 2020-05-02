@@ -111,6 +111,23 @@ class AssetSkuForm(forms.ModelForm):
             raise forms.ValidationError("非法金额格式，合法格式如199, 10.02")
         return price
 
+    def save(self, asset=None, commit=True):
+        sku = super().save(commit=False)
+
+        spec = self.cleaned_data.get('spec')
+        model = self.cleaned_data.get('model')
+        manufacturer = self.cleaned_data.get('manufacturer')
+        produced_on = self.cleaned_data.get('produced_on')
+        expired_on = self.cleaned_data.get('expired_on')
+        price = self.cleaned_data.get('price')
+
+        sku.set_skuid('#%s:%s/%s/%s/%s/%s' % (asset.aid, model, spec, manufacturer, produced_on, price))
+        if asset:
+            sku.asset = asset
+            if commit:
+                sku.save()
+        return sku
+
 
 class AssetSetForm(forms.ModelForm):
     quantity = forms.IntegerField(

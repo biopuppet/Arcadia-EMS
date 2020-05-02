@@ -11,6 +11,9 @@ urlpatterns = [
 
     path('create/', AssetCreationView.as_view(), name='create'),
     path('create/<slug:asset_id>', AssetCreationOnAssetView.as_view(), name='create-on-asset'),
+    path('borrow/<slug:asset_id>', AssetIndexView.as_view(), name='borrow'),
+    path('scrap/<slug:asset_id>', AssetIndexView.as_view(), name='scrap'),
+    path('fix/<slug:asset_id>', AssetIndexView.as_view(), name='fix'),
 
     # path('delete-asset/<char:asset_id>', DeleteUserView.as_view(), name='delete-asset'),
     # path('update-asset/<char:asset_id>', UpdateUserView.as_view(), name='update-asset'),

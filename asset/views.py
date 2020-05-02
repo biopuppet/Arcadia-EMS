@@ -1,4 +1,6 @@
 import json
+from django.db.utils import IntegrityError
+from django.forms.utils import ErrorDict
 
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -82,7 +84,7 @@ class AssetCreationView(View):
         if asset is not None:
             ret.update({'msg': '编号【%s】设备的建账申请已提交！' % asset})
         elif save_ret.get('error_msg'):
-            ret.update(save_ret.get('error_msg'))
+            ret.update(save_ret['error_msg'])
         return render(request, 'create-asset.html', ret)
 
 
@@ -134,10 +136,7 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
                 asset = asset_form.save()
             else:
                 return asset_form.errors
-
-        asset_sku = asset_sku_form.save(commit=False)
-        asset_sku.asset = asset
-        asset_sku.save()
+        asset_sku = asset_sku_form.save(asset)
 
         asset_creation = asset_creation_form.save(commit=False)
         asset_creation.sku = asset_sku
