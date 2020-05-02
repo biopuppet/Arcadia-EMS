@@ -228,6 +228,7 @@ class AssetCreationForm(forms.ModelForm):
             asset_creation_app.save()
         return asset_creation_app
 
+
 class AssetScrapForm(forms.ModelForm):
     """
     A form that scrap an asset.

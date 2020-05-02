@@ -216,20 +216,33 @@ class AssetScrapView(View):
 
     def get(self, request):
         scrap_form = AssetScrapForm(auto_id="form-scrap-%s", label_suffix='')
+
         ret = {
             'scrap_form': scrap_form,
         }
         return render(request, 'asset-scrap.html', ret)
 
-    def post(self, request):
+    def post(self, request, asset_set_id, sku_id, asset_id):
         scrap_form = AssetScrapForm(request.POST, auto_id="form-scrap-%s", label_suffix='')
+        asset = get_object_or_404(Asset, pk=asset_id)
+        asset_set = get_object_or_404(AssetSetForm, pk=asset_set_id)
+        asset_set_form = AssetSetForm(request.POST, instance=asset_set, auto_id="form-asset-%s", label_suffix='')
+        asset_set_new_form = AssetSetForm(request.POST, auto_id="form-asset-new-%s", label_suffix='')
         ret = {
             'scrap_form': scrap_form,
+            'asset_form': asset_set_new_form,
         }
-        if scrap_form.is_valid():
+        if scrap_form.is_valid() and AssetSetForm.is_valid():
             assert_scrap = scrap_form.save(commit=False)
+            assert_scrap.sku = sku_id
             # TODO: deal with file input
             assert_scrap.save()
+
+            assert_set = asset_set_form.save()
+
+            assert_set_new = asset_set_new_form.save(commit=False)
+            assert_set_new.sku = sku_id
+            assert_set_new.save()
             ret.update({'msg': '编号【{}】设备建账申请已提交！'.format(scrap_form.aid)})
         else:
             errors = dict()

@@ -66,3 +66,4 @@ function initDatatable(table, ajax_url, csrf_token, paging=true, searching=true)
 }
 
 
+
