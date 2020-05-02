@@ -116,7 +116,17 @@ class BaseAppModel(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return 'Base' + self.sku.id.__str__() + '@' + self.created_at.__str__()
+        return 'Base' + self.id.__str__() + '@' + self.created_at.__str__()
+
+    def transit(self, event):
+        if event is None or event == '':
+            return self.status
+        if event == 'reject':
+            self.status = '已驳回'
+        elif event == 'approve':
+            self.status = '已通过'
+        else:
+            self.status = '异常'
 
 
 class AssetCreate(BaseAppModel):
