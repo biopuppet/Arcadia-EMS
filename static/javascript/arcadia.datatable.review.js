@@ -15,10 +15,13 @@ function initDatatable(table, ajax_url, csrf_token) {
                 width: "1%",
             },
             {
-                title: '设备编号',
-                data: 'asset',
+                title: 'SKU编号',
+                data: 'skuid',
                 responsivePriority: 1,
-                width: "10%",
+                width: "15%",
+                render: function(data, type, full, meta){
+                    return trunc(type, data, 15);
+                }
             },
             {
                 title: '申请日期',
@@ -41,7 +44,7 @@ function initDatatable(table, ajax_url, csrf_token) {
             {
                 title: '状态',
                 data: 'status',
-                responsivePriority: 5,
+                responsivePriority: 1,
                 width: "5%",
                 render: CONSTANT.DATA_TABLE.RENDER.ASSET_STATUS,
             },

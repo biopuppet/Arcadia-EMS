@@ -20,8 +20,18 @@ class ReviewIndexView(LoginRequiredMixin, View):
                 'id': app.id,
                 'created_at': app.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 'updated_at': app.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-                'asset': app.sku.skuid,
+                'skuid': app.sku.skuid,
                 'transactor': app.transactor.username,
                 'status': app.status,
             })
+        return HttpResponse(json.dumps(app_list), content_type='application/json')
+
+
+class AppDetailView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        return render(request, 'index.html')
+
+    def post(self, request):
+        app_list = []
         return HttpResponse(json.dumps(app_list), content_type='application/json')
