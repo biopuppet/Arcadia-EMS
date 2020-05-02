@@ -49,7 +49,8 @@ class AssetSKU(models.Model):
         return self.skuid.__str__()
 
     def make_skuid(self):
-        skuid = '%s/%s/%s/%s' % (self.asset.aid, str(self.model), str(self.spec), str(self.manufacturer))
+        skuid = '%s/%s/%s/%s/' % (self.asset.aid, str(self.model), str(self.spec), str(self.manufacturer))
+        skuid += '%s/%s/%s/' % (str(self.produced_on), str(self.expired_on), str(self.price))
         return skuid
 
 
@@ -67,7 +68,7 @@ class AssetSet(models.Model):
         combine the 2 rows if everything's consistent. Otherwise, keep as it is.
     """
     sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, related_name='sets', verbose_name='所属货格')
-    status = models.CharField(max_length=20, default='完好', verbose_name='状态')
+    status = models.CharField(max_length=20, default='建账审核中', verbose_name='状态')
     quantity = models.IntegerField(default=1, verbose_name='数量')
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, verbose_name='所在部门')
     address = models.CharField(max_length=100, blank=True, null=True, verbose_name='所在地址')
@@ -88,7 +89,8 @@ class AssetSet(models.Model):
 class BaseAppModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='%(class)s_app', verbose_name='关联设备')
+    # TODO: change sku to ManyToMany Field
+    sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, related_name='%(class)s_sku', verbose_name='关联SKU')
     transactor = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True,
                                    related_name='%(class)s_transacted_assets',
                                    verbose_name='经办人')
@@ -105,7 +107,7 @@ class BaseAppModel(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return self.asset.name + '@' + self.created_at.__str__()
+        return 'Base' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
 class AssetCreate(BaseAppModel):
@@ -117,7 +119,7 @@ class AssetCreate(BaseAppModel):
         ordering = ['id']
 
     def __str__(self):
-        return 'Create: ' + self.asset.name + '@' + self.created_at.__str__()
+        return 'Create: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
 class AssetScrap(BaseAppModel):
@@ -129,7 +131,7 @@ class AssetScrap(BaseAppModel):
         ordering = ['id']
 
     def __str__(self):
-        return 'Scrap: ' + self.asset.name + '@' + self.created_at.__str__()
+        return 'Scrap: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
 class AssetFix(BaseAppModel):
@@ -142,4 +144,4 @@ class AssetFix(BaseAppModel):
         ordering = ['id']
 
     def __str__(self):
-        return 'Fix: ' + self.asset.name + '@' + self.created_at.__str__()
+        return 'Fix: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()

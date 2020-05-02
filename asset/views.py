@@ -7,7 +7,7 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
-from asset.models import Asset
+from asset.models import Asset, AssetSet
 from asset.serializers import AssetSkuSerializer, AssetSerializer
 
 
@@ -77,7 +77,7 @@ class AssetCreationView(View):
             'asset_set_form': asset_set_form,
         }
         save_ret = save_asset_creation(asset_form, asset_sku_form, asset_set_form,
-                                     asset_creation_form)
+                                       asset_creation_form)
         asset = save_ret.get('asset')
         if asset is not None:
             ret.update({'msg': '编号【%s】设备的建账申请已提交！' % asset})
@@ -119,7 +119,7 @@ class AssetCreationOnAssetView(LoginRequiredMixin, View):
             'asset_form': asset_form,
         }
         save_ret = save_asset_creation(asset_form, asset_sku_form, asset_set_form,
-                                     asset_creation_form, on_asset=True, asset=asset)
+                                       asset_creation_form, on_asset=True, asset=asset)
         if save_ret['asset'] is not None:
             ret.update({'msg': '基于编号【{}】设备的建账申请已提交！'.format(asset.aid)})
         elif save_ret.get('error_msg'):
@@ -128,21 +128,21 @@ class AssetCreationOnAssetView(LoginRequiredMixin, View):
 
 
 def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creation_form, on_asset=False, asset=None):
-
     if asset_sku_form.is_valid() and asset_set_form.is_valid() and asset_creation_form.is_valid():
         if not on_asset and asset is None:
             if asset_form.is_valid():
                 asset = asset_form.save()
             else:
                 return asset_form.errors
-        asset_creation = asset_creation_form.save(commit=False)
-        asset_creation.asset = asset
-        # TODO: deal with file input
-        asset_creation.save()
 
         asset_sku = asset_sku_form.save(commit=False)
         asset_sku.asset = asset
         asset_sku.save()
+
+        asset_creation = asset_creation_form.save(commit=False)
+        asset_creation.sku = asset_sku
+        # TODO: deal with file input
+        asset_creation.save()
 
         asset_set = asset_set_form.save(commit=False)
         asset_set.sku = asset_sku
