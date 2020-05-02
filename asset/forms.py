@@ -145,9 +145,18 @@ class AssetSetForm(forms.ModelForm):
 
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
+        # TODO: integer check
         if quantity and quantity <= 0:
             raise forms.ValidationError("非法数量")
         return quantity
+
+    def save(self, sku=None, app=None, commit=True):
+        asset_set = super().save(commit=False)
+        asset_set.sku = sku
+        asset_set.app = app
+        if commit:
+            asset_set.save()
+        return asset_set
 
 
 class AssetCreationForm(forms.ModelForm):
@@ -185,3 +194,10 @@ class AssetCreationForm(forms.ModelForm):
     #     if aid and Asset.objects.filter(id=id).count():
     #         raise forms.ValidationError('AID already exists.')
     #     return aid
+
+    def save(self, sku=None, commit=True):
+        asset_creation_app = super().save(commit=False)
+        asset_creation_app.sku = sku
+        if commit:
+            asset_creation_app.save()
+        return asset_creation_app

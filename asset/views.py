@@ -137,15 +137,8 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
             else:
                 return asset_form.errors
         asset_sku = asset_sku_form.save(asset)
-
-        asset_creation = asset_creation_form.save(commit=False)
-        asset_creation.sku = asset_sku
-        # TODO: deal with file input
-        asset_creation.save()
-
-        asset_set = asset_set_form.save(commit=False)
-        asset_set.sku = asset_sku
-        asset_set.save()
+        asset_creation = asset_creation_form.save(sku=asset_sku)
+        asset_set_form.save(sku=asset_sku, app=asset_creation)
         return {'asset': asset.aid}
     else:
         if not on_asset and asset_form.errors:

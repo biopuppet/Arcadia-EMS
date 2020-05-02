@@ -74,6 +74,9 @@ class AssetSet(models.Model):
         combine the 2 rows if everything's consistent. Otherwise, keep as it is.
     """
     sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, related_name='sets', verbose_name='所属货格')
+    app = models.ForeignKey('BaseAppModel', on_delete=models.SET_NULL, null=True, related_name='asset_sets_app',
+                            verbose_name='关联申请')
+
     status = models.CharField(max_length=20, default='建账审核中', verbose_name='状态')
     quantity = models.IntegerField(default=1, verbose_name='数量')
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, verbose_name='所在部门')
@@ -95,7 +98,7 @@ class AssetSet(models.Model):
 class BaseAppModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
-    # TODO: change sku to ManyToMany Field
+
     sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, related_name='%(class)s_sku', verbose_name='关联SKU')
     transactor = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True,
                                    related_name='%(class)s_transacted_assets',
