@@ -37,43 +37,6 @@ function initDatatable(table, ajax_url, csrf_token) {
                     responsivePriority: 4,
                     width: "10%",
                 },
-                // {
-                //     title: '生产日期',
-                //     data: 'produced_on',
-                //     responsivePriority: 3,
-                //     width: "5%",
-                // },
-                // {
-                //     title: '保质日期',
-                //     data: 'expired_on',
-                //     responsivePriority: 3,
-                //     width: "5%",
-                // },
-                // {
-                //     title: '所在部门',
-                //     data: 'distribution',
-                //     responsivePriority: 4,
-                //     width: "5%",
-                // },
-                // {
-                //     title: '状态',
-                //     data: 'status',
-                //     responsivePriority: 5,
-                //     width: "5%",
-                //     render: CONSTANT.DATA_TABLE.RENDER.ASSET_STATUS,
-                // },
-                // {
-                //     title: '数量',
-                //     data: 'quantity',
-                //     responsivePriority: 6,
-                //     width: "1%",
-                // },
-                // {
-                //     title: '单价',
-                //     data: 'price',
-                //     responsivePriority: 6,
-                //     width: "5%",
-                // },
                 CONSTANT.DATA_TABLE.COLUMN.ACTION,
             ],
             columnDefs: [

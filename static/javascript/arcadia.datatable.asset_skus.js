@@ -6,101 +6,57 @@ function initDatatable(table, ajax_url, csrf_token) {
                 "data": {"csrfmiddlewaretoken": csrf_token},
                 "dataSrc": "",
             },
-            autoWidth: false,
+            paging: true,
             columns: [
                 {
                     title: '编号',
                     data: 'id',
                     responsivePriority: 1,
-                    width: "5%",
-                },
-                {
-                    title: '购置日期',
-                    data: 'acquired_at',
-                    responsivePriority: 2,
-                    width: "10%",
-                },
-                {
-                    title: '更新日期',
-                    data: 'updated_at',
-                    responsivePriority: 3,
-                    width: "10%",
                 },
                 {
                     title: '型号',
                     data: 'model',
                     responsivePriority: 4,
-                    width: "10%",
                 },
 
                 {
                     title: '规格',
                     data: 'spec',
                     responsivePriority: 5,
-                    width: "10%",
                 },
                 {
                     title: '生产厂商',
                     data: 'manufacturer',
                     responsivePriority: 6,
-                    width: "10%",
                 },
                 {
                     title: '生产日期',
                     data: 'produced_on',
                     responsivePriority: 6,
-                    width: "10%",
                 },
                 {
                     title: '保质日期',
                     data: 'expired_on',
-                    responsivePriority: 7,
-                    width: "10%",
+                    responsivePriority: 6,
                 },
                 {
                     title: '单价',
                     data: 'price',
-                    responsivePriority: 7,
-                    width: "7.5%",
+                    responsivePriority: 6,
+                    render: function (data, type, full, meta) {
+                        return '¥ ' + data;
+                    }
                 },
-
-                // {
-                //     title: '生产日期',
-                //     data: 'produced_on',
-                //     responsivePriority: 3,
-                //     width: "5%",
-                // },
-                // {
-                //     title: '保质日期',
-                //     data: 'expired_on',
-                //     responsivePriority: 3,
-                //     width: "5%",
-                // },
-                // {
-                //     title: '所在部门',
-                //     data: 'distribution',
-                //     responsivePriority: 4,
-                //     width: "5%",
-                // },
-                // {
-                //     title: '状态',
-                //     data: 'status',
-                //     responsivePriority: 5,
-                //     width: "5%",
-                //     render: CONSTANT.DATA_TABLE.RENDER.ASSET_STATUS,
-                // },
-                // {
-                //     title: '数量',
-                //     data: 'quantity',
-                //     responsivePriority: 6,
-                //     width: "1%",
-                // },
-                // {
-                //     title: '单价',
-                //     data: 'price',
-                //     responsivePriority: 6,
-                //     width: "5%",
-                // },
+                {
+                    title: '购置日期',
+                    data: 'acquired_at',
+                    responsivePriority: 7,
+                },
+                {
+                    title: '更新日期',
+                    data: 'updated_at',
+                    responsivePriority: 8,
+                },
                 CONSTANT.DATA_TABLE.COLUMN.ACTION,
             ],
             columnDefs: [
@@ -109,10 +65,10 @@ function initDatatable(table, ajax_url, csrf_token) {
                     title: "操作",
                     "render":
                         function (data, type, full, meta) {
-                            var view_btn = "<a href='/asset/" + full.aid + "' class='action-icon'>" +
-                                "<i class='mdi mdi-eye'></i></a>";
-                            var update_btn = "<a href='/asset/create/" + full.aid + "' class='action-icon'>" +
-                                "<i class='mdi mdi-plus'></i></a>";
+                            var view_btn = "<a type='button' data-toggle='collapse' data-target='#asset-sets-"
+                                + full.id + "' href='' class='action-icon'><i class='mdi mdi-eye'></i></a>";
+                            var update_btn = "<a href='/asset/borrow/" + full.id + "' class='action-icon'>" +
+                                "<i class='mdi mdi-cart'></i></a>";
                             var more_btn =
                                 "<a class='action-icon ' href='#' id='dropdownMenuLink' data-toggle='dropdown'>" +
                                 "<i class='mdi mdi-dots-horizontal'></i></a>" +

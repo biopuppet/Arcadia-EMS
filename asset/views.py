@@ -1,13 +1,14 @@
-import datetime
 import json
 
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
+from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
 from asset.models import Asset
+from asset.serializers import AssetSkuSerializer, AssetSerializer
 
 
 class AssetIndexView(View):
@@ -18,24 +19,8 @@ class AssetIndexView(View):
 
     def post(self, request):
         if request.is_ajax():
-            asset_list = []
-            for asset in Asset.objects.all():
-                asset_list.append({
-                    'aid': asset.aid,
-                    'name': asset.name,
-                    'category': str(asset.category),
-                    'created_at': asset.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    'updated_at': asset.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    # 'manufacturer': asset.manufacturer,
-                    # 'produced_on': str(asset.produced_on),
-                    # 'expired_on': str(asset.expired_on),
-                    # 'distribution': str(asset.distribution.all()),
-                    # 'status': asset.status,
-                    # 'quantity': asset.quantity,
-                    # 'price': str(asset.price),
-                })
-            print(asset_list)
-            return HttpResponse(json.dumps(asset_list), content_type='application/json')
+            assets = AssetSerializer(instance=Asset.objects.all(), many=True)
+            return HttpResponse(json.dumps(assets.data), content_type='application/json')
         else:
             assets = Asset.objects.all()
             return render(request, 'assets.html', {'assets': assets})
@@ -45,63 +30,39 @@ class AssetProfileView(View):
 
     def get(self, request, asset_id):
         asset = get_object_or_404(Asset, pk=asset_id)
-        res = asset.skus.all().values()
-        print(res)
-        for dic in res:
-            dic.pop('asset_id')
-            dic.pop('skuid')
-            dic.pop('note')
-        print(list(res))
-        # for skus in asset.skus.all():
-        #     for set in skus.sets.all():
-        #         print('%s %s %s' % (skus, set, set.quantity))
-        return render(request, 'profile.html', {'asset': asset, 'skus': list(res)})
+        # Sum all stocks under this asset
+        stock = 0
+        for skus in asset.skus.all():
+            for set in skus.sets.all():
+                stock += set.quantity
+        return render(request, 'profile.html', {'asset': asset, 'stock': stock})
 
     def post(self, request, asset_id):
         if request.is_ajax():
             asset = get_object_or_404(Asset, pk=asset_id)
-            sku_list = []
-            for sku in asset.skus.all():
-                sku_list.append({
-                    'id': sku.id,
-                    'model': sku.model,
-                    'spec': sku.spec,
-                    'acquired_at': sku.acquired_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    'updated_at': sku.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    'manufacturer': sku.manufacturer,
-                    'produced_on': str(sku.produced_on),
-                    'expired_on': str(sku.expired_on),
-                    'price': str(sku.price),
-                })
-            print(sku_list)
-            return HttpResponse(json.dumps(sku_list), content_type='application/json')
+            skus = AssetSkuSerializer(instance=asset.skus.all(), many=True)
+            return HttpResponse(json.dumps(skus.data), content_type='application/json')
+        else:
+            raise page_not_found(request)
 
 
 class AssetCreationView(View):
 
     def get(self, request):
-        asset_creation_form = AssetCreationForm(auto_id="form-asset-create-%s", label_suffix='')
-        asset_form = AssetForm(auto_id="form-asset-%s", label_suffix='')
-        asset_sku_form = AssetSkuForm(auto_id="form-asset-sku-%s", label_suffix='')
-        asset_set_form = AssetSetForm(auto_id="form-asset-set-%s", label_suffix='')
-        ret = {
-            'asset_creation_form': asset_creation_form,
-            'asset_form': asset_form,
-            'asset_sku_form': asset_sku_form,
-            'asset_set_form': asset_set_form,
-        }
         if request.is_ajax():
-            asset_list = []
-            for asset in Asset.objects.all():
-                asset_list.append({
-                    'aid': asset.aid,
-                    'name': asset.name,
-                    'category': str(asset.category),
-                    'created_at': asset.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                })
-            print(asset_list)
-            return HttpResponse(json.dumps(asset_list), content_type='application/json')
+            assets = AssetSerializer(instance=Asset.objects.all(), many=True)
+            return HttpResponse(json.dumps(assets.data), content_type='application/json')
         else:
+            asset_creation_form = AssetCreationForm(auto_id="form-asset-create-%s", label_suffix='')
+            asset_form = AssetForm(auto_id="form-asset-%s", label_suffix='')
+            asset_sku_form = AssetSkuForm(auto_id="form-asset-sku-%s", label_suffix='')
+            asset_set_form = AssetSetForm(auto_id="form-asset-set-%s", label_suffix='')
+            ret = {
+                'asset_creation_form': asset_creation_form,
+                'asset_form': asset_form,
+                'asset_sku_form': asset_sku_form,
+                'asset_set_form': asset_set_form,
+            }
             return render(request, 'create-asset.html', ret)
 
     def post(self, request):
@@ -115,42 +76,13 @@ class AssetCreationView(View):
             'asset_sku_form': asset_sku_form,
             'asset_set_form': asset_set_form,
         }
-        if asset_form.is_valid() and asset_sku_form.is_valid() \
-                and asset_set_form.is_valid() and asset_creation_form.is_valid():
-            asset = asset_form.save()
-            asset_creation = asset_creation_form.save(commit=False)
-            asset_creation.asset = asset
-            # TODO: deal with file input
-            asset_creation.save()
-
-            asset_sku = asset_sku_form.save(commit=False)
-            asset_sku.asset = asset
-            asset_sku.skuid = asset_sku.make_skuid()
-            asset_sku.save()
-
-            asset_set = asset_set_form.save(commit=False)
-            asset_set.sku = asset_sku
-            asset_set.save()
-
-            ret.update({'msg': '编号【{}】设备建账申请已提交！'.format(asset.aid)})
-        else:
-            if asset_form.errors:
-                ret.update({
-                    'error_msg': asset_form.errors.as_ul()
-                })
-            elif asset_creation_form.errors:
-                ret.update({
-                    'error_msg': asset_creation_form.errors.as_ul()
-                })
-            elif asset_sku_form.errors:
-                ret.update({
-                    'error_msg': asset_sku_form.errors.as_ul()
-                })
-            elif asset_set_form.errors:
-                ret.update({
-                    'error_msg': asset_set_form.errors.as_ul()
-                })
-
+        save_ret = save_asset_creation(asset_form, asset_sku_form, asset_set_form,
+                                     asset_creation_form)
+        asset = save_ret.get('asset')
+        if asset is not None:
+            ret.update({'msg': '编号【%s】设备的建账申请已提交！' % asset})
+        elif save_ret.get('error_msg'):
+            ret.update(save_ret.get('error_msg'))
         return render(request, 'create-asset.html', ret)
 
 
@@ -186,32 +118,45 @@ class AssetCreationOnAssetView(LoginRequiredMixin, View):
             'asset': asset,
             'asset_form': asset_form,
         }
-        if asset_sku_form.is_valid() and asset_set_form.is_valid() and asset_creation_form.is_valid():
-            asset_creation = asset_creation_form.save(commit=False)
-            asset_creation.asset = asset
-            # TODO: deal with file input
-            asset_creation.save()
-
-            asset_sku = asset_sku_form.save(commit=False)
-            asset_sku.asset = asset
-            asset_sku.save()
-
-            asset_set = asset_set_form.save(commit=False)
-            asset_set.sku = asset_sku
-            asset_set.save()
-
-            ret.update({'msg': '编号【{}】设备建账申请已提交！'.format(asset.aid)})
-        else:
-            if asset_creation_form.errors:
-                ret.update({
-                    'error_msg': asset_creation_form.errors.as_ul()
-                })
-            elif asset_sku_form.errors:
-                ret.update({
-                    'error_msg': asset_sku_form.errors.as_ul()
-                })
-            elif asset_set_form.errors:
-                ret.update({
-                    'error_msg': asset_set_form.errors.as_ul()
-                })
+        save_ret = save_asset_creation(asset_form, asset_sku_form, asset_set_form,
+                                     asset_creation_form, on_asset=True, asset=asset)
+        if save_ret['asset'] is not None:
+            ret.update({'msg': '基于编号【{}】设备的建账申请已提交！'.format(asset.aid)})
+        elif save_ret.get('error_msg'):
+            ret.update(save_ret.get('error_msg'))
         return render(request, 'create-asset.html', ret)
+
+
+def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creation_form, on_asset=False, asset=None):
+
+    if asset_sku_form.is_valid() and asset_set_form.is_valid() and asset_creation_form.is_valid():
+        if not on_asset and asset is None:
+            if asset_form.is_valid():
+                asset = asset_form.save()
+            else:
+                return asset_form.errors
+        asset_creation = asset_creation_form.save(commit=False)
+        asset_creation.asset = asset
+        # TODO: deal with file input
+        asset_creation.save()
+
+        asset_sku = asset_sku_form.save(commit=False)
+        asset_sku.asset = asset
+        asset_sku.save()
+
+        asset_set = asset_set_form.save(commit=False)
+        asset_set.sku = asset_sku
+        asset_set.save()
+        return {'asset': asset.aid}
+    else:
+        if not on_asset and asset_form.errors:
+            errors = asset_form.errors
+        elif asset_creation_form.errors:
+            errors = asset_creation_form.errors
+        elif asset_sku_form.errors:
+            errors = asset_sku_form.errors
+        elif asset_set_form.errors:
+            errors = asset_set_form.errors
+        else:
+            return {'error_msg': 'Unknown errors'}
+        return {'error_msg': errors.as_ul()}

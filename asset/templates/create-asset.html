@@ -189,13 +189,12 @@
 
     <!-- demo app -->
     <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
-    <script src="{% static 'javascript/arcadia.datatable.create_asset.js' %}"></script>
+    <script src="{% static 'javascript/arcadia.datatable.asset.js' %}"></script>
 
     <!-- end demo js-->
     <script type="text/javascript">
         $(document).ready(function () {
-            // "use strict";
-            initDatatable($('#datatable-create-asset'), "{% url 'asset:create' %}", "{{ csrf_token }}");
+            var table = initDatatable($('#datatable-create-asset'), "{% url 'asset:index' %}", "{{ csrf_token }}");
         });
     </script>
 {% endblock %}
