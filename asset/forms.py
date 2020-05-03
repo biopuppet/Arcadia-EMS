@@ -4,6 +4,7 @@ from django import forms
 from django.forms import TextInput, Select
 
 from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU
+from department.models import Department
 from user.models import UserProfile
 
 
@@ -73,7 +74,7 @@ class AssetSkuForm(forms.ModelForm):
         label="生产厂商",
         required=False,
         max_length=50,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "生产厂商详细信息，如联系方式、地址等", }, )
+        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "生产厂商信息", }, )
     )
     produced_on = forms.DateField(
         label="生产日期",
@@ -136,11 +137,35 @@ class AssetSetForm(forms.ModelForm):
         initial=1,
         widget=forms.widgets.NumberInput(attrs={'class': 'form-control', }),
     )
+    department = forms.ModelChoiceField(
+        label="所在部门",
+        required=False,
+        queryset=Department.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
+    )
+    manager = forms.ModelChoiceField(
+        label="负责人",
+        required=False,
+        queryset=UserProfile.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
+    )
+    user = forms.ModelChoiceField(
+        label="使用人",
+        required=False,
+        queryset=UserProfile.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
+    )
+    address = forms.CharField(
+        label="详细地址",
+        required=False,
+        widget=forms.widgets.Textarea(attrs={'class': 'form-control',
+                                             'placeholder': '具体到仓库，实验室等'})
+    )
 
     class Meta:
         model = AssetSet
         fields = [
-            'quantity',
+            'quantity', 'manager', 'user', 'department', 'address',
         ]
 
     def clean_quantity(self):
