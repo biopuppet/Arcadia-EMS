@@ -20,8 +20,8 @@ function initDatatable(table, ajax_url, csrf_token) {
                 width: "5%",
             },
             {
-                title: '关联设备',
-                data: 'asset',
+                title: '关联SKU',
+                data: 'sku',
                 responsivePriority: 2,
                 width: "5%",
             },
@@ -50,12 +50,6 @@ function initDatatable(table, ajax_url, csrf_token) {
                 responsivePriority: 6,
                 width: "10%",
             },
-            {
-                title: '建账证明',
-                data: 'credentials',
-                responsivePriority: 6,
-                width: "10%",
-            },
             CONSTANT.DATA_TABLE.COLUMN.ACTION,
         ],
         columnDefs: [
@@ -64,17 +58,15 @@ function initDatatable(table, ajax_url, csrf_token) {
                 title: "操作",
                 "render":
                     function (data, type, full, meta) {
-                        var view_btn = "<a href='/asset/" + full.id + "' class='action-icon'>" +
+                        var view_btn = "<a href='/review/" + full.id + "' class='action-icon'>" +
                             "<i class='mdi mdi-eye'></i></a>";
-                        var update_btn = "<a href='#' class='action-icon'" +
-                            "<i class='mdi mdi-square-edit-outline'></i></a>";
                         var more_btn =
                             "<a class='action-icon ' href='#' id='dropdownMenuLink' data-toggle='dropdown'>" +
                             "<i class='mdi mdi-dots-horizontal'></i></a>" +
                             "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>" +
                             "<a href='#' class='dropdown-item'>" +
                             "Toggle something</a></div>";
-                        return view_btn + update_btn + more_btn;
+                        return view_btn + more_btn;
                     }
             }
         ],

@@ -20,8 +20,8 @@ function initDatatable(table, ajax_url, csrf_token) {
                 width: "5%",
             },
             {
-                title: '关联设备',
-                data: 'asset',
+                title: '关联SKU',
+                data: 'sku',
                 responsivePriority: 2,
                 width: "5%",
             },
@@ -66,15 +66,13 @@ function initDatatable(table, ajax_url, csrf_token) {
                     function (data, type, full, meta) {
                         var view_btn = "<a href='/asset/" + full.id + "' class='action-icon'>" +
                             "<i class='mdi mdi-eye'></i></a>";
-                        var update_btn = "<a href='#' class='action-icon'" +
-                            "<i class='mdi mdi-square-edit-outline'></i></a>";
                         var more_btn =
                             "<a class='action-icon ' href='#' id='dropdownMenuLink' data-toggle='dropdown'>" +
                             "<i class='mdi mdi-dots-horizontal'></i></a>" +
                             "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>" +
                             "<a href='#' class='dropdown-item'>" +
                             "Toggle something</a></div>";
-                        return view_btn + update_btn + more_btn;
+                        return view_btn + more_btn;
                     }
             }
         ],

@@ -19,9 +19,6 @@ function initDatatable(table, ajax_url, csrf_token) {
                 data: 'sku',
                 responsivePriority: 1,
                 width: "15%",
-                render: function(data, type, full, meta){
-                    return trunc(type, data['skuid'], 15);
-                }
             },
             {
                 title: '类型',
@@ -46,9 +43,6 @@ function initDatatable(table, ajax_url, csrf_token) {
                 data: 'transactor',
                 responsivePriority: 4,
                 width: "10%",
-                render: function(data, type, full, meta){
-                    return trunc(type, data['username'], 15);
-                }
             },
             {
                 title: '状态',
@@ -76,7 +70,7 @@ function initDatatable(table, ajax_url, csrf_token) {
                             "<a href='/review/reject/" + full.id + "' class='dropdown-item'>驳回</a>" +
                             "<a href='/review/approve/" + full.id + "' class='dropdown-item'>通过</a>" +
                             "</div>";
-                        return view_btn + update_btn + more_btn;
+                        return view_btn + more_btn;
                     },
             },
         ],

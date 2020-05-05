@@ -9,8 +9,8 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
-from asset.models import Asset, AssetSet
-from asset.serializers import AssetSkuSerializer, AssetSerializer
+from asset.models import Asset, AssetSet, AssetCreate, AssetScrap
+from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer
 
 
 class AssetIndexView(View):
@@ -161,24 +161,12 @@ class AssetCreateTableView(View):
         return render(request, 'assetcreatetable.html', {'assetscreatetable': createtable})
 
     def post(self, request):
+        asset_creations = AssetCreate.objects.all()
         if request.is_ajax():
-            createtable_list = []
-            for createtable in AssetCreate.objects.all():
-                createtable_list.append({
-                    'created_at': str(createtable.created_at),
-                    'updated_at': str(createtable.updated_at),
-                    'asset': str(createtable.asset.name),
-                    'transactor': str(createtable.transactor),
-                    'note': str(createtable.note),
-                    'status': str(createtable.status),
-                    'reviewer': str(createtable.reviewer),
-                    'opinion': str(createtable.opinion),
-                    'credentials': str(createtable.credentials),
-                })
-            return HttpResponse(json.dumps(createtable_list), content_type='application/json')
+            asset_creations_serial = AssetCreateSerializer(instance=asset_creations, many=True)
+            return HttpResponse(json.dumps(asset_creations_serial.data), content_type='application/json')
         else:
-            createtable = AssetCreate.objects.all()
-            return render(request, 'assetcreatetable.html', {'assetscreatetable': createtable})
+            return render(request, 'assetcreatetable.html', {'assetscreatetable': asset_creations})
 
 
 class AssetScrapTableView(View):
@@ -188,21 +176,9 @@ class AssetScrapTableView(View):
         return render(request, 'assetscraptable.html', {'assetsscraptable': scraptable})
 
     def post(self, request):
+        asset_scraps = AssetScrap.objects.all()
         if request.is_ajax():
-            scraptable_list = []
-            for scraptable in AssetScrap.objects.all():
-                scraptable_list.append({
-                    'created_at': str(scraptable.created_at),
-                    'updated_at': str(scraptable.updated_at),
-                    'asset': str(scraptable.asset),
-                    'transactor': str(scraptable.transactor),
-                    'note': str(scraptable.note),
-                    'status': str(scraptable.status),
-                    'reviewer': str(scraptable.reviewer),
-                    'opinion': str(scraptable.opinion),
-                    'reason': str(scraptable.reason),
-                })
-            return HttpResponse(json.dumps(scraptable_list), content_type='application/json')
+            asset_scraps_serial = AssetCreateSerializer(instance=asset_scraps, many=True)
+            return HttpResponse(json.dumps(asset_scraps_serial.data), content_type='application/json')
         else:
-            scraptable = AssetScrap.objects.all()
-            return render(request, 'assetscraptable.html', {'assetsscraptable': scraptable})
+            return render(request, 'assetscraptable.html', {'assetsscraptable': asset_scraps})

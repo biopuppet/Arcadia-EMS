@@ -1,14 +1,14 @@
 import json
 
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from asset.forms import *
 from asset.models import BaseAppModel, AssetCreate, AssetScrap
 from review.forms import ReviewAssetCreationForm
-from review.serializers import BaseAppModelSerializer
+from asset.serializers import BaseAppModelSerializer
 
 
 class ReviewIndexView(LoginRequiredMixin, View):
@@ -51,7 +51,7 @@ class AppDetailView(LoginRequiredMixin, View):
             print('scrap app')
         else:
             print('unknown')
-        return render(request, 'index.html')
+        return redirect('review:index')
 
     def post(self, request, app_id):
         app = get_object_or_404(BaseAppModel, id=app_id)
