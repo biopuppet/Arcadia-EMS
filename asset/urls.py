@@ -5,7 +5,6 @@ from asset.views import *
 app_name = 'asset'
 
 urlpatterns = [
-    # path('asset/', ),
     path('', AssetIndexView.as_view(), name='index'),
     path('<slug:asset_id>', AssetProfileView.as_view(), name='profile'),
 
