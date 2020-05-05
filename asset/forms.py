@@ -3,7 +3,7 @@ import re
 from django import forms
 from django.forms import TextInput, Select
 
-from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU, AssetScrap
+from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU, AssetScrap, AssetBorrowReturn
 from department.models import Department
 from user.models import UserProfile
 
@@ -264,4 +264,28 @@ class AssetScrapForm(forms.ModelForm):
         model = AssetScrap
         fields = [
             'aid', 'transactor', 'reviewer', 'reason',
+        ]
+
+
+class AssetBorrowForm(forms.ModelForm):
+    """
+    A form that scrap an asset.
+    """
+    error_messages = {
+    }
+    estimate_return_on = forms.DateField(
+        label="预计归还日期",
+        required=True,
+        widget=forms.widgets.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', })
+    )
+    returned_at = forms.DateTimeField(
+        label="实际归还日期",
+        required=False,
+        widget=forms.widgets.DateTimeInput(attrs={'class': 'form-control', })
+    )
+
+    class Meta:
+        model = AssetBorrowReturn
+        fields = [
+            'estimate_return_on', 'returned_at'
         ]

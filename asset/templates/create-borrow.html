@@ -1,0 +1,210 @@
+{% extends 'base-sidebar.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+        {% include 'base-page-title.html' with title_name='设备借还' %}
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <form action="{% url 'asset:borrow' %}" method="post" class="pl-2 pr-2">
+                                    {% csrf_token %}
+                                    <h4 class="mt-2">设备基本信息</h4>
+                                    <p class="text-muted mb-4">您填写的设备基础信息会直接用于生成设备条目，请谨慎填写!</p>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_form.aid.label_tag | capfirst }}
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">#</span>
+                                                </div>
+                                                {{ asset_form.aid }}
+                                            </div>
+                                            {% if asset_form.aid.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.aid.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="col-6 mb-3">
+                                            {{ asset_form.name.label_tag | capfirst }}
+                                            {{ asset_form.name }}
+                                            {% if asset_form.name.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.name.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_form.category.label_tag | capfirst }}
+                                            {{ asset_form.category }}
+                                            {% if asset_form.category.errors %}
+                                                <div class="alert alert-warning">{{ asset_form.category.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.model.label_tag | capfirst }}
+                                            {{ asset_sku_form.model }}
+                                            {% if asset_sku_form.model.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.model.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.spec.label_tag | capfirst }}
+                                            {{ asset_sku_form.spec }}
+                                            {% if asset_sku_form.spec.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.spec.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.manufacturer.label_tag | capfirst }}
+                                            {{ asset_sku_form.manufacturer }}
+                                            {% if asset_sku_form.manufacturer.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.manufacturer.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ borrow_form.ex_return.label_tag | capfirst }}
+                                            {{ borrow_form.ex_return }}
+                                            {% if asset_sku_form.produced_on.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.produced_on.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ borrow_form.act_return.label_tag | capfirst }}
+                                            {{ borrow_form.act_return }}
+                                            {% if asset_sku_form.expired_on.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.expired_on.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-6 mb-3">
+                                            {{ asset_sku_form.price.label_tag | capfirst }}
+                                            {{ asset_sku_form.price }}
+                                            {% if asset_sku_form.price.errors %}
+                                                <div class="alert alert-warning">{{ asset_sku_form.price.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            {{ asset_set_form.quantity.label_tag | capfirst }}
+                                            {{ asset_set_form.quantity }}
+                                            {% if asset_set_form.quantity.errors %}
+                                                <div class="alert alert-warning">{{ asset_set_form.quantity.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        {{ asset_form.description.label_tag }}
+                                        {{ asset_form.description }}
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        {{ asset_sku_form.note.label_tag }}
+                                        {{ asset_sku_form.note }}
+                                    </div>
+
+                                    <h4 class="mt-lg-4">设备建账信息</h4>
+                                    <p class="text-muted mb-4">设备建账相关信息</p>
+                                    {% for item in asset_creation_form %}
+                                        <div class="form-group mb-3">
+                                            {{ item.label_tag }}
+                                            {{ item }}
+                                            {{ item.errors }}
+                                        </div>
+                                    {% endfor %}
+
+                                    <div class="row mt-4">
+                                        <div class="col-sm-6">
+                                            <a href="{% url 'asset:index' %}"
+                                               class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
+                                                <i class="mdi mdi-arrow-left"></i> 返回台账
+                                            </a>
+                                        </div> <!-- end col -->
+                                        <div class="col-sm-6 text-sm-right">
+                                            <button href="#" class="btn btn-danger">
+                                                <i class="mdi mdi-truck-fast mr-1"></i> 提交
+                                            </button>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+                                </form>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="border p-3 mt-4 mt-lg-0 rounded">
+                                    <h4 class="header-title mb-3">Summary</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-centered mb-0">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <p class="m-0 d-inline-block align-middle">
+                                                        5 x $148.60
+                                                    </p>
+                                                </td>
+                                                <td class="text-right">
+                                                    $743.30
+                                                </td>
+                                            </tr>
+                                            <tr class="text-right">
+                                                <td>
+                                                    <h6 class="m-0">Sub Total:</h6>
+                                                </td>
+                                                <td class="text-right">
+                                                    $1071.29
+                                                </td>
+                                            </tr>
+                                            <tr class="text-right">
+                                                <td>
+                                                    <h5 class="m-0">Total:</h5>
+                                                </td>
+                                                <td class="text-right font-weight-semibold">
+                                                    $1071.29
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- end table-responsive -->
+                                </div> <!-- end .border-->
+                            </div> <!-- end col -->
+                        </div> <!-- end row-->
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        <!-- end row-->
+    </div> <!-- container -->
+{% endblock %}
+
+{% block js-footer %}
+    <!-- third party js -->
+    <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
+    <!-- third party js ends -->
+
+    <!-- demo app -->
+    <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
+    <script src="{% static 'javascript/arcadia.datatable.asset.js' %}"></script>
+
+    <!-- end demo js-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = initDatatable($('#datatable-create-asset'), "{% url 'asset:index' %}", "{{ csrf_token }}");
+        });
+    </script>
+{% endblock %}

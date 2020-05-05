@@ -5,7 +5,7 @@ from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
-from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm
+from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm, AssetBorrowForm
 from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
     AssetFixSerializer, AssetBorrowReturnSerializer
@@ -252,3 +252,47 @@ class AssetScrapView(View):
                 'error_msg': errors.as_ul()
             })
         return render(request, 'asset-scrap.html', ret)
+
+
+class AssetBorrowView(View):
+
+    def get(self, request):
+        if request.is_ajax():
+            assets = AssetSerializer(instance=Asset.objects.all(), many=True)
+            return HttpResponse(json.dumps(assets.data), content_type='application/json')
+        else:
+            asset_creation_form = AssetCreationForm(auto_id="form-asset-create-%s", label_suffix='')
+            asset_form = AssetForm(auto_id="form-asset-%s", label_suffix='')
+            asset_sku_form = AssetSkuForm(auto_id="form-asset-sku-%s", label_suffix='')
+            asset_set_form = AssetSetForm(auto_id="form-asset-set-%s", label_suffix='')
+            borrow_form = AssetBorrowForm(auto_id="form-borrow-%s", label_suffix='')
+            ret = {
+                'asset_creation_form': asset_creation_form,
+                'asset_form': asset_form,
+                'asset_sku_form': asset_sku_form,
+                'asset_set_form': asset_set_form,
+                'borrow_form': borrow_form,
+            }
+            return render(request, 'create-borrow.html', ret)
+
+    def post(self, request):
+        asset_form = AssetForm(request.POST, auto_id="form-asset-%s", label_suffix='')
+        asset_sku_form = AssetSkuForm(request.POST, auto_id="form-asset-sku-%s", label_suffix='')
+        asset_set_form = AssetSetForm(request.POST, auto_id="form-asset-set-%s", label_suffix='')
+        asset_creation_form = AssetCreationForm(request.POST, auto_id="form-asset-create-%s", label_suffix='')
+        borrow_form = AssetBorrowForm(request.POST, auto_id="form-borrow-%s", label_suffix='')
+        ret = {
+            'asset_creation_form': asset_creation_form,
+            'asset_form': asset_form,
+            'asset_sku_form': asset_sku_form,
+            'asset_set_form': asset_set_form,
+            'borrow_form': borrow_form,
+        }
+        save_ret = save_asset_creation(asset_form, asset_sku_form, asset_set_form,
+                                       asset_creation_form)
+        asset = save_ret.get('asset')
+        if asset is not None:
+            ret.update({'msg': '编号【%s】设备的建账申请已提交！' % asset})
+        elif save_ret.get('error_msg'):
+            ret.update(save_ret.get('error_msg'))
+        return render(request, 'create-borrow.html', ret)
