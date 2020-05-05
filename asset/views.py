@@ -9,8 +9,9 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
-from asset.models import Asset, AssetSet, AssetCreate, AssetScrap
-from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer
+from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix
+from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
+    AssetFixSerializer
 
 
 class AssetIndexView(View):
@@ -178,7 +179,22 @@ class AssetScrapTableView(View):
     def post(self, request):
         asset_scraps = AssetScrap.objects.all()
         if request.is_ajax():
-            asset_scraps_serial = AssetCreateSerializer(instance=asset_scraps, many=True)
+            asset_scraps_serial = AssetScrapSerializer(instance=asset_scraps, many=True)
             return HttpResponse(json.dumps(asset_scraps_serial.data), content_type='application/json')
         else:
             return render(request, 'assetscraptable.html', {'assetsscraptable': asset_scraps})
+
+
+class AssetFixTableView(View):
+
+    def get(self, request):
+        fixtable = AssetFix.objects.all()
+        return render(request, 'assetfixtable.html', {'assetfixtable': fixtable})
+
+    def post(self, request):
+        asset_fixs = AssetFix.objects.all()
+        if request.is_ajax():
+            asset_fixs_serial = AssetFixSerializer(instance=asset_fixs, many=True)
+            return HttpResponse(json.dumps(asset_fixs_serial.data), content_type='application/json')
+        else:
+            return render(request, 'assetfixtable.html', {'assetfixtable': asset_fixs})

@@ -46,3 +46,9 @@ class AssetScrapSerializer(BaseAppModelSerializer):
     class Meta:
         model = AssetScrap
         fields = "__all__"
+
+class AssetFixSerializer(BaseAppModelSerializer):
+
+    class Meta:
+        model = AssetFix
+        fields = "__all__"
