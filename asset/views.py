@@ -273,7 +273,7 @@ class AssetBorrowView(View):
                 'asset_set_form': asset_set_form,
                 'borrow_form': borrow_form,
             }
-            return render(request, 'create-borrow.html', ret)
+            return render(request, 'borrow.html', ret)
 
     def post(self, request):
         asset_form = AssetForm(request.POST, auto_id="form-asset-%s", label_suffix='')
@@ -295,4 +295,4 @@ class AssetBorrowView(View):
             ret.update({'msg': '编号【%s】设备的建账申请已提交！' % asset})
         elif save_ret.get('error_msg'):
             ret.update(save_ret.get('error_msg'))
-        return render(request, 'create-borrow.html', ret)
+        return render(request, 'borrow.html', ret)
