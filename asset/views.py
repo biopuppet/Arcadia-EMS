@@ -9,9 +9,9 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
-from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
     AssetFixSerializer
+from asset.models import Asset, AssetSet, AssetCreate, AssetFix, AssetScrap, AssetBorrowReturn
 
 
 class AssetIndexView(View):
@@ -198,3 +198,18 @@ class AssetFixTableView(View):
             return HttpResponse(json.dumps(asset_fixs_serial.data), content_type='application/json')
         else:
             return render(request, 'assetfixtable.html', {'assetfixtable': asset_fixs})
+
+
+class AssetBorrowReturnTableView(View):
+
+    def get(self, request):
+        borrowreturntable = AssetBorrowReturn.objects.all()
+        return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': borrowreturntable})
+
+    def post(self,request):
+        asset_borrowreturns = AssetBorrowReturn.objects.all()
+        if request.is_ajax():
+            asset_borrowreturns_serial = AssetBorrowReturnSerializer(instance=asset_borrowreturns, many=True)
+            return HttpResponse(json.dumps(asset_borrowreturns_serial.data), content_type='application/json')
+        else:
+            return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': asset_borrowreturns})

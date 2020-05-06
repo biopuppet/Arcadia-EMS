@@ -135,6 +135,8 @@ class BaseAppModel(models.Model):
             asset_set.status = self.type + self.status
             asset_set.save()
 
+# 设备报表
+
 
 class AssetCreate(BaseAppModel):
     credentials = models.FileField(upload_to='credentials/%Y/%m', blank=True, verbose_name='建账证明')

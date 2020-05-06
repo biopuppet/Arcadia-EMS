@@ -21,5 +21,6 @@ urlpatterns = [
 
     path('createtable/', AssetCreateTableView.as_view(), name='createtable'),
     path('scraptable/', AssetScrapTableView.as_view(), name='scraptable'),
-    path('fixtable/', AssetFixTableView.as_view(), name='fixtable')
+    path('fixtable/', AssetFixTableView.as_view(), name='fixtable'),
+    path('borrowreturntable/', AssetBorrowReturnTableView.as_view(), name='borrowreturntable')
 ]
