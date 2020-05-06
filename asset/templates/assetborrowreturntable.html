@@ -11,47 +11,28 @@
 {% block content %}
     <!-- Start Content-->
     <div class="container-fluid">
-        {% include 'base-page-title.html' with title_name='设备维修报表' %}
+        {% include 'base-page-title.html' with title_name='设备借还表' %}
 
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <table id="AssetBorrowReturn" class="table table-striped dt-responsive nowrap">
-                            <thead>
-                                <tr>
-                                    <th>创建时间</th>
-                                    <th>更新时间</th>
-                                    <th>关联设备</th>
-                                    <th>经办人</th>
-                                    <th>备注</th>
-                                    <th>审核状态</th>
-                                    <th>审批人</th>
-                                    <th>审批意见</th>
-                                    <th>借出时间</th>
-                                    <th>预计归还时间</th>
-                                    <th>归还时间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                 {% for AssetBorrowReturn in asset_table.all %}
-                                    <tr>
-                                        <td>{{ AssetBorrowReturn.created_at }}</td>
-                                        <td>{{ AssetBorrowReturn.updated_at }}</td>
-                                        <td>{{ AssetBorrowReturn.asset }}</td>
-                                        <td>{{ AssetBorrowReturn.transactor }}</td>
-                                        <td>{{ AssetBorrowReturn.note }}</td>
-                                        <td>{{ AssetBorrowReturn.status }}</td>
-                                        <td>{{ AssetBorrowReturn.reviewer }}</td>
-                                        <td>{{ AssetBorrowReturn.opinion }}</td>
-                                        <td>{{ AssetBorrowReturn.borrow_date }}</td>
-                                        <td>{{ AssetBorrowReturn.ext_return_date }}</td>
-                                        <td>{{ AssetBorrowReturn.return_date }}</td>
-                                    </tr>
-                                 {% endfor %}
-                            </tbody>
-                        </table>
 
+                        <div class="row mb-2">
+                            <div class="col-sm-4">
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="text-sm-right">
+                                    <button disabled type="button" class="btn btn-warning mb-3 mr-1">
+                                        Export
+                                    </button>
+                                    <button type="button" class="btn btn-info dt-btn-reload mb-3">
+                                        <i class="mdi mdi-refresh"></i>
+                                    </button>
+                                </div>
+                            </div><!-- end col-->
+                        </div>
+                        <table id="datatable-borrowreturntable" class="table table-striped dt-responsive nowrap"></table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
@@ -59,7 +40,6 @@
         <!-- end row-->
     </div> <!-- container -->
 {% endblock %}
-
 
 
 {% block javascripts %}
@@ -77,11 +57,11 @@
     <!-- demo app -->
     <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
     <!-- end demo js-->
-    <script src="{% static 'javascript/arcadia.datatable.asset.js' %}"></script>
+    <script src="{% static 'javascript/arcadia.datatable.assetborrowreturntable.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             // "use strict";
-            initDatatable($('#datatable-assets'), "{% url 'asset:index' %}", "{{ csrf_token }}");
+            initDatatable($('#datatable-borrowreturntable'), "{% url 'asset:borrowreturntable' %}", "{{ csrf_token }}");
         });
     </script>
 {% endblock %}

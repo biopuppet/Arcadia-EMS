@@ -9,9 +9,9 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
-from asset.models import Asset, AssetSet, AssetCreate, AssetFix, AssetScrap, AssetBorrowReturn
-from asset.serializers import AssetSkuSerializer, AssetSerializer
-
+from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn
+from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
+    AssetFixSerializer, AssetBorrowReturnSerializer
 
 class AssetIndexView(View):
 
@@ -205,7 +205,7 @@ class AssetBorrowReturnTableView(View):
         borrowreturntable = AssetBorrowReturn.objects.all()
         return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': borrowreturntable})
 
-    def post(self,request):
+    def post(self, request):
         asset_borrowreturns = AssetBorrowReturn.objects.all()
         if request.is_ajax():
             asset_borrowreturns_serial = AssetBorrowReturnSerializer(instance=asset_borrowreturns, many=True)

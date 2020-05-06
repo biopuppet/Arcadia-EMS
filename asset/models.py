@@ -177,8 +177,8 @@ class AssetBorrowReturn(BaseAppModel):
     return_date = models.DateTimeField(null=True, blank=True, verbose_name='实际归还时间')
 
     class Meta:
-        verbose_name = "Asset fix application"
+        verbose_name = "Asset borrow return application"
         verbose_name_plural = verbose_name + "s"
 
     def __str__(self):
-        return 'Fix: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
+        return 'BorrowReturn: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
