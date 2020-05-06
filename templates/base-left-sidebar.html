@@ -35,24 +35,14 @@
                     <span> 业务办理 </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <ul class="side-nav-second-level" aria-expanded="false">
+                <ul class="side-nav-second-level" >
                     <li>
                         <a href="{% url 'asset:create' %}">设备建账</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'maintained' %}">设备报废</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'maintained' %}">设备报修</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'maintained' %}">设备变动</a>
                     </li>
                     <li>
                         <a href="{% url 'maintained' %}">设备借还</a>
                     </li>
                 </ul>
-
             </li>
 
             <li class="side-nav-item">
@@ -68,7 +58,7 @@
                     <span> 设备报表 </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <ul class="side-nav-second-level" aria-expanded="false">
+                <ul class="side-nav-second-level">
                     <li>
                         <a href="{% url 'asset:createtable' %}">设备建账表</a>
                     </li>
@@ -91,7 +81,7 @@
                     <span> 附加程序 </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <ul class="side-nav-second-level" aria-expanded="false">
+                <ul class="side-nav-second-level">
                     <li>
                         <a href="{% url 'user:calendar' %}">日程表</a>
                     </li>
@@ -104,7 +94,7 @@
                     <span> 系统管理 </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <ul class="side-nav-second-level" aria-expanded="false">
+                <ul class="side-nav-second-level">
                     <li>
                         <a href="{% url 'user:index' %}">用户管理</a>
                     </li>
@@ -122,27 +112,21 @@
                     <span> 设置 </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <ul class="side-nav-second-level" aria-expanded="false">
+                <ul class="side-nav-second-level">
                     <li>
                         <a href="{% url 'user:profile' user.id %}">我的账号</a>
-                    </li>
-                    <li hidden>
-                        <a href="#">Lock Screen</a>
-                    </li>
-                    <li hidden>
-                        <a href="#">Confirm Mail</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="side-nav-item">
+            <li hidden class="side-nav-item">
                 <a href="#" class="side-nav-link">
                     <i class="mdi mdi-account"></i>
                     <span> *Dev Kit </span>
 
                     <span class="menu-arrow"></span>
                 </a>
-                <ul class="side-nav-second-level" aria-expanded="false">
+                <ul class="side-nav-second-level">
                     <li>
                         <a href="#">Modals</a>
                     </li>
