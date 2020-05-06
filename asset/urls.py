@@ -18,4 +18,9 @@ urlpatterns = [
     # path('delete-asset/<char:asset_id>', DeleteUserView.as_view(), name='delete-asset'),
     # path('update-asset/<char:asset_id>', UpdateUserView.as_view(), name='update-asset'),
     # path('toggle-asset-status/<char:asset_id>', ToggleUserStatusView().as_view(), name='toggle-asset-status'),
+
+    path('createtable/', AssetCreateTableView.as_view(), name='createtable'),
+    path('scraptable/', AssetScrapTableView.as_view(), name='scraptable'),
+    path('fixtable/', AssetFixTableView.as_view(), name='fixtable'),
+    path('borrowreturntable/', AssetBorrowReturnTableView.as_view(), name='borrowreturntable')
 ]

@@ -9,7 +9,7 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm
-from asset.models import Asset, AssetSet
+from asset.models import Asset, AssetSet, AssetCreate, AssetFix, AssetScrap, AssetBorrowReturn
 from asset.serializers import AssetSkuSerializer, AssetSerializer
 
 
@@ -152,3 +152,63 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
         else:
             return {'error_msg': 'Unknown errors'}
         return {'error_msg': errors.as_ul()}
+
+
+class AssetCreateTableView(View):
+
+    def get(self, request):
+        createtable = AssetCreate.objects.all()
+        return render(request, 'assetcreatetable.html', {'assetscreatetable': createtable})
+
+    def post(self, request):
+        asset_creations = AssetCreate.objects.all()
+        if request.is_ajax():
+            asset_creations_serial = AssetCreateSerializer(instance=asset_creations, many=True)
+            return HttpResponse(json.dumps(asset_creations_serial.data), content_type='application/json')
+        else:
+            return render(request, 'assetcreatetable.html', {'assetscreatetable': asset_creations})
+
+
+class AssetScrapTableView(View):
+
+    def get(self, request):
+        scraptable = AssetScrap.objects.all()
+        return render(request, 'assetscraptable.html', {'assetsscraptable': scraptable})
+
+    def post(self, request):
+        asset_scraps = AssetScrap.objects.all()
+        if request.is_ajax():
+            asset_scraps_serial = AssetScrapSerializer(instance=asset_scraps, many=True)
+            return HttpResponse(json.dumps(asset_scraps_serial.data), content_type='application/json')
+        else:
+            return render(request, 'assetscraptable.html', {'assetsscraptable': asset_scraps})
+
+
+class AssetFixTableView(View):
+
+    def get(self, request):
+        fixtable = AssetFix.objects.all()
+        return render(request, 'assetfixtable.html', {'assetfixtable': fixtable})
+
+    def post(self, request):
+        asset_fixs = AssetFix.objects.all()
+        if request.is_ajax():
+            asset_fixs_serial = AssetFixSerializer(instance=asset_fixs, many=True)
+            return HttpResponse(json.dumps(asset_fixs_serial.data), content_type='application/json')
+        else:
+            return render(request, 'assetfixtable.html', {'assetfixtable': asset_fixs})
+
+
+class AssetBorrowReturnTableView(View):
+
+    def get(self, request):
+        borrowreturntable = AssetBorrowReturn.objects.all()
+        return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': borrowreturntable})
+
+    def post(self,request):
+        asset_borrowreturns = AssetBorrowReturn.objects.all()
+        if request.is_ajax():
+            asset_borrowreturns_serial = AssetBorrowReturnSerializer(instance=asset_borrowreturns, many=True)
+            return HttpResponse(json.dumps(asset_borrowreturns_serial.data), content_type='application/json')
+        else:
+            return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': asset_borrowreturns})

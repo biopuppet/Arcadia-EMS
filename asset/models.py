@@ -134,6 +134,8 @@ class BaseAppModel(models.Model):
             asset_set.status = self.type + self.status
             asset_set.save()
 
+# 设备报表
+
 
 class AssetCreate(BaseAppModel):
     credentials = models.FileField(upload_to='credentials/%Y/%m', blank=True, verbose_name='建账证明')
@@ -160,6 +162,19 @@ class AssetScrap(BaseAppModel):
 class AssetFix(BaseAppModel):
     contact = models.CharField(max_length=20, default="", verbose_name="维修方联系方式")
     returned_at = models.DateTimeField(null=True, blank=True, verbose_name='维修结束时间')
+
+    class Meta:
+        verbose_name = "Asset fix application"
+        verbose_name_plural = verbose_name + "s"
+
+    def __str__(self):
+        return 'Fix: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
+
+
+class AssetBorrowReturn(BaseAppModel):
+    borrow_date = models.DateTimeField(null=True, blank=True, verbose_name='借出时间')
+    ext_return_date = models.DateTimeField(null=True, blank=True, verbose_name='预计归还时间')
+    return_date = models.DateTimeField(null=True, blank=True, verbose_name='实际归还时间')
 
     class Meta:
         verbose_name = "Asset fix application"
