@@ -6,6 +6,8 @@ app_name = 'asset'
 
 urlpatterns = [
     path('', AssetIndexView.as_view(), name='index'),
+    path('mine/', AssetMineView.as_view(), name='mine'),
+
     path('<slug:asset_id>', AssetProfileView.as_view(), name='profile'),
 
     path('create/', AssetCreationView.as_view(), name='create'),

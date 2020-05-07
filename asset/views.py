@@ -6,9 +6,9 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm, AssetBorrowForm
-from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU
+from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseAppModel
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
-    AssetFixSerializer, AssetBorrowReturnSerializer
+    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppModelSerializer
 
 
 class AssetIndexView(LoginRequiredMixin, View):
@@ -24,6 +24,18 @@ class AssetIndexView(LoginRequiredMixin, View):
         else:
             assets = Asset.objects.all()
             return render(request, 'assets.html', {'assets': assets})
+
+
+class AssetMineView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        return render(request, 'mine.html')
+
+    def post(self, request):
+        if request.is_ajax():
+            apps = BaseAppModel.objects.filter(transactor=request.user)
+            apps_ = BaseAppModelSerializer(instance=apps, many=True)
+            return HttpResponse(json.dumps(apps_.data), content_type='application/json')
 
 
 class AssetProfileView(LoginRequiredMixin, View):
