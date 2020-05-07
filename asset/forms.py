@@ -180,6 +180,7 @@ class AssetSetForm(forms.ModelForm):
         asset_set = super().save(commit=False)
         asset_set.sku = sku
         asset_set.app = app
+        asset_set.set_status()
         if commit:
             asset_set.save()
         return asset_set

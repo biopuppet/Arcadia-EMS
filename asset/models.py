@@ -77,7 +77,7 @@ class AssetSet(models.Model):
     app = models.ForeignKey('BaseAppModel', on_delete=models.SET_NULL, null=True, related_name='asset_sets_app',
                             verbose_name='关联申请')
 
-    status = models.CharField(max_length=20, default='建账审核中', verbose_name='状态')
+    status = models.CharField(max_length=20, default='审核中', verbose_name='状态')
     quantity = models.IntegerField(default=1, verbose_name='数量')
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, verbose_name='所在部门')
     address = models.CharField(max_length=100, blank=True, null=True, verbose_name='所在地址')
@@ -93,6 +93,9 @@ class AssetSet(models.Model):
 
     def __str__(self):
         return self.id.__str__()
+
+    def set_status(self):
+        self.status = self.app.type + '审核中'
 
 
 class BaseAppModel(models.Model):
