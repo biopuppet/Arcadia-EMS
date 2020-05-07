@@ -11,7 +11,7 @@ from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSe
     AssetFixSerializer, AssetBorrowReturnSerializer
 
 
-class AssetIndexView(View):
+class AssetIndexView(LoginRequiredMixin, View):
 
     def get(self, request):
         assets = Asset.objects.all()
@@ -26,7 +26,7 @@ class AssetIndexView(View):
             return render(request, 'assets.html', {'assets': assets})
 
 
-class AssetProfileView(View):
+class AssetProfileView(LoginRequiredMixin, View):
 
     def get(self, request, asset_id):
         asset = get_object_or_404(Asset, pk=asset_id)
@@ -46,7 +46,7 @@ class AssetProfileView(View):
             raise page_not_found(request)
 
 
-class AssetCreationView(View):
+class AssetCreationView(LoginRequiredMixin, View):
 
     def get(self, request):
         if request.is_ajax():
@@ -152,7 +152,7 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
         return {'error_msg': errors.as_ul()}
 
 
-class AssetCreateTableView(View):
+class AssetCreateTableView(LoginRequiredMixin, View):
 
     def get(self, request):
         createtable = AssetCreate.objects.all()
@@ -167,7 +167,7 @@ class AssetCreateTableView(View):
             return render(request, 'assetcreatetable.html', {'assetscreatetable': asset_creations})
 
 
-class AssetScrapTableView(View):
+class AssetScrapTableView(LoginRequiredMixin, View):
 
     def get(self, request):
         scraptable = AssetScrap.objects.all()
@@ -182,7 +182,7 @@ class AssetScrapTableView(View):
             return render(request, 'assetscraptable.html', {'assetsscraptable': asset_scraps})
 
 
-class AssetFixTableView(View):
+class AssetFixTableView(LoginRequiredMixin, View):
 
     def get(self, request):
         fixtable = AssetFix.objects.all()
@@ -197,7 +197,7 @@ class AssetFixTableView(View):
             return render(request, 'assetfixtable.html', {'assetfixtable': asset_fixs})
 
 
-class AssetBorrowReturnTableView(View):
+class AssetBorrowReturnTableView(LoginRequiredMixin, View):
 
     def get(self, request):
         borrowreturntable = AssetBorrowReturn.objects.all()
