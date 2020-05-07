@@ -131,6 +131,7 @@ class BaseAppModel(models.Model):
 
         # Transit all of the asset sets under this application
         for asset_set in self.asset_sets_app.all():
+            # e.g. '建账已通过', '报废已驳回'
             asset_set.status = self.type + self.status
             asset_set.save()
 
@@ -171,14 +172,38 @@ class AssetFix(BaseAppModel):
         return 'Fix: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
+<<<<<<< HEAD
 class AssetBorrowReturn(BaseAppModel):
     borrow_date = models.DateTimeField(null=True, blank=True, verbose_name='借出时间')
     ext_return_date = models.DateTimeField(null=True, blank=True, verbose_name='预计归还时间')
     return_date = models.DateTimeField(null=True, blank=True, verbose_name='实际归还时间')
+=======
+class AssetChange(BaseAppModel):
+    change_type = models.CharField(max_length=50, blank=True, null=True, verbose_name='变更类型')
+    change_field = models.CharField(max_length=50, verbose_name='变动字段')
+    change_description = models.CharField(max_length=100, verbose_name='变动内容')
+
+    class Meta:
+        verbose_name = "Asset change application"
+        verbose_name_plural = verbose_name + "s"
+
+    def __str__(self):
+        return 'Change: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
+
+
+class AssetBorrowReturn(BaseAppModel):
+    borrowed_at = models.DateTimeField(verbose_name='借出时间')
+    estimate_return_on = models.DateField(verbose_name='预计归还时间')
+    returned_at = models.DateTimeField(verbose_name='实际归还时间')
+>>>>>>> b03c724984150e5f2e292e394060561cb9f4793a
 
     class Meta:
         verbose_name = "Asset borrow return application"
         verbose_name_plural = verbose_name + "s"
 
     def __str__(self):
+<<<<<<< HEAD
         return 'BorrowReturn: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
+=======
+        return 'B&R: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
+>>>>>>> b03c724984150e5f2e292e394060561cb9f4793a

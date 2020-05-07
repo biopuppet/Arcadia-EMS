@@ -1,6 +1,9 @@
 # VS Code
 .vscode/
 
+# MacOS
+.DS_Store
+
 # PyCharm
 .idea/**/workspace.xml
 .idea/**/tasks.xml

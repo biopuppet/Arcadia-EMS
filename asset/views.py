@@ -13,6 +13,7 @@ from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, Ass
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
     AssetFixSerializer, AssetBorrowReturnSerializer
 
+
 class AssetIndexView(View):
 
     def get(self, request):
@@ -212,3 +213,4 @@ class AssetBorrowReturnTableView(View):
             return HttpResponse(json.dumps(asset_borrowreturns_serial.data), content_type='application/json')
         else:
             return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': asset_borrowreturns})
+
