@@ -47,8 +47,16 @@ class AssetScrapSerializer(BaseAppModelSerializer):
         model = AssetScrap
         fields = "__all__"
 
+
 class AssetFixSerializer(BaseAppModelSerializer):
 
     class Meta:
         model = AssetFix
+        fields = "__all__"
+
+
+class AssetBorrowReturnSerializer(BaseAppModelSerializer):
+
+    class Meta:
+        model = AssetBorrowReturn
         fields = "__all__"
