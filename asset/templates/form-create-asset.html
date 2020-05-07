@@ -1,12 +1,5 @@
 {% load static %}
 
-<!-- Start Content-->
-{% if msg %}
-    <div class="alert alert-success" role="alert">
-        {{ msg }}
-    </div>
-{% endif %}
-
 {% if readonly %}
     <form action="{% url 'asset:create-on-asset' asset.aid %}" method="post"
           class="pl-2 pr-2">
