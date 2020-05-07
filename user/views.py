@@ -1,8 +1,5 @@
 import json
-import re
-
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,7 +13,7 @@ from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from ArcadiaEMS.email import send_email
 from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm, GroupCreationForm
-from user.models import UserProfile, Department
+from user.models import UserProfile
 
 User = get_user_model()
 
@@ -159,9 +156,6 @@ class UpdateUserView(LoginRequiredMixin, View):
 
 class UserChangePasswordView(LoginRequiredMixin, View):
 
-    def get(self, request, user_id):
-        return HttpResponseRedirect(reverse('user:profile', args=(user_id,)))
-
     def post(self, request, user_id):
         if 'id' in request.POST and int(request.POST['id']) == user_id:
             user = get_object_or_404(User, pk=int(request.POST['id']))
@@ -172,13 +166,15 @@ class UserChangePasswordView(LoginRequiredMixin, View):
             new_password = request.POST['new_password']
             user.set_password(new_password)
             user.save()
-            return HttpResponseRedirect(reverse('user:profile', args=[user_id, ]))
+            ret = {
+                'status': 'success',
+            }
         else:
             ret = {
                 'status': 'fail',
-                'password_change_form_errors': form.errors.as_ul()
+                'errors': form.errors.as_text()
             }
-            return HttpResponse(json.dumps(ret), content_type='application/json')
+        return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
 class ToggleUserStatusView(LoginRequiredMixin, View):
@@ -188,7 +184,6 @@ class ToggleUserStatusView(LoginRequiredMixin, View):
             user = get_object_or_404(User, pk=int(user_id))
             user.is_active = not user.is_active
             user.save()
-
         return HttpResponseRedirect(reverse('user:index'))
 
 
@@ -221,7 +216,6 @@ class UserCreateGroupView(LoginRequiredMixin, View):
 
     def post(self, request):
         form = GroupCreationForm(request.POST)
-        groups = Group.objects.all()
         ret = {'form': GroupCreationForm(), }
         if form.is_valid:
             group = form.save()
@@ -255,7 +249,6 @@ class UserChangeGroupView(LoginRequiredMixin, View):
             ret.update({
                 'error_msg': form.errors.as_ul(),
             })
-        print(ret)
         return render(request, 'user/group-change.html', ret)
 
 

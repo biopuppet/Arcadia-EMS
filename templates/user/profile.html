@@ -30,9 +30,7 @@
                                 </ul>
                             </div> <!-- end col-->
                             <!-- Change password modal content -->
-                            <div id="change-password-modal" class="modal fade" tabindex="-1" role="dialog"
-                                 aria-hidden="true"
-                                 style="display: none;">
+                            <div id="change-password-modal" class="modal fade">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-body">
@@ -43,8 +41,7 @@
                                                 </a>
                                             </div>
 
-                                            <form id="form-change-password" class="pl-3 pr-3"
-                                                  action="{% url 'user:change-password' user.id %}" method="post">
+                                            <form id="form-change-password" class="pl-3 pr-3">
                                                 {% csrf_token %}
                                                 <input type="hidden" name='id' value="{{ user.id }}"/>
                                                 <div class="form-group">
@@ -176,6 +173,27 @@
                 });
                 return false; // !important! or the form will be posted twice
             });
+            $('#form-change-password').submit(function () {
+                $.ajax({
+                    url: '{% url 'user:change-password' user.id %}',
+                    type: 'POST',
+                    data: $("#form-change-password").serialize(),
+                    cache: false,
+                    async: true,
+                    success: function (msg) {
+                        if (msg.status === 'success') {
+                            parent.location.reload();
+                        } else {
+                            console.log(msg.errors);
+                            alert(msg.errors)
+                        }
+                    },
+                    complete: function (XMLHttpRequest) {
+                    }
+                });
+                return false; // !important! or the form will be posted twice
+            });
+
         });
     </script>
 {% endblock %}
