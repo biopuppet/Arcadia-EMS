@@ -47,16 +47,12 @@ class AssetScrapSerializer(BaseAppModelSerializer):
         model = AssetScrap
         fields = "__all__"
 
-<<<<<<< HEAD
 
-=======
->>>>>>> b03c724984150e5f2e292e394060561cb9f4793a
 class AssetFixSerializer(BaseAppModelSerializer):
 
     class Meta:
         model = AssetFix
         fields = "__all__"
-<<<<<<< HEAD
 
 
 class AssetBorrowReturnSerializer(BaseAppModelSerializer):
@@ -64,5 +60,3 @@ class AssetBorrowReturnSerializer(BaseAppModelSerializer):
     class Meta:
         model = AssetBorrowReturn
         fields = "__all__"
-=======
->>>>>>> b03c724984150e5f2e292e394060561cb9f4793a
