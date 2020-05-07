@@ -15,12 +15,8 @@ urlpatterns = [
     path('scrap/<slug:asset_id>', AssetIndexView.as_view(), name='scrap'),
     path('fix/<slug:asset_id>', AssetIndexView.as_view(), name='fix'),
 
-    # path('delete-asset/<char:asset_id>', DeleteUserView.as_view(), name='delete-asset'),
-    # path('update-asset/<char:asset_id>', UpdateUserView.as_view(), name='update-asset'),
-    # path('toggle-asset-status/<char:asset_id>', ToggleUserStatusView().as_view(), name='toggle-asset-status'),
-
-    path('createtable/', AssetCreateTableView.as_view(), name='createtable'),
-    path('scraptable/', AssetScrapTableView.as_view(), name='scraptable'),
-    path('fixtable/', AssetFixTableView.as_view(), name='fixtable'),
-    path('borrowreturntable/', AssetBorrowReturnTableView.as_view(), name='borrowreturntable')
+    path('create-table/', AssetCreateTableView.as_view(), name='create-table'),
+    path('scrap-table/', AssetScrapTableView.as_view(), name='scrap-table'),
+    path('fix-table/', AssetFixTableView.as_view(), name='fix-table'),
+    path('borrow-return-table/', AssetBorrowReturnTableView.as_view(), name='borrow-return-table')
 ]

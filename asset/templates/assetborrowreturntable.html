@@ -32,7 +32,7 @@
                                 </div>
                             </div><!-- end col-->
                         </div>
-                        <table id="datatable-borrowreturntable" class="table table-striped dt-responsive nowrap"></table>
+                        <table id="datatable-borrow-return-table" class="table table-striped dt-responsive nowrap"></table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
@@ -61,7 +61,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             // "use strict";
-            initDatatable($('#datatable-borrowreturntable'), "{% url 'asset:borrowreturntable' %}", "{{ csrf_token }}");
+            initDatatable($('#datatable-borrow-return-table'), "{% url 'asset:borrow-return-table' %}", "{{ csrf_token }}");
         });
     </script>
 {% endblock %}

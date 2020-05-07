@@ -62,7 +62,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             // "use strict";
-            initDatatable($('#datatable-assetfixtable'), "{% url 'asset:fixtable' %}", "{{ csrf_token }}");
+            initDatatable($('#datatable-assetfixtable'), "{% url 'asset:fix-table' %}", "{{ csrf_token }}");
         });
     </script>
 {% endblock %}

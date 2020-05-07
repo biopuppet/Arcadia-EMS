@@ -1,7 +1,4 @@
 import json
-from django.db.utils import IntegrityError
-from django.forms.utils import ErrorDict
-
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import View
@@ -213,4 +210,3 @@ class AssetBorrowReturnTableView(View):
             return HttpResponse(json.dumps(asset_borrowreturns_serial.data), content_type='application/json')
         else:
             return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': asset_borrowreturns})
-
