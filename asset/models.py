@@ -184,9 +184,9 @@ class AssetChange(BaseAppModel):
 
 
 class AssetBorrowReturn(BaseAppModel):
-    borrowed_at = models.DateTimeField(verbose_name='借出时间')
+    borrowed_at = models.DateTimeField(auto_now_add=True, verbose_name='借出时间')
     estimate_return_on = models.DateField(verbose_name='预计归还时间')
-    returned_at = models.DateTimeField(verbose_name='实际归还时间')
+    returned_at = models.DateTimeField(null=True, verbose_name='实际归还时间')
 
     class Meta:
         verbose_name = "Asset borrow return application"

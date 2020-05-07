@@ -101,7 +101,7 @@
                                             <td>{{ asset_set.quantity }}</td>
                                             <td>{{ asset_set.status }}</td>
                                             <td>
-                                                <a href="#" class='action-icon'>
+                                                <a href="{% url 'asset:borrow' asset_set.id %}" class='action-icon'>
                                                     <i class='mdi mdi-cart'></i>借出</a>
                                                 <a href="#" class='action-icon'>
                                                     <i class='mdi mdi-keyboard-return'></i>归还</a>

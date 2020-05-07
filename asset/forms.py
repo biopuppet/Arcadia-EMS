@@ -1,3 +1,4 @@
+import copy
 import re
 
 from django import forms
@@ -269,23 +270,39 @@ class AssetScrapForm(forms.ModelForm):
 
 class AssetBorrowForm(forms.ModelForm):
     """
-    A form that scrap an asset.
+    A form that borrows an asset.
     """
     error_messages = {
     }
+
     estimate_return_on = forms.DateField(
         label="预计归还日期",
         required=True,
-        widget=forms.widgets.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', })
+        widget=forms.widgets.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'})
     )
-    returned_at = forms.DateTimeField(
-        label="实际归还日期",
+    transactor = forms.ModelChoiceField(
+        label="经办人",
+        required=True,
+        queryset=UserProfile.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
+    )
+    note = forms.CharField(
+        label="备注",
         required=False,
-        widget=forms.widgets.DateTimeInput(attrs={'class': 'form-control', })
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '建账备注信息'})
     )
 
     class Meta:
         model = AssetBorrowReturn
         fields = [
-            'estimate_return_on', 'returned_at'
+            'estimate_return_on', 'transactor', 'note',
         ]
+
+    def save(self, sku=None, commit=True):
+        app = super().save(commit=False)
+        app.sku = sku
+        app.type = '借出'
+
+        if commit:
+            app.save()
+        return app
