@@ -9,7 +9,7 @@ function initDatatable(table, ajax_url, csrf_token) {
         columns: [
             {
                 title: '报修时间',
-                data: 'updated_at',
+                data: 'created_at',
                 responsivePriority: 1,
                 width: "5%",
             },
@@ -20,7 +20,7 @@ function initDatatable(table, ajax_url, csrf_token) {
                 width: "5%",
             },
             {
-                title: '申请人',
+                title: '经办人',
                 data: 'transactor',
                 responsivePriority: 3,
                 width: "5%",
@@ -35,46 +35,27 @@ function initDatatable(table, ajax_url, csrf_token) {
                 title: '审批状态',
                 data: 'status',
                 responsivePriority: 5,
-                width: "5%",
+                width: "2%",
                 render: CONSTANT.DATA_TABLE.RENDER.ASSET_STATUS,
             },
             {
                 title: '审批意见',
                 data: 'opinion',
                 responsivePriority: 6,
-                width: "10%",
+                width: "5%",
             },
             {
                 title: '维修方联系方式',
                 data: 'contact',
-                responsivePriority: 6,
+                responsivePriority: 3,
                 width: "5%",
             },
             {
                 title: '维修结束日期',
                 data: 'returned_at',
-                responsivePriority: 6,
+                responsivePriority: 5,
                 width: "5%",
             },
-            CONSTANT.DATA_TABLE.COLUMN.ACTION,
-        ],
-        columnDefs: [
-            {
-                "targets": -1,
-                title: "操作",
-                "render":
-                    function (data, type, full, meta) {
-                        var view_btn = "<a href='/asset/" + full.id + "' class='action-icon'>" +
-                            "<i class='mdi mdi-eye'></i></a>";
-                        var more_btn =
-                            "<a class='action-icon ' href='#' id='dropdownMenuLink' data-toggle='dropdown'>" +
-                            "<i class='mdi mdi-dots-horizontal'></i></a>" +
-                            "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>" +
-                            "<a href='#' class='dropdown-item'>" +
-                            "Toggle something</a></div>";
-                        return view_btn + more_btn;
-                    }
-            }
         ],
         })
     );

@@ -6,6 +6,7 @@ function initDatatable(table, ajax_url, csrf_token) {
                 "data": {"csrfmiddlewaretoken": csrf_token},
                 "dataSrc": "",
             },
+            autoWidth: false,
             columns: [
                 {
                     title: '关联SKU',
@@ -41,14 +42,14 @@ function initDatatable(table, ajax_url, csrf_token) {
                     title: '审批状态',
                     data: 'status',
                     responsivePriority: 3,
-                    width: "5%",
+                    width: "2%",
                     render: CONSTANT.DATA_TABLE.RENDER.ASSET_STATUS,
                 },
                 {
                     title: '审批意见',
                     data: 'opinion',
                     responsivePriority: 6,
-                    width: "10%",
+                    width: "5%",
                 },
             ],
         })
