@@ -217,7 +217,7 @@ class UserCreateGroupView(LoginRequiredMixin, View):
     def post(self, request):
         form = GroupCreationForm(request.POST)
         ret = {'form': GroupCreationForm(), }
-        if form.is_valid:
+        if form.is_valid():
             group = form.save()
             ret.update({
                 'msg': '成功创建角色组: {}'.format(group)
