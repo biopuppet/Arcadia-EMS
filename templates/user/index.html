@@ -91,6 +91,7 @@
                             $('#{{ item.id_for_label }}').val(msg['data']['{{ item.name }}']);
                         {% endfor %}
                         $('#{{user_update_form.id.id_for_label}}').val(e);
+                        $('#{{user_update_form.groups.id_for_label}}').val(msg['data']['groups_id']).trigger('change');
                     } else {
                         console.log(msg.errors);
                     }

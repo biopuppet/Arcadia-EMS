@@ -6,7 +6,8 @@
         <form id="form-update-user" onsubmit="return false" action="" method="post" class="pl-3 pr-3">
             {% csrf_token %}
             {{ user_update_form.non_field_errors }}
-            <input type="hidden" name="{{ user_update_form.id.name }}" id="{{ user_update_form.id.id_for_label }}" value="">
+            <input type="hidden" name="{{ user_update_form.id.name }}" id="{{ user_update_form.id.id_for_label }}"
+                   value="">
             <div class="form-row">
                 <div class="col-6 mb-3">
                     {{ user_update_form.username.label_tag }}
@@ -54,6 +55,10 @@
             });
         });
         $(document).ready(function () {
+            $('#{{ user_update_form.groups.id_for_label }}').select2({
+                tags: true,
+            });
+
             $('#form-update-user').submit(function () {
                 $.ajax({
                     url: '{% url 'user:update-user' %}',

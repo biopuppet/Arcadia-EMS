@@ -1,7 +1,6 @@
 import json
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.models import Group
-from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse
@@ -14,6 +13,7 @@ from ArcadiaEMS.views import page_not_found
 from ArcadiaEMS.email import send_email
 from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm, GroupCreationForm
 from user.models import UserProfile
+from user.serializers import UserProfileSerializer
 
 User = get_user_model()
 
@@ -132,7 +132,7 @@ class UpdateUserView(LoginRequiredMixin, View):
         if request.is_ajax() and 'user_id' in request.GET and int(request.GET['user_id']) > 0:
             user_id = request.GET['user_id']
             user = User.objects.get(id=user_id)
-            user_data = json.loads(serializers.serialize("json", (user,)))[0]['fields']
+            user_data = UserProfileSerializer(instance=user, many=False).data
             ret = {
                 'status': 'success',
                 'data': user_data,

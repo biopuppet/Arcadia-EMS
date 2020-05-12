@@ -24,7 +24,7 @@
                                 </div>
                             {% endfor %}
                             {% if error_msg %}
-                                <p class="alert alert-warning">{{ error_msg }}</p>
+                                <div class="alert alert-warning">{{ error_msg }}</div>
                             {% endif %}
 
                             <div class="text-center">
@@ -38,4 +38,15 @@
         </div>
         <!-- end row-->
     </div> <!-- container -->
+{% endblock %}
+
+{% block js-footer %}
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#{{ form.permissions.id_for_label }}').select2({
+            tags: true,
+        });
+    });
+
+    </script>
 {% endblock %}

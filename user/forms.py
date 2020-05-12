@@ -174,7 +174,7 @@ class UserUpdateForm(forms.ModelForm):
         label="Role Group",
         required=False,  # @TODO
         queryset=Group.objects.all(),
-        widget=SelectMultiple(attrs={'class': 'form-control', })
+        widget=SelectMultiple(attrs={'class': 'form-control', 'style': 'width: 100%;'})
     )
     department = forms.ModelChoiceField(
         label="Department",
@@ -236,7 +236,7 @@ class GroupCreationForm(forms.ModelForm):
         label="Permissions",
         queryset=Permission.objects.all(),
         required=True,
-        widget=FilteredSelectMultiple("Groups", is_stacked=False, attrs={'class': 'form-control', })
+        widget=SelectMultiple(attrs={'class': 'form-control', 'style': 'width: 100%;'})
     )
 
     class Meta:
