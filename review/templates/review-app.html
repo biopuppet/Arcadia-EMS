@@ -1,0 +1,73 @@
+{% extends 'base-sidebar.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Start Content-->
+    <div class="container-fluid">
+        {% include 'base-page-title.html' with title_name='业务审批' %}
+        {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-body">
+                    {% if not msg %}
+                        {% block form %}
+                        {% endblock %}
+                    {% endif %}
+                    <form action="{% url 'review:app-detail' app.id %}" method="post">
+                        {% csrf_token %}
+                        <h4 class="mt-lg-4">审核信息</h4>
+                        <p class="text-muted mb-4">请填写审核意见等信息</p>
+                        <div class="form-group mb-3">
+                            {{ review_form.opinion.label_tag }}
+                            {{ review_form.opinion }}
+                            {{ review_form.opinion.errors }}
+                        </div>
+                        <input hidden id="review-result" name="result" value="">
+                        {% if error_msg %}
+                            <div class="alert alert-warning">{{ error_msg }}</div>
+                        {% endif %}
+                        <div class="row mt-4">
+                            <div class="col-sm-6">
+                                <a href="{% url 'review:index' %}"
+                                   class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
+                                    <i class="mdi mdi-arrow-left"></i> 返回申请列表
+                                </a>
+                            </div> <!-- end col -->
+                            <div class="col-sm-6 text-sm-right">
+                                <button type="submit" class="btn btn-danger mr-4"
+                                        onclick="$('#review-result').val('reject');">
+                                    <i class="mdi mdi-keyboard-return mr-1"></i> 驳回
+                                </button>
+                                <button type="submit" class="btn btn-success"
+                                        onclick="$('#review-result').val('approve');">
+                                    <i class="mdi mdi-check-all mr-1"></i> 通过
+                                </button>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+                    </form>
+                </div> <!-- end card-body-->
+            </div> <!-- end card-->
+        </div> <!-- end col -->
+    </div>
+    <!-- end row-->
+    </div> <!-- container -->
+{% endblock %}
+
+{% block js-footer %}
+    <!-- third party js -->
+    <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'javascript/responsive.bootstrap4.min.js' %}"></script>
+    <!-- third party js ends -->
+
+    <!-- demo app -->
+    <script src="{% static 'javascript/arcadia.datatable.js' %}"></script>
+
+    <script type="text/javascript">
+    </script>
+{% endblock %}

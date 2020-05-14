@@ -1,0 +1,26 @@
+<form action="{% url 'asset:borrow' asset_set.id %}" method="post" class="pl-2 pr-2">
+    {% csrf_token %}
+    <h4 class="mt-4">借出信息</h4>
+    <p class="text-muted mb-4">借出具体数量，预计归还日期等必要信息</p>
+    {{ borrow_form }}
+    {{ asset_set_child_form }}
+    {% if error_msg %}
+        <div class="alert alert-warning">{{ error_msg }}</div>
+    {% endif %}
+    {% if not nofooter %}
+    <div class="row mt-4">
+        <div class="col-sm-6">
+            <a href="{% url 'asset:index' %}"
+               class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
+                <i class="mdi mdi-arrow-left"></i> 返回台账
+            </a>
+        </div> <!-- end col -->
+        <div class="col-sm-6 text-sm-right">
+            <button type="submit" class="btn btn-danger">
+                <i class="mdi mdi-truck-fast mr-1"></i> 提交
+            </button>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+    {% endif %}
+</form>
+

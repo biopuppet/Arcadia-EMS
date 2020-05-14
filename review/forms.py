@@ -1,20 +1,14 @@
-import re
-
 from django import forms
-from django.forms import TextInput, Select
-
-from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU
-from user.models import UserProfile
+from asset.models import AssetCreate, BaseAppModel
 
 
-class ReviewAssetCreationForm(forms.ModelForm):
+class ReviewAssetAppForm(forms.ModelForm):
     """
-    A form that reviews an asset creation.
+    A form that reviews an asset application.
     """
     error_messages = {
     }
 
-    # result = HiddenInput
     result = forms.CharField()
     opinion = forms.CharField(
         label="审批意见",
@@ -23,19 +17,33 @@ class ReviewAssetCreationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = AssetCreate
+        model = BaseAppModel
         fields = [
             'opinion',
         ]
 
     def save(self, user=None, commit=True):
-        asset_create_app = super().save(commit=False)
+        app = super().save(commit=False)
         if user:
-            asset_create_app.reviewer = user
+            app.reviewer = user
         result = self.cleaned_data.get('result')
         print(result)
-        asset_create_app.transit(result)
+        # Broadcast the review result to all asset_sets registered to this app
+        app.transit(result)
 
         if commit:
-            asset_create_app.save()
-        return asset_create_app
+            app.save()
+        return app
+
+
+class ReviewAssetCreationForm(ReviewAssetAppForm):
+    """
+    A form that reviews an asset creation.
+    Unused for now...
+    """
+
+    class Meta:
+        model = AssetCreate
+        fields = [
+            'opinion',
+        ]
