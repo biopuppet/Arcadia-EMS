@@ -5,10 +5,11 @@ from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
-from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm, AssetBorrowForm
+from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm, AssetBorrowForm, \
+    AssetReturnForm
 from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseAppModel
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
-    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppModelSerializer
+    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppModelSerializer, AssetSetSerializer
 
 
 class AssetIndexView(LoginRequiredMixin, View):
@@ -164,66 +165,6 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
         return {'error_msg': errors.as_ul()}
 
 
-class AssetCreateTableView(LoginRequiredMixin, View):
-
-    def get(self, request):
-        createtable = AssetCreate.objects.all()
-        return render(request, 'assetcreatetable.html', {'assetscreatetable': createtable})
-
-    def post(self, request):
-        asset_creations = AssetCreate.objects.all()
-        if request.is_ajax():
-            asset_creations_serial = AssetCreateSerializer(instance=asset_creations, many=True)
-            return HttpResponse(json.dumps(asset_creations_serial.data), content_type='application/json')
-        else:
-            return render(request, 'assetcreatetable.html', {'assetscreatetable': asset_creations})
-
-
-class AssetScrapTableView(LoginRequiredMixin, View):
-
-    def get(self, request):
-        scraptable = AssetScrap.objects.all()
-        return render(request, 'assetscraptable.html', {'assetsscraptable': scraptable})
-
-    def post(self, request):
-        asset_scraps = AssetScrap.objects.all()
-        if request.is_ajax():
-            asset_scraps_serial = AssetScrapSerializer(instance=asset_scraps, many=True)
-            return HttpResponse(json.dumps(asset_scraps_serial.data), content_type='application/json')
-        else:
-            return render(request, 'assetscraptable.html', {'assetsscraptable': asset_scraps})
-
-
-class AssetFixTableView(LoginRequiredMixin, View):
-
-    def get(self, request):
-        fixtable = AssetFix.objects.all()
-        return render(request, 'assetfixtable.html', {'assetfixtable': fixtable})
-
-    def post(self, request):
-        asset_fixs = AssetFix.objects.all()
-        if request.is_ajax():
-            asset_fixs_serial = AssetFixSerializer(instance=asset_fixs, many=True)
-            return HttpResponse(json.dumps(asset_fixs_serial.data), content_type='application/json')
-        else:
-            return render(request, 'assetfixtable.html', {'assetfixtable': asset_fixs})
-
-
-class AssetBorrowReturnTableView(LoginRequiredMixin, View):
-
-    def get(self, request):
-        borrowreturntable = AssetBorrowReturn.objects.all()
-        return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': borrowreturntable})
-
-    def post(self, request):
-        asset_borrowreturns = AssetBorrowReturn.objects.all()
-        if request.is_ajax():
-            asset_borrowreturns_serial = AssetBorrowReturnSerializer(instance=asset_borrowreturns, many=True)
-            return HttpResponse(json.dumps(asset_borrowreturns_serial.data), content_type='application/json')
-        else:
-            return render(request, 'assetborrowreturntable.html', {'assetborrowreturntable': asset_borrowreturns})
-
-
 class AssetScrapView(View):
 
     def get(self, request):
@@ -328,3 +269,64 @@ class AssetBorrowView(View):
                 'error_msg': borrow_form.errors.as_ul(),
             })
         return render(request, 'borrow.html', ret)
+
+
+class AssetReturnIndexView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        return render(request, 'return-index.html')
+
+    def post(self, request):
+        if request.is_ajax():
+            sets = AssetSet.objects.filter(app__type='借出')
+            sets_data = AssetSetSerializer(instance=sets, many=True).data
+            return HttpResponse(json.dumps(sets_data), content_type='application/json')
+
+
+class AssetReturnView(LoginRequiredMixin, View):
+
+    def get(self, request, app_id):
+        app = get_object_or_404(BaseAppModel, pk=app_id)
+        sku = app.sku
+        merging_set = app.asset_sets_app.first()
+        asset = sku.asset
+        asset_sets = sku.sets.all()
+        return_form = AssetReturnForm(instance=app, sku_id=sku.id, auto_id="form-return-%s", label_suffix='')
+        ret = {
+            'asset_sets': asset_sets,
+            'merging_set': merging_set,
+            'return_form': return_form,
+        }
+        return render(request, 'return.html', ret)
+
+    def post(self, request, app_id):
+        app = get_object_or_404(AssetBorrowReturn, pk=app_id)
+        sku = app.sku
+        asset = sku.asset
+        asset_sets = sku.sets.all()
+        asset_set = app.asset_sets_app.first()
+        return_form = AssetReturnForm(request.POST, instance=app, sku_id=sku.id, auto_id="form-return-%s", label_suffix='')
+        ret = {
+            'asset_sets': asset_sets,
+            'return_form': return_form,
+            'merging_set': asset_set,
+        }
+        if return_form.is_valid():
+            asset_return = return_form.save()
+            merge_set = return_form.cleaned_data.get('merge_set')
+            if merge_set.sku == asset_set.sku and merge_set.status == app.returned_status:
+                merge_set.quantity += asset_set.quantity
+                ret.update({
+                    'msg': '成功合入【%d】,设备组【%d】已删除' % (merge_set.id, asset_set.id)
+                })
+                merge_set.save()
+                asset_set.delete()
+            else:
+                ret.update({
+                    'error_msg': '无法合并到设备组【%d】，状态不一致' % merge_set.id,
+                })
+        else:
+            ret.update({
+                'error_msg': return_form.errors.as_ul(),
+            })
+        return render(request, 'return.html', ret)

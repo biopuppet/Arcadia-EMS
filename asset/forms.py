@@ -1,8 +1,7 @@
-import copy
 import re
-
 from django import forms
 from django.forms import TextInput, Select
+from django.shortcuts import get_object_or_404
 
 from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU, AssetScrap, AssetBorrowReturn
 from department.models import Department
@@ -53,12 +52,7 @@ class AssetSkuForm(forms.ModelForm):
     """
     error_messages = {
     }
-    # skuid = forms.CharField(
-    #     label="货格编号",
-    #     required=True,
-    #     max_length=30,
-    #     widget=TextInput(attrs={'class': 'form-control', 'placeholder': "货格编号", }, )
-    # )
+
     model = forms.CharField(
         label="设备型号",
         required=False,
@@ -216,12 +210,6 @@ class AssetCreationForm(forms.ModelForm):
             'credentials', 'transactor', 'note',
         ]
 
-    # def clean_id(self):
-    #     aid = self.cleaned_data.get("id")
-    #     if aid and Asset.objects.filter(id=id).count():
-    #         raise forms.ValidationError('AID already exists.')
-    #     return aid
-
     def save(self, sku=None, commit=True):
         asset_creation_app = super().save(commit=False)
         asset_creation_app.sku = sku
@@ -233,7 +221,7 @@ class AssetCreationForm(forms.ModelForm):
 
 class AssetScrapForm(forms.ModelForm):
     """
-    A form that scrap an asset.
+    An application form that scraps an asset.
     """
     error_messages = {
     }
@@ -271,7 +259,7 @@ class AssetScrapForm(forms.ModelForm):
 
 class AssetBorrowForm(forms.ModelForm):
     """
-    A form that borrows an asset.
+    An application form that borrows an asset.
     """
     error_messages = {
     }
@@ -307,3 +295,45 @@ class AssetBorrowForm(forms.ModelForm):
         if commit:
             app.save()
         return app
+
+
+class AssetReturnForm(forms.ModelForm):
+    """
+    An application form that returns an asset.
+    """
+    error_messages = {
+    }
+
+    returned_on = forms.DateField(
+        label="归还时间",
+        required=True,
+        widget=forms.widgets.DateInput(format='%Y-%m-%d',
+                                       attrs={'class': 'form-control', 'type': 'date'})
+    )
+    returned_status = forms.CharField(
+        label='归还时状态',
+        required=True,
+        widget=forms.widgets.TextInput(attrs={'class': 'form-control', })
+    )
+
+    # Extra fields
+    merge_set = forms.ModelChoiceField(
+        label='合入设备组',
+        required=True,
+        queryset=AssetSet.objects.all(),
+        widget=forms.widgets.Select(attrs={'class': 'form-control', }),
+    )
+
+    class Meta:
+        model = AssetBorrowReturn
+        fields = [
+            'returned_on', 'returned_status',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        sku_id = kwargs.pop('sku_id', None)
+        super(AssetReturnForm, self).__init__(*args, **kwargs)
+        if sku_id:
+            sku = get_object_or_404(AssetSKU, pk=sku_id)
+            # TODO: intersect queryset
+            self.fields['merge_set'].queryset = sku.sets.all()

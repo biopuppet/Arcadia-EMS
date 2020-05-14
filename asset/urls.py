@@ -1,5 +1,6 @@
 from django.urls import path
 
+from asset.table_views import *
 from asset.views import *
 
 app_name = 'asset'
@@ -11,10 +12,13 @@ urlpatterns = [
     path('<slug:asset_id>', AssetProfileView.as_view(), name='profile'),
 
     path('create/', AssetCreationView.as_view(), name='create'),
+    path('return/', AssetReturnIndexView.as_view(), name='return-index'),
+    path('return/<int:app_id>', AssetReturnView.as_view(), name='return'),
+
     path('create/<slug:asset_id>', AssetCreationOnAssetView.as_view(), name='create-on-asset'),
     path('borrow/<slug:asset_set_id>', AssetBorrowView.as_view(), name='borrow'),
     path('scrap/<slug:asset_set_id>', AssetScrapView.as_view(), name='scrap'),
-    path('fix/<slug:asset_id>', AssetIndexView.as_view(), name='fix'),
+    path('fix/<slug:asset_set_id>', AssetIndexView.as_view(), name='fix'),
 
     # 统计报表
     path('create-table/', AssetCreateTableView.as_view(), name='create-table'),

@@ -21,28 +21,28 @@ function initDatatable(table, ajax_url, csrf_token) {
                 width: "15%",
             },
             {
-                title: '类型',
-                data: 'type',
-                responsivePriority: 2,
+                title: '数量',
+                data: 'quantity',
+                responsivePriority: 4,
+                width: "10%",
+            },
+            {
+                title: '所在部门',
+                data: 'department',
+                responsivePriority: 4,
+                width: "10%",
+            },
+            {
+                title: '地址',
+                data: 'address',
+                responsivePriority: 4,
+                width: "10%",
+            },
+            {
+                title: '负责人',
+                data: 'manager',
+                responsivePriority: 4,
                 width: "5%",
-            },
-            {
-                title: '申请日期',
-                data: 'created_at',
-                responsivePriority: 4,
-                width: "10%",
-            },
-            {
-                title: '更新日期',
-                data: 'updated_at',
-                responsivePriority: 4,
-                width: "10%",
-            },
-            {
-                title: '实际归还时间',
-                data: 'returned_at',
-                responsivePriority: 4,
-                width: "10%",
             },
             {
                 title: '状态',
@@ -56,7 +56,7 @@ function initDatatable(table, ajax_url, csrf_token) {
         columnDefs: [
             {
                 "targets": -1,
-                title: "Action",
+                title: "操作",
                 "render":
                     function (data, type, full, meta) {
                         var view_btn = "<a href='/asset/return/" + full.id + "'>" +

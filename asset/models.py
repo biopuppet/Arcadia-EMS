@@ -189,8 +189,9 @@ class AssetChange(BaseAppModel):
 class AssetBorrowReturn(BaseAppModel):
     borrowed_at = models.DateTimeField(auto_now_add=True, verbose_name='借出时间')
     estimate_return_on = models.DateField(verbose_name='预计归还时间')
-    returned_at = models.DateTimeField(null=True, verbose_name='实际归还时间')
-
+    returned_on = models.DateField(null=True, verbose_name='实际归还时间')
+    returned_status = models.CharField(max_length=10, null=True, verbose_name='归还时状态')
+    # returned_to = models.ForeignKey(AssetSet, null=True, on_delete=)
     class Meta:
         verbose_name = "Asset borrow return application"
         verbose_name_plural = verbose_name + "s"

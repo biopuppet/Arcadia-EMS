@@ -27,7 +27,7 @@ function initDatatable(table, ajax_url, csrf_token) {
                 },
                 {
                     title: '实际归还时间',
-                    data: 'returned_at',
+                    data: 'returned_on',
                     responsivePriority: 4,
                     width: "5%",
                 },
