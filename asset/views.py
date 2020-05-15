@@ -307,7 +307,7 @@ class AssetBorrowView(View):
                 'borrow_form': borrow_form,
                 'asset_set': asset_set,
             }
-            return render(request, 'borrow.html', ret)
+            return render(request, 'asset-borrow.html', ret)
 
     def post(self, request, asset_set_id):
         asset_set = get_object_or_404(AssetSet, pk=asset_set_id)
@@ -346,7 +346,7 @@ class AssetBorrowView(View):
             ret.update({
                 'error_msg': borrow_form.errors.as_ul(),
             })
-        return render(request, 'borrow.html', ret)
+        return render(request, 'asset-borrow.html', ret)
 
 
 class AssetReturnIndexView(LoginRequiredMixin, View):
