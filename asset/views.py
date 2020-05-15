@@ -6,7 +6,7 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm, AssetBorrowForm, \
-    AssetReturnForm
+    AssetReturnForm, AssetFixForm
 from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseAppModel
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
     AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppModelSerializer, AssetSetSerializer
@@ -165,13 +165,74 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
         return {'error_msg': errors.as_ul()}
 
 
+class AssetFixView(View):
+
+    def get(self, request, asset_set_id):
+        fix_form = AssetFixForm(auto_id="form-fix-%s", label_suffix='')
+        asset_set_child_form = AssetSetForm(auto_id='form-asset-set-%s', label_suffix='')
+        asset_set = get_object_or_404(AssetSet, pk=asset_set_id)
+        ret = {
+            'fix_form': fix_form,
+            'asset_set': asset_set,
+            'asset_set_form': asset_set_child_form,
+        }
+        return render(request, 'asset-fix.html', ret)
+
+    def post(self, request, asset_set_id):
+        asset_set = get_object_or_404(AssetSet, pk=asset_set_id)
+        asset_sku = asset_set.sku
+        asset = asset_sku.asset
+
+        fix_form = AssetFixForm(request.POST, auto_id="form-fix-%s", label_suffix='')
+        asset_set_new_form = AssetSetForm(request.POST, auto_id="form-asset-new-%s", label_suffix='')
+        ret = {
+            'fix_form': fix_form,
+            'asset_set': asset_set,
+            'asset_set_form': asset_set_new_form,
+        }
+        if fix_form.is_valid() and asset_set_new_form.is_valid():
+            # if fixing the whole set
+            child_quantity = asset_set_new_form.cleaned_data.get('quantity')
+            if child_quantity == asset_set.quantity:
+                # Abandon the forked asset set form
+                asset_set.status = '报修审核中'
+                asset_set.save()
+                fix_app = fix_form.save(sku=asset_sku)
+                ret.update({'msg': '编号【{}】设备报修申请已提交！'.format(fix_app.id)})
+            elif child_quantity > asset_set.quantity:
+                ret.update({
+                    'error_msg': '数量超过了合法范围'
+                })
+            else:
+                asset_set.quantity -= child_quantity
+                asset_set.save()
+
+                fix_app = fix_form.save(sku=asset_sku)
+
+                asset_set_new_form.save(sku=asset_sku, app=fix_app)
+
+                ret.update({'msg': '编号【{}】设备报修申请已提交！'.format(fix_app.id)})
+        elif fix_form.errors:
+            ret.update({
+                'error_msg': fix_form.errors.as_ul()
+            })
+        else:
+            ret.update({
+                'error_msg': asset_set_new_form.errors.as_ul()
+            })
+        return render(request, 'asset-fix.html', ret)
+
+
 class AssetScrapView(View):
 
-    def get(self, request):
+    def get(self, request, asset_set_id):
         scrap_form = AssetScrapForm(auto_id="form-scrap-%s", label_suffix='')
-
+        asset_set_child_form = AssetSetForm(auto_id='form-asset-set-%s', label_suffix='')
+        asset_set = get_object_or_404(AssetSet, pk=asset_set_id)
         ret = {
             'scrap_form': scrap_form,
+            'asset_set': asset_set,
+            'asset_set_form': asset_set_child_form,
         }
         return render(request, 'asset-scrap.html', ret)
 
@@ -181,24 +242,41 @@ class AssetScrapView(View):
         asset = asset_sku.asset
 
         scrap_form = AssetScrapForm(request.POST, auto_id="form-scrap-%s", label_suffix='')
-        asset_set = get_object_or_404(AssetSetForm, pk=asset_set_id)
-        asset_set_form = AssetSetForm(request.POST, instance=asset_set, auto_id="form-asset-%s", label_suffix='')
         asset_set_new_form = AssetSetForm(request.POST, auto_id="form-asset-new-%s", label_suffix='')
         ret = {
             'scrap_form': scrap_form,
-            'asset_form': asset_set_new_form,
+            'asset_set': asset_set,
+            'asset_set_form': asset_set_new_form,
         }
         if scrap_form.is_valid() and asset_set_new_form.is_valid():
-            assert_scrap = scrap_form.save()
-            assert_set = asset_set_form.save()
-            assert_set_new = asset_set_new_form.save(commit=False)
-            ret.update({'msg': '编号【{}】设备建账申请已提交！'.format(scrap_form.aid)})
-        else:
-            errors = dict()
-            if scrap_form.errors:
-                errors = scrap_form.errors
+            # if scraping the whole set
+            child_quantity = asset_set_new_form.cleaned_data.get('quantity')
+            if child_quantity == asset_set.quantity:
+                # Abandon the forked asset set form
+                asset_set.status = '报废审核中'
+                asset_set.save()
+                scrap_app = scrap_form.save(sku=asset_sku)
+                ret.update({'msg': '编号【{}】设备报废申请已提交！'.format(scrap_app.id)})
+            elif child_quantity > asset_set.quantity:
+                ret.update({
+                    'error_msg': '数量非法'
+                })
+            else:
+                asset_set.quantity -= child_quantity
+                asset_set.save()
+
+                scrap_app = scrap_form.save(sku=asset_sku)
+
+                asset_set_new_form.save(sku=asset_sku, app=scrap_app)
+
+                ret.update({'msg': '编号【{}】设备报废申请已提交！'.format(scrap_app.id)})
+        elif scrap_form.errors:
             ret.update({
-                'error_msg': errors.as_ul()
+                'error_msg': scrap_form.errors.as_ul()
+            })
+        else:
+            ret.update({
+                'error_msg': asset_set_new_form.errors.as_ul()
             })
         return render(request, 'asset-scrap.html', ret)
 

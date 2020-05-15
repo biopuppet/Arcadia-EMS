@@ -3,7 +3,7 @@ from django import forms
 from django.forms import TextInput, Select
 from django.shortcuts import get_object_or_404
 
-from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU, AssetScrap, AssetBorrowReturn
+from asset.models import Asset, AssetCreate, AssetCategory, AssetSet, AssetSKU, AssetScrap, AssetBorrowReturn, AssetFix
 from department.models import Department
 from user.models import UserProfile
 
@@ -219,6 +219,42 @@ class AssetCreationForm(forms.ModelForm):
         return asset_creation_app
 
 
+class AssetFixForm(forms.ModelForm):
+    """
+    An application form that fixes an asset.
+    """
+    type = '维修'
+    error_messages = {
+    }
+
+    transactor = forms.ModelChoiceField(
+        label="申请人",
+        required=True,
+        queryset=UserProfile.objects.all(),
+        widget=Select(attrs={'class': 'form-control', })
+    )
+    contact = forms.CharField(
+        label="维修方联系方式",
+        required=False,
+        widget=forms.widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '维修方联系方式'})
+    )
+
+    class Meta:
+        model = AssetFix
+        fields = [
+            'transactor', 'contact',
+        ]
+
+    def save(self, sku=None, commit=True):
+        app = super().save(commit=False)
+        app.sku = sku
+        app.type = self.type
+
+        if commit:
+            app.save()
+        return app
+
+
 class AssetScrapForm(forms.ModelForm):
     """
     An application form that scraps an asset.
@@ -226,20 +262,8 @@ class AssetScrapForm(forms.ModelForm):
     error_messages = {
     }
 
-    aid = forms.CharField(
-        label="设备编号",
-        required=True,
-        max_length=30,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备编号", })
-    )
     transactor = forms.ModelChoiceField(
         label="申请人",
-        required=True,
-        queryset=UserProfile.objects.all(),
-        widget=Select(attrs={'class': 'form-control', })
-    )  # 存疑
-    reviewer = forms.ModelChoiceField(
-        label="审批人",
         required=True,
         queryset=UserProfile.objects.all(),
         widget=Select(attrs={'class': 'form-control', })
@@ -253,8 +277,17 @@ class AssetScrapForm(forms.ModelForm):
     class Meta:
         model = AssetScrap
         fields = [
-            'aid', 'transactor', 'reviewer', 'reason',
+            'transactor', 'reason',
         ]
+
+    def save(self, sku=None, commit=True):
+        app = super().save(commit=False)
+        app.sku = sku
+        app.type = '报废'
+
+        if commit:
+            app.save()
+        return app
 
 
 class AssetBorrowForm(forms.ModelForm):

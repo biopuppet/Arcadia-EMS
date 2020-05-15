@@ -12,13 +12,15 @@ urlpatterns = [
     path('<slug:asset_id>', AssetProfileView.as_view(), name='profile'),
 
     path('create/', AssetCreationView.as_view(), name='create'),
+    path('create/<slug:asset_id>', AssetCreationOnAssetView.as_view(), name='create-on-asset'),
+
+    path('borrow/<int:asset_set_id>', AssetBorrowView.as_view(), name='borrow'),
     path('return/', AssetReturnIndexView.as_view(), name='return-index'),
+    # TODO: Why is this app_id while you actually deal with asset_set?
     path('return/<int:app_id>', AssetReturnView.as_view(), name='return'),
 
-    path('create/<slug:asset_id>', AssetCreationOnAssetView.as_view(), name='create-on-asset'),
-    path('borrow/<slug:asset_set_id>', AssetBorrowView.as_view(), name='borrow'),
-    path('scrap/<slug:asset_set_id>', AssetScrapView.as_view(), name='scrap'),
-    path('fix/<slug:asset_set_id>', AssetIndexView.as_view(), name='fix'),
+    path('scrap/<int:asset_set_id>', AssetScrapView.as_view(), name='scrap'),
+    path('fix/<int:asset_set_id>', AssetFixView.as_view(), name='fix'),
 
     # 统计报表
     path('create-table/', AssetCreateTableView.as_view(), name='create-table'),

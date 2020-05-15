@@ -4,7 +4,7 @@
 {% block content %}
     <!-- Start Content-->
     <div class="container-fluid">
-        {% include 'base-page-title.html' with title_name='设备报废' %}
+        {% include 'base-page-title.html' with title_name='设备报修' %}
         {% if msg %}
             <div class="alert alert-success" role="alert">
                 {{ msg }}
@@ -16,7 +16,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-8">
-                            {% include 'form-scrap-asset.html' with nofooter='true' %}
+                            {% include 'form-fix-asset.html' with nofooter='true' %}
                             </div>
                              <!-- end col -->
                         </div> <!-- end row-->
