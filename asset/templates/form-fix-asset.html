@@ -2,24 +2,29 @@
     <form action="{% url 'asset:fix' asset_set.id %}" method="post" class="pl-2 pr-2">
         {% csrf_token %}
         <h4 class="mt-2">设备报修信息</h4>
+
         {{ fix_form }}
         {{ asset_set_form }}
+
         {% if error_msg %}
             <div class="alert alert-warning mt-3">{{ error_msg }}</div>
         {% endif %}
-        <div class="row mt-4">
-            <div class="col-sm-6">
-                <a href="{% url 'asset:index' %}"
-                   class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
-                    <i class="mdi mdi-arrow-left"></i> 返回台账
-                </a>
-            </div> <!-- end col -->
-            <div class="col-sm-6 text-sm-right">
-                <button href="#" class="btn btn-danger">
-                    <i class="mdi mdi-truck-fast mr-1"></i> 提交
-                </button>
-            </div> <!-- end col -->
-        </div> <!-- end row -->
+
+        {% if not nofooter %}
+            <div class="row mt-4">
+                <div class="col-sm-6">
+                    <a href="{% url 'asset:index' %}"
+                       class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
+                        <i class="mdi mdi-arrow-left"></i> 返回台账
+                    </a>
+                </div> <!-- end col -->
+                <div class="col-sm-6 text-sm-right">
+                    <button href="#" class="btn btn-danger">
+                        <i class="mdi mdi-truck-fast mr-1"></i> 提交
+                    </button>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        {% endif %}
     </form>
 {% else %}
     <div class="alert alert-danger">该设备组已失效，原因可能是已经被合入了</div>

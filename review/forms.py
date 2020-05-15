@@ -27,7 +27,6 @@ class ReviewAssetAppForm(forms.ModelForm):
         if user:
             app.reviewer = user
         result = self.cleaned_data.get('result')
-        print(result)
         # Broadcast the review result to all asset_sets registered to this app
         app.transit(result)
 
