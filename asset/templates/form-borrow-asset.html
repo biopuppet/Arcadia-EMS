@@ -1,3 +1,4 @@
+{% if asset_set %}
 <form action="{% url 'asset:borrow' asset_set.id %}" method="post" class="pl-2 pr-2">
     {% csrf_token %}
     <h4 class="mt-4">借出信息</h4>
@@ -23,4 +24,6 @@
     </div> <!-- end row -->
     {% endif %}
 </form>
-
+{% else %}
+<div class="alert alert-danger">该设备组已失效，原因可能是已经被合入了</div>
+{% endif %}
