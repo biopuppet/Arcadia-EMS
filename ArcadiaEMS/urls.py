@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
+from asset.views import AssetIndexView
 from .settings import DEBUG
 from user import views as user_views
 from django.conf import settings
@@ -30,7 +31,7 @@ urlpatterns = [
         path('asset/', include('asset.urls', namespace='asset')),
         path('review/', include('review.urls', namespace='review')),
 
-        path('', user_views.IndexView.as_view(), name='index'),
+        path('', AssetIndexView.as_view(), name='index'),
         path('login/', user_views.LoginView.as_view(), name='login'),
         path('logout/', user_views.LogoutView.as_view(), name='logout'),
         path('maintained/', auth_views.TemplateView.as_view(template_name='maintenance.html'),
