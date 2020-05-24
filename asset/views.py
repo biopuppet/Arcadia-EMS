@@ -165,7 +165,7 @@ def save_asset_creation(asset_form, asset_sku_form, asset_set_form, asset_creati
         return {'error_msg': errors.as_ul()}
 
 
-class AssetFixView(View):
+class AssetFixView(LoginRequiredMixin, View):
 
     def get(self, request, asset_set_id):
         fix_form = AssetFixForm(auto_id="form-fix-%s", label_suffix='')
@@ -223,7 +223,7 @@ class AssetFixView(View):
         return render(request, 'asset-fix.html', ret)
 
 
-class AssetScrapView(View):
+class AssetScrapView(LoginRequiredMixin, View):
 
     def get(self, request, asset_set_id):
         scrap_form = AssetScrapForm(auto_id="form-scrap-%s", label_suffix='')
@@ -281,7 +281,7 @@ class AssetScrapView(View):
         return render(request, 'asset-scrap.html', ret)
 
 
-class AssetBorrowView(View):
+class AssetBorrowView(LoginRequiredMixin, View):
 
     def get(self, request, asset_set_id):
         if request.is_ajax():
