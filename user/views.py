@@ -275,7 +275,9 @@ class UserRecoverPasswordView(View):
             """
             try:
                 user = User.objects.get(email=user_email)
-                send_email(request, to=user_email, token=token, fullname=user.fullname)
+                name = user.fullname or user.username
+                print(name)
+                send_email(request, to=user_email, token=token, name=name)
                 user.set_password(token)
                 user.save()
             except ObjectDoesNotExist:

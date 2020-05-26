@@ -7,8 +7,8 @@ from ArcadiaEMS import settings
 
 
 def send_email(request, to, subject='ArcadiaEMS Support', **kwargs):
-    html = render(request, 'user/email-recoverpwd.html', {'token': kwargs['token'], 'fullname': kwargs['fullname']})
-    text = render(request, 'user/email.txt', {'token': kwargs['token'], 'fullname': kwargs['fullname']})
+    html = render(request, 'user/email-recoverpwd.html', {'token': kwargs['token'], 'name': kwargs['name']})
+    text = render(request, 'user/email.txt', {'token': kwargs['token'], 'name': kwargs['name']})
 
     msg = EmailMultiAlternatives(subject, html.content.decode('utf-8'), from_email=settings.DEFAULT_FROM_EMAIL, to=[to])
     msg.attach_alternative(text.content.decode('utf-8'), "text/html")
