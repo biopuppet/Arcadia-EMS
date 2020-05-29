@@ -91,11 +91,11 @@ class AssetCreationView(LoginRequiredMixin, View):
         }
         save_ret = save_asset_creation(asset_form, asset_sku_form, asset_set_form,
                                        asset_creation_form)
-        asset = save_ret.get('asset')
-        if asset is not None:
+        if save_ret and save_ret.get('asset'):
+            asset = save_ret.get('asset')
             ret.update({'msg': '编号【%s】设备的建账申请已提交！' % asset})
         elif save_ret.get('error_msg'):
-            ret.update(save_ret['error_msg'])
+            ret.update(save_ret)
         return render(request, 'create-asset.html', ret)
 
 
@@ -133,10 +133,10 @@ class AssetCreationOnAssetView(LoginRequiredMixin, View):
         }
         save_ret = save_asset_creation(asset_form, asset_sku_form, asset_set_form,
                                        asset_creation_form, on_asset=True, asset=asset)
-        if save_ret['asset'] is not None:
+        if save_ret and save_ret.get('asset') is not None:
             ret.update({'msg': '基于编号【{}】设备的建账申请已提交！'.format(asset.aid)})
         elif save_ret.get('error_msg'):
-            ret.update(save_ret.get('error_msg'))
+            ret.update(save_ret)
         return render(request, 'create-asset.html', ret)
 
 

@@ -166,7 +166,7 @@ class AssetSetForm(forms.ModelForm):
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
         # TODO: integer check
-        if quantity and quantity <= 0:
+        if quantity and int(quantity) <= 0:
             raise forms.ValidationError("非法数量")
         return quantity
 
