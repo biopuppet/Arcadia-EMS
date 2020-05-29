@@ -36,7 +36,7 @@ urlpatterns = [
         path('logout/', user_views.LogoutView.as_view(), name='logout'),
         path('maintained/', auth_views.TemplateView.as_view(template_name='maintenance.html'),
              name='maintained'),
-
+        path('faq/', user_views.FaqView.as_view(), name='faq'),
         path('admin/', admin.site.urls),
         # path('ui/', include('system.urls')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

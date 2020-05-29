@@ -12,7 +12,7 @@ from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from ArcadiaEMS.email import send_email
 from user.forms import LoginForm, UserCreateForm, UserChangePasswordForm, UserUpdateForm, GroupCreationForm
-from user.models import UserProfile
+from user.models import UserProfile, Faq
 from user.serializers import UserProfileSerializer
 
 User = get_user_model()
@@ -287,3 +287,13 @@ class UserRecoverPasswordView(View):
         else:
             error_msg = 'Please enter your email.'
             return render(request, 'user/recover-password.html', {'error_msg': error_msg})
+
+
+class FaqView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        faqs = Faq.objects.all()
+        ret = {
+            'faqs': faqs
+        }
+        return render(request, 'faq.html', ret)

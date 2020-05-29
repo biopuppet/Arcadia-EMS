@@ -57,3 +57,8 @@ class UserProfile(AbstractUser):
 
     def __str__(self):
         return self.username.__str__()
+
+
+class Faq(models.Model):
+    question = models.CharField(max_length=100, verbose_name='Question')
+    answer = models.TextField(verbose_name='Answer')

@@ -115,30 +115,16 @@
             </li>
             <li class="side-nav-item">
                 <a href="#" class="side-nav-link">
-                    <i class="mdi mdi-settings"></i>
-                    <span> 设置 </span>
+                    <i class="mdi mdi-dots-horizontal"></i>
+                    <span> 其他 </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <ul class="side-nav-second-level">
                     <li>
                         <a href="{% url 'user:profile' user.id %}">我的账号</a>
                     </li>
-                </ul>
-            </li>
-
-            <li hidden class="side-nav-item">
-                <a href="#" class="side-nav-link">
-                    <i class="mdi mdi-account"></i>
-                    <span> *Dev Kit </span>
-
-                    <span class="menu-arrow"></span>
-                </a>
-                <ul class="side-nav-second-level">
                     <li>
-                        <a href="#">Modals</a>
-                    </li>
-                    <li>
-                        <a href="#">Notifications</a>
+                        <a href="{% url 'faq' %}">FAQ 疑难解答</a>
                     </li>
                 </ul>
             </li>
