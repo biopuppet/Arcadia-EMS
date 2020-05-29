@@ -27,7 +27,6 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Permissions</th>
                                 <th class="sorting_desc_disabled sorting_asc_disabled">Action</th>
                             </tr>
                             </thead>
@@ -36,7 +35,6 @@
                                 <tr>
                                     <td>{{ group.id }}</td>
                                     <td>{{ group.name }}</td>
-                                    <td>{{ group.permissions }}</td>
                                     <td class="table-action">
                                         <a href="{% url 'user:change-group' group.id %}" class="action-icon">
                                             <i class="mdi mdi-pencil"></i></a>
