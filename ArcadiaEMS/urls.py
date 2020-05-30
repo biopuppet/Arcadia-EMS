@@ -25,7 +25,8 @@ from django.conf.urls.static import static
 
 from .views import page_error, page_not_found
 
-urlpatterns = [
+urlpatterns = \
+    [
         path('user/', include('user.urls', namespace='user')),
         path('department/', include('department.urls', namespace='department')),
         path('asset/', include('asset.urls', namespace='asset')),
@@ -43,6 +44,8 @@ urlpatterns = [
 
 handler404 = page_not_found
 handler500 = page_error
+
+urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]
 
 if DEBUG:
     urlpatterns += [
