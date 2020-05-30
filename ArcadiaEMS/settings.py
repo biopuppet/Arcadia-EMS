@@ -147,10 +147,9 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # Silk
 SILKY_PYTHON_PROFILER = True
 SILKY_PYTHON_PROFILER_BINARY = True
-SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, 'logs')
+SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, 'profs')
 SILKY_AUTHENTICATION = True  # User must login
 SILKY_AUTHORISATION = True  # User must have permissions
-
-SILKY_META = True  # To see what effect Silk is having on the request/response time.
-
 SILKY_PERMISSIONS = lambda user: user.is_superuser
+
+# SILKY_META = True  # To see what effect Silk is having on the request/response time.
