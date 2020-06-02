@@ -40,7 +40,7 @@ function initDatatable(table, ajax_url, csrf_token) {
                     responsivePriority: 6,
                 },
                 {
-                    title: '单价',
+                    title: '单价(元)',
                     data: 'price',
                     responsivePriority: 6,
                     render: function (data, type, full, meta) {

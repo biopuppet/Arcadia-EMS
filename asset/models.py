@@ -38,7 +38,7 @@ class AssetSKU(models.Model):
     manufacturer = models.CharField(max_length=50, null=True, blank=True, verbose_name='生产厂商')
     produced_on = models.DateField(null=True, blank=True, verbose_name='生产日期')
     expired_on = models.DateField(null=True, blank=True, verbose_name='保质日期')
-    price = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2, verbose_name='单价')
+    price = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2, verbose_name='单价(元)')
 
     class Meta:
         verbose_name = "Asset Stock Keeping Unit"

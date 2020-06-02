@@ -82,7 +82,7 @@ class AssetSkuForm(forms.ModelForm):
         widget=forms.widgets.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'})
     )
     price = forms.DecimalField(
-        label="单价",
+        label="单价(元)",
         required=False,
         widget=forms.widgets.NumberInput(
             attrs={'class': 'form-control', 'placeholder': '0.00'}),
