@@ -11,7 +11,7 @@ class Asset(models.Model):
     """
     A general, abstract asset model.
     """
-    aid = models.CharField(max_length=30, primary_key=True, verbose_name='设备编号')
+    aid = models.AutoField(auto_created=True, primary_key=True, verbose_name='ID')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     name = models.CharField(max_length=50, verbose_name='设备名称')

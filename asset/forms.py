@@ -15,12 +15,6 @@ class AssetForm(forms.ModelForm):
     error_messages = {
     }
 
-    aid = forms.CharField(
-        label="设备编号",
-        required=True,
-        max_length=30,
-        widget=TextInput(attrs={'class': 'form-control', 'placeholder': "设备编号", }, )
-    )
     name = forms.CharField(
         label="设备名称",
         required=True,
@@ -42,7 +36,7 @@ class AssetForm(forms.ModelForm):
     class Meta:
         model = Asset
         fields = [
-            'aid', 'name', 'category', 'description',
+            'name', 'category', 'description',
         ]
 
 
