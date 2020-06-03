@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'asset.apps.AssetConfig',
     'department.apps.DepartmentConfig',
     'review.apps.ReviewConfig',
-    'silk',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +50,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'ArcadiaEMS.urls'
@@ -143,13 +141,3 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = 'arcadia_ems@163.com'
 EMAIL_HOST_PASSWORD = 'XATYEWMLEYGQNKSA'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-# Silk
-SILKY_PYTHON_PROFILER = True
-SILKY_PYTHON_PROFILER_BINARY = True
-SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, 'profs')
-SILKY_AUTHENTICATION = True  # User must login
-SILKY_AUTHORISATION = True  # User must have permissions
-SILKY_PERMISSIONS = lambda user: user.is_superuser
-
-# SILKY_META = True  # To see what effect Silk is having on the request/response time.

@@ -45,8 +45,6 @@ urlpatterns = \
 handler404 = page_not_found
 handler500 = page_error
 
-urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]
-
 if DEBUG:
     urlpatterns += [
         path('404/', handler404, name='404'),
