@@ -7,9 +7,9 @@ from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm, AssetBorrowForm, \
     AssetReturnForm, AssetFixForm
-from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseAppModel
+from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseApp
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
-    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppModelSerializer, AssetSetSerializer
+    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppSerializer, AssetSetSerializer
 
 
 class AssetIndexView(LoginRequiredMixin, View):
@@ -34,8 +34,8 @@ class AssetMineView(LoginRequiredMixin, View):
 
     def post(self, request):
         if request.is_ajax():
-            apps = BaseAppModel.objects.filter(transactor=request.user)
-            apps_ = BaseAppModelSerializer(instance=apps, many=True)
+            apps = BaseApp.objects.filter(transactor=request.user)
+            apps_ = BaseAppSerializer(instance=apps, many=True)
             return HttpResponse(json.dumps(apps_.data), content_type='application/json')
 
 
@@ -364,7 +364,7 @@ class AssetReturnIndexView(LoginRequiredMixin, View):
 class AssetReturnView(LoginRequiredMixin, View):
 
     def get(self, request, app_id):
-        app = get_object_or_404(BaseAppModel, pk=app_id)
+        app = get_object_or_404(BaseApp, pk=app_id)
         sku = app.sku
         merging_set = app.asset_sets_app.first()
         asset = sku.asset

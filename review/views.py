@@ -7,9 +7,9 @@ from django.views import View
 from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_error
 from asset.forms import *
-from asset.models import BaseAppModel, AssetCreate, AssetScrap
+from asset.models import BaseApp, AssetCreate, AssetScrap
 from review.forms import ReviewAssetCreationForm, ReviewAssetAppForm
-from asset.serializers import BaseAppModelSerializer
+from asset.serializers import BaseAppSerializer
 
 
 class ReviewIndexView(LoginRequiredMixin, View):
@@ -19,8 +19,8 @@ class ReviewIndexView(LoginRequiredMixin, View):
 
     def post(self, request):
         if request.is_ajax():
-            apps = BaseAppModel.objects.all()
-            apps_ = BaseAppModelSerializer(instance=apps, many=True)
+            apps = BaseApp.objects.all()
+            apps_ = BaseAppSerializer(instance=apps, many=True)
             return HttpResponse(json.dumps(apps_.data), content_type='application/json')
 
 
@@ -31,7 +31,7 @@ class AppDetailView(LoginRequiredMixin, View):
     asset_set = None
 
     def get(self, request, app_id):
-        self.app = get_object_or_404(BaseAppModel, id=app_id)
+        self.app = get_object_or_404(BaseApp, id=app_id)
         self.sku = self.app.sku
         self.asset = self.sku.asset
         self.asset_set = self.app.asset_sets_app.all().first()  # TODO: deal with query set
@@ -49,7 +49,7 @@ class AppDetailView(LoginRequiredMixin, View):
             raise page_error(request)
 
     def post(self, request, app_id):
-        app = get_object_or_404(BaseAppModel, id=app_id)
+        app = get_object_or_404(BaseApp, id=app_id)
         sku = app.sku
         asset = sku.asset
         review_form = ReviewAssetAppForm(request.POST, instance=app, auto_id="form-review-asset-%s",

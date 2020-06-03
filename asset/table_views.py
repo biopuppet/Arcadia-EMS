@@ -4,9 +4,9 @@ from django.shortcuts import render
 from django.views import View
 
 from ArcadiaEMS.mixin import LoginRequiredMixin
-from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseAppModel
+from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseApp
 from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
-    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppModelSerializer
+    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppSerializer
 
 
 class AssetCreateTableView(LoginRequiredMixin, View):

@@ -1,5 +1,5 @@
 from django import forms
-from asset.models import AssetCreate, BaseAppModel
+from asset.models import AssetCreate, BaseApp
 
 
 class ReviewAssetAppForm(forms.ModelForm):
@@ -17,7 +17,7 @@ class ReviewAssetAppForm(forms.ModelForm):
     )
 
     class Meta:
-        model = BaseAppModel
+        model = BaseApp
         fields = [
             'opinion',
         ]

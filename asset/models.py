@@ -74,7 +74,7 @@ class AssetSet(models.Model):
         combine the 2 rows if everything's consistent. Otherwise, keep as it is.
     """
     sku = models.ForeignKey(AssetSKU, on_delete=models.CASCADE, related_name='sets', verbose_name='所属货格')
-    app = models.ForeignKey('BaseAppModel', on_delete=models.SET_NULL, null=True, related_name='asset_sets_app',
+    app = models.ForeignKey('BaseApp', on_delete=models.SET_NULL, null=True, related_name='asset_sets_app',
                             verbose_name='关联申请')
 
     status = models.CharField(max_length=20, default='审核中', verbose_name='状态')
@@ -98,7 +98,7 @@ class AssetSet(models.Model):
         self.status = self.app.type + '审核中'
 
 
-class BaseAppModel(models.Model):
+class BaseApp(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     type = models.CharField(max_length=20, default='Unknown', verbose_name='申请类型')
@@ -139,7 +139,7 @@ class BaseAppModel(models.Model):
             asset_set.save()
 
 
-class AssetCreate(BaseAppModel):
+class AssetCreate(BaseApp):
     credentials = models.FileField(upload_to='credentials/%Y/%m', blank=True, verbose_name='建账证明')
 
     class Meta:
@@ -150,7 +150,7 @@ class AssetCreate(BaseAppModel):
         return 'Create: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
-class AssetScrap(BaseAppModel):
+class AssetScrap(BaseApp):
     reason = models.TextField(null=True, blank=True, verbose_name='报废原因')
 
     class Meta:
@@ -161,7 +161,7 @@ class AssetScrap(BaseAppModel):
         return 'Scrap: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
-class AssetFix(BaseAppModel):
+class AssetFix(BaseApp):
     contact = models.CharField(max_length=20, default="", verbose_name="维修方联系方式")
     returned_at = models.DateTimeField(null=True, blank=True, verbose_name='维修结束时间')
 
@@ -173,7 +173,7 @@ class AssetFix(BaseAppModel):
         return 'Fix: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
-class AssetChange(BaseAppModel):
+class AssetChange(BaseApp):
     change_type = models.CharField(max_length=50, blank=True, null=True, verbose_name='变更类型')
     change_field = models.CharField(max_length=50, verbose_name='变动字段')
     change_description = models.CharField(max_length=100, verbose_name='变动内容')
@@ -186,7 +186,7 @@ class AssetChange(BaseAppModel):
         return 'Change: ' + self.sku.id.__str__() + '@' + self.created_at.__str__()
 
 
-class AssetBorrowReturn(BaseAppModel):
+class AssetBorrowReturn(BaseApp):
     borrowed_at = models.DateTimeField(auto_now_add=True, verbose_name='借出时间')
     estimate_return_on = models.DateField(verbose_name='预计归还时间')
     returned_on = models.DateField(null=True, verbose_name='实际归还时间')

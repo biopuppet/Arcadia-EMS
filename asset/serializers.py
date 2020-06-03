@@ -31,7 +31,7 @@ class AssetSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class BaseAppModelSerializer(serializers.ModelSerializer):
+class BaseAppSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format("%Y-%m-%d %H:%M:%S"))
     updated_at = serializers.DateTimeField(format("%Y-%m-%d %H:%M:%S"))
     transactor = serializers.CharField(allow_null=True, source='transactor.username')
@@ -39,11 +39,11 @@ class BaseAppModelSerializer(serializers.ModelSerializer):
     sku = serializers.CharField(source='sku.skuid')
 
     class Meta:
-        model = BaseAppModel
+        model = BaseApp
         fields = "__all__"
 
 
-class AssetCreateSerializer(BaseAppModelSerializer):
+class AssetCreateSerializer(BaseAppSerializer):
     # credentials
 
     class Meta:
@@ -51,21 +51,21 @@ class AssetCreateSerializer(BaseAppModelSerializer):
         fields = "__all__"
 
 
-class AssetScrapSerializer(BaseAppModelSerializer):
+class AssetScrapSerializer(BaseAppSerializer):
 
     class Meta:
         model = AssetScrap
         fields = "__all__"
 
 
-class AssetFixSerializer(BaseAppModelSerializer):
+class AssetFixSerializer(BaseAppSerializer):
 
     class Meta:
         model = AssetFix
         fields = "__all__"
 
 
-class AssetBorrowReturnSerializer(BaseAppModelSerializer):
+class AssetBorrowReturnSerializer(BaseAppSerializer):
 
     class Meta:
         model = AssetBorrowReturn
