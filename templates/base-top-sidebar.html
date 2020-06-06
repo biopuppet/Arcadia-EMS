@@ -4,7 +4,7 @@
 <div class="navbar-custom">
     <ul class="list-unstyled topbar-right-menu float-right mb-0">
 
-        <li class="dropdown notification-list">
+        <li hidden class="dropdown notification-list">
             <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="#"
                role="button" aria-haspopup="false" aria-expanded="false">
                 <i class="mdi mdi-bell noti-icon"></i>
@@ -104,7 +104,6 @@
             </a>
         </li>
 
-
         <li class="dropdown notification-list">
             <a class="nav-link dropdown-toggle nav-user arrow-none mr-0" data-toggle="dropdown"
                href="#" role="button">
@@ -137,7 +136,6 @@
 
             </div>
         </li>
-
     </ul>
     <div class="app-search">
         <form>
@@ -156,8 +154,5 @@
             window.location.href = {% url 'logout' %};
         });
     </script>
-    <button class="button-menu-mobile open-left disable-btn">
-        <i class="mdi mdi-menu"></i>
-    </button>
 </div>
 <!-- end Topbar -->
