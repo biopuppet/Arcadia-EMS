@@ -70,7 +70,7 @@ function initDatatable(table, ajax_url, csrf_token) {
                             "<a href='/review/reject/" + full.id + "' class='dropdown-item'>驳回</a>" +
                             "<a href='/review/approve/" + full.id + "' class='dropdown-item'>通过</a>" +
                             "</div>";
-                        return view_btn + more_btn;
+                        return view_btn;
                     },
             },
         ],
