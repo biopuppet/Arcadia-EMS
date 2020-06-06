@@ -101,12 +101,16 @@
                                             <td>{{ asset_set.quantity }}</td>
                                             <td>{{ asset_set.status }}</td>
                                             <td>
-                                                <a href="{% url 'asset:borrow' asset_set.id %}" class='action-icon'>
-                                                    <i class='mdi mdi-cart'></i>借出</a>
-                                                <a href="{% url 'asset:scrap' asset_set.id %}" class='action-icon'>
-                                                    <i class='mdi mdi-image-broken'></i>报废</a>
-                                                <a href="{% url 'asset:fix' asset_set.id %}" class='action-icon'>
-                                                    <i class='mdi mdi-auto-fix'></i>报修</a>
+                                                {% if asset_set.status|slice:"2:" != "审核中" %}
+                                                    <a href="{% url 'asset:borrow' asset_set.id %}" class='action-icon'>
+                                                        <i class='mdi mdi-cart'></i>借出</a>
+                                                    <a href="{% url 'asset:scrap' asset_set.id %}" class='action-icon'>
+                                                        <i class='mdi mdi-image-broken'></i>报废</a>
+                                                    <a href="{% url 'asset:fix' asset_set.id %}" class='action-icon'>
+                                                        <i class='mdi mdi-auto-fix'></i>报修</a>
+                                                {% else %}
+                                                    业务办理中不予操作
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
