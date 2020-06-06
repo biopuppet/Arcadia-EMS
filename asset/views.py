@@ -249,23 +249,23 @@ class AssetScrapView(LoginRequiredMixin, View):
             'asset_set_form': asset_set_new_form,
         }
         if scrap_form.is_valid() and asset_set_new_form.is_valid():
-            # if scraping the whole set
             child_quantity = asset_set_new_form.cleaned_data.get('quantity')
+            # if scraping the whole set
             if child_quantity == asset_set.quantity:
                 # Abandon the forked asset set form
-                asset_set.status = '报废审核中'
-                asset_set.save()
                 scrap_app = scrap_form.save(sku=asset_sku)
+                asset_set.status = '报废审核中'
+                asset_set.app = scrap_app
+                asset_set.save()
                 ret.update({'msg': '编号【{}】设备报废申请已提交！'.format(scrap_app.id)})
             elif child_quantity > asset_set.quantity:
                 ret.update({
                     'error_msg': '数量非法'
                 })
             else:
+                scrap_app = scrap_form.save(sku=asset_sku)
                 asset_set.quantity -= child_quantity
                 asset_set.save()
-
-                scrap_app = scrap_form.save(sku=asset_sku)
 
                 asset_set_new_form.save(sku=asset_sku, app=scrap_app)
 
