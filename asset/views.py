@@ -7,9 +7,9 @@ from ArcadiaEMS.mixin import LoginRequiredMixin
 from ArcadiaEMS.views import page_not_found
 from asset.forms import AssetCreationForm, AssetForm, AssetSkuForm, AssetSetForm, AssetScrapForm, AssetBorrowForm, \
     AssetReturnForm, AssetFixForm
-from asset.models import Asset, AssetSet, AssetCreate, AssetScrap, AssetFix, AssetBorrowReturn, AssetSKU, BaseApp
-from asset.serializers import AssetSkuSerializer, AssetSerializer, AssetCreateSerializer, AssetScrapSerializer, \
-    AssetFixSerializer, AssetBorrowReturnSerializer, BaseAppSerializer, AssetSetSerializer
+from asset.models import Asset, AssetSet, AssetBorrowReturn, BaseApp
+from asset.serializers import AssetSkuSerializer, AssetSerializer, \
+    BaseAppSerializer, AssetSetSerializer
 
 
 class AssetIndexView(LoginRequiredMixin, View):
@@ -383,7 +383,8 @@ class AssetReturnView(LoginRequiredMixin, View):
         asset = sku.asset
         asset_sets = sku.sets.all()
         asset_set = app.asset_sets_app.first()
-        return_form = AssetReturnForm(request.POST, instance=app, sku_id=sku.id, auto_id="form-return-%s", label_suffix='')
+        return_form = AssetReturnForm(request.POST, instance=app, sku_id=sku.id, auto_id="form-return-%s",
+                                      label_suffix='')
         ret = {
             'asset_sets': asset_sets,
             'return_form': return_form,
